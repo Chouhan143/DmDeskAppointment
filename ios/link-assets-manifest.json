@@ -1,0 +1,17 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/KrutiDev010.ttf",
+      "sha1": "7d293539d88de70c2b73add7b4a81d629dba8a1d"
+    },
+    {
+      "path": "assets/fonts/TiroDevanagariHindi-Italic.ttf",
+      "sha1": "19b36ecc6a9c104c91635b51be61389709eeb7b5"
+    },
+    {
+      "path": "assets/fonts/TiroDevanagariHindi-Regular.ttf",
+      "sha1": "ef67b6ecb1d5ef20f309aab707098afbec5babbb"
+    }
+  ]
+}
