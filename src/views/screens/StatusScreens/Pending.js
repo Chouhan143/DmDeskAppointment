@@ -12,14 +12,19 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
-import database from '@react-native-firebase/database';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
+
 import Avtar from '../../../../Asets/avtar.png';
 import Icon from 'react-native-vector-icons/Entypo';
 import React from 'react';
 import {useState} from 'react';
 import axios from 'axios';
 import {useEffect} from 'react';
-import {firebase} from '@react-native-firebase/auth';
+
 import {postData} from '../../../Hooks/ApiHelper';
 import {SkeletonCard} from './SkeletonCard';
 import { useToast } from 'react-native-fast-toast';
@@ -323,11 +328,12 @@ const styles = StyleSheet.create({
 
   Model: {
     display: 'flex',
-    height: 250,
     paddingLeft: 20,
     width: width - 90,
     borderRadius: 10,
     textAlign: 'center',
+    flexWrap:'wrap',
+    overflow:'hidden'
   },
   cancelIcon: {
     marginLeft: 125,
@@ -342,10 +348,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#00000099',
+    
   },
   warning_modal: {
     width: 300,
-    height: 350,
+    height: "auto",
     backgroundColor: '#6195C1',
     borderWidth: 1,
     borderColor: '#36648B',
@@ -393,6 +400,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-around',
     flexDirection: 'row',
+    marginTop:10
   },
   acceptBtn: {
     padding: 10,

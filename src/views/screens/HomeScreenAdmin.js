@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Image,ScrollView, TouchableOpacity, Dimensions, FlatList } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import userAdd from '../../../Asets/plus.png'
 import React from 'react'
 import BookAppointment from './BookAppointment'
+import { RefreshControl } from 'react-native';
 import {
     responsiveHeight,
     responsiveWidth,
@@ -18,6 +19,7 @@ const HomeScreenAdmin = ({ navigation }) => {
     const [pending, setPending] = useState([]);
     const [completed, setCompleted] = useState([]);
     const [rejected, setRejected] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     const AddUser = () => {
         navigation.navigate('userInfo');
@@ -35,6 +37,15 @@ const HomeScreenAdmin = ({ navigation }) => {
     const CancelgHendle = () => {
         navigation.navigate('cancel');
     }
+
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        AddUserInfo();
+    
+        setTimeout(() => setRefreshing(false), 1000);
+      };
+
     useEffect(() => {
         AddUserInfo();
     }, []);
@@ -68,6 +79,13 @@ const HomeScreenAdmin = ({ navigation }) => {
 
     return (
         <>
+
+<ScrollView
+        scrollEnabled={false}
+        nestedScrollEnabled={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
             <View style={styles.header}>
                 <Icon name="sort-variant" color='#3e2465' size={28} onPress={navigation.toggleDrawer} />
                 <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
@@ -163,7 +181,7 @@ const HomeScreenAdmin = ({ navigation }) => {
                 </View>
             </View>
 
-
+</ScrollView>
         </>
 
     )

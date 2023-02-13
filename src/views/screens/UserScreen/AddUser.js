@@ -111,7 +111,8 @@ const LoginScreen = ({navigation}) => {
         toast.show('User Added successfully', {
           type: 'success',
           position: 'top',
-        });
+        });0
+        navigation.navigate('HomeScreenAdmin');
       }
     } else {
       toast.show('Fill all inputs first', {type: 'danger'});
@@ -237,7 +238,8 @@ const LoginScreen = ({navigation}) => {
                   handleOnchange(selectedItem, 'user_type')
                 }}
                 onFocus={() => handleError(null, 'user_type')}
-                defaultButtonText="Select"
+                defaultButtonText="Select User"
+         
                 buttonTextAfterSelection={(selectedItem, index) => {
                   // text represented after item is selected
                   // if data array is an array of objects then return selectedItem.property to render after item is selected
