@@ -4,19 +4,20 @@ import {
   View,
   Image,
   Dimensions,
-  FlatList,
   ScrollView,
 } from 'react-native';
 import { Modal } from 'react-native';
 import React from 'react';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Entypo';
-import database from '@react-native-firebase/database';
 import Avtar from '../../../../Asets/avtar.png';
 import {useState, useEffect} from 'react';
 import {RefreshControl} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import { SkeletonCard } from './SkeletonCard';
+import { getData } from '../../../Hooks/ApiHelper';
+import { Get_Appointment_Data } from '../../../Constants/UrlConstants';
+import { FlatList } from 'react-native';
 const {height} = Dimensions.get('window');
 const {width} = Dimensions.get('screen');
 const Completed = () => {
@@ -50,25 +51,15 @@ const Completed = () => {
     SetshowWarning(true);
   }
 
-  const AddUserInfo = () => {
+  const AddUserInfo = async () => {
     setloader(true);
-    axios({
-      method: 'get',
-      url: 'https://srninfotech.com/projects/dmdesk/getAppointmentData',
-    })
-      .then(function (response) {
-        // console.log("response", JSON.stringify(response.data.result))
 
-        const rejectData = response.data.result.filter(
+    const response = await getData(Get_Appointment_Data)
+        const rejectData = response.result.filter(
           appointment => appointment.status == 'reject',
         );
-        console.log(rejectData);
         setloader(false);
         setMyData(rejectData);
-      })
-      .catch(function (error) {
-        console.log('error', error);
-      });
   };
   return (
     <ScrollView
@@ -90,10 +81,11 @@ const Completed = () => {
           </View>
         )}
 
-        {myData?.map((item, index) => {
-          console.log(item.img);
-          return (
-            <View key={index} style={styles.MainWraper}>
+<FlatList
+          data={myData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => (
+            <View style={styles.MainWraper}>
               <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
                 <Text style={{color: '#fff', fontSize: 15, fontWeight: 'bold'}}>
                   {item.user_name}{' '}
@@ -139,16 +131,19 @@ const Completed = () => {
                     <Text style={styles.textHeading}>समय :- </Text>
                     <Text style={styles.textSubHeading}>{item.time}</Text>
                   </View>
+
                   <View style={styles.ViewMore}>
-                      <TouchableOpacity onPress={() => onPressHandler(item)}>
-                        <Text style={{ color: '#fff', fontSize: 10 }}>View More</Text>
-                      </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity onPress={() => onPressHandler(item)}>
+                      <Text style={{color: '#fff', fontSize: 10}}>
+                        View More
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
-          );
-        })}
+          )}
+        />
 
            {/* modal  */}
     <View style={styles.centered_view}>

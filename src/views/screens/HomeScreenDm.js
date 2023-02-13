@@ -9,10 +9,11 @@ import {
     responsiveWidth,
     responsiveFontSize
 } from "react-native-responsive-dimensions";
-import BookAppointment from './BookAppointment'
 import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { getData } from '../../Hooks/ApiHelper';
+import { Get_Appointment_Data } from '../../Constants/UrlConstants';
 
 const { height } = Dimensions.get('window');
 const HomeScreenDm = ({ navigation }) => {
@@ -20,11 +21,10 @@ const HomeScreenDm = ({ navigation }) => {
     const [completed, setCompleted] = useState([]);
     const [rejected, setRejected] = useState([]);
 
-    const OpenAppointment = () => {
-        navigation.navigate('Appointment');
-    };
+   
     const logout = () => {
         navigation.replace('login');
+
     };
 
     const PendingHendle = () => {
@@ -44,30 +44,23 @@ const HomeScreenDm = ({ navigation }) => {
         AddUserInfo();
     }, []);
 
-    const AddUserInfo = () => {
-        axios({
-            method: 'get',
-            url: 'https://srninfotech.com/projects/dmdesk/getAppointmentData',
+    const AddUserInfo = async () => {
 
-        })
-            .then(function (response) {
-                // console.log("response", JSON.stringify(response.data.result))
+        const response = await getData(Get_Appointment_Data)
+     
+                // console.log("response", JSON.stringify(response.result))
 
                 // console.log(newData)
-                const completedData = response.data.result.filter(appointment => appointment.status == 'complete')
-                const pendingData = response.data.result.filter(appointment => appointment.status == 'pending')
-                const rejectData = response.data.result.filter(appointment => appointment.status == 'reject')
+                const completedData = response.result.filter(appointment => appointment.status == 'complete')
+                const pendingData = response.result.filter(appointment => appointment.status == 'pending')
+                const rejectData = response.result.filter(appointment => appointment.status == 'reject')
                 setPending(pendingData.length)
                 setCompleted(completedData.length)
                 setRejected(rejectData.length)
 
-                console.log(pendingData)
                 setMyData(completedData)
 
-            })
-            .catch(function (error) {
-                console.log("error", error)
-            })
+           
     }
 
 

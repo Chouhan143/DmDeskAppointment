@@ -1,66 +1,53 @@
-import { StyleSheet, Text, View, Image, Dimensions, FlatList, ScrollView,TouchableOpacity } from 'react-native'
-import React from 'react'
-import database from '@react-native-firebase/database';
-import Avtar from '../../../../Asets/avtar.png'
-import { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import React from 'react';
+import Avtar from '../../../../Asets/avtar.png';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
-import { RefreshControl } from 'react-native';
-import { SkeletonCard } from './SkeletonCard';
-import { Modal } from 'react-native';
+import {RefreshControl} from 'react-native';
+import {SkeletonCard} from './SkeletonCard';
+import {Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import { Pressable } from 'react-native';
-import { useToast } from 'react-native-fast-toast';
+import {useToast} from 'react-native-fast-toast';
+import {getData} from '../../../Hooks/ApiHelper';
+import {Get_Appointment_Data} from '../../../Constants/UrlConstants';
+import {FlatList} from 'react-native';
 
-const { height } = Dimensions.get('window');
-const { width } = Dimensions.get('screen');
+const {height} = Dimensions.get('window');
+const {width} = Dimensions.get('screen');
 const Completed = () => {
-  const toast = useToast()
+  const toast = useToast();
 
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState({});
   const [loadingMore, setLoadingMore] = useState(false);
   const [dataKey, setDataKey] = useState('');
-    const [loader, setloader] = useState(false);
+  const [loader, setloader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [obj, setobj] = useState({});
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
-
-  // const getData = async () => {
-  //   console.log('--------------------')
-  //   try {
-  //     const data = await database().ref("appoint");
-  //     data.on("value", snapshot => {
-  //       if (snapshot.val()) {
-  //         const data = Object.entries(snapshot.val() && snapshot.val()).filter(([key, value]) => value.value.status === 'completed');
-  //         setMyData(data)
-  //       }
-  //     });
-
-
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
-  let stopFetchMore = true;
   const onPressHandler = (item, index) => {
     setobj(item);
-    setDataKey(index)
-    setUserData(item)
+    setDataKey(index);
+    setUserData(item);
     SetshowWarning(true);
-  }
+  };
   const onPressReject = (item, index) => {
-    setDataKey(index)
-    setUserData(item)
+    setDataKey(index);
+    setUserData(item);
     SetshowWarning(true);
-  }
+  };
   const onPressCard = () => {
     SetshowWarning(false);
-  }
+  };
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -69,65 +56,32 @@ const Completed = () => {
     setTimeout(() => setRefreshing(false), 1000);
   };
 
-
   useEffect(() => {
     AddUserInfo();
-}, []);
+  }, []);
 
-const AddUserInfo = () => {
-  setloader(true);
-    axios({
-      method: 'get',
-      url: 'https://srninfotech.com/projects/dmdesk/getAppointmentData',
-
-    })
-      .then(function (response) {
-        // console.log("response", JSON.stringify(response.data.result))
-       
-    // console.log(newData)
-        const completedData = response.data.result.filter(appointment => appointment.status == 'complete')
-        setMyData(completedData)
-        setloader(false);
-    
-      })
-      .catch(function (error) {
-        console.log("error", error)
-      })
-  }
-
-
-  const onPressChangeStatus = async (id, item) => {
-    let payload = {
-      id: id,
-      status: item,
-    };
-    const data = await postData(
-      'https://srninfotech.com/projects/dmdesk/updateStatus',
-      payload,
+  const AddUserInfo = async () => {
+    setloader(true);
+    const response = await getData(Get_Appointment_Data);
+    const completedData = response.result.filter(
+      appointment => appointment.status == 'complete',
     );
-    if (data.result) {
-      SetshowWarning(false);
-      toast.show("Updated", { type: "success" , position: 'top'});
-      AddUserInfo();
-    }
+    setMyData(completedData);
+    setloader(false);
   };
 
-
-
-
-
-
   return (
-    <ScrollView    refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    } style={{ backgroundColor: '#C0D9D9' }}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      style={{backgroundColor: '#C0D9D9'}}>
       <View style={styles.container}>
         <View style={styles.headingWraper}>
-          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+          <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>
             Completed Appointments
           </Text>
         </View>
-
 
         {loader && (
           <View>
@@ -136,56 +90,72 @@ const AddUserInfo = () => {
             ))}
           </View>
         )}
-        {
-          myData?.map((item,index) => {
-            return (
-              <View key={index} style={styles.MainWraper} >
-                <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
-                  <Text style={{ color: '#fff', fontSize: 15, fontWeight: 'bold' }}>{item.user_name} </Text>
-                </View>
-                <View style={styles.OuterWraper} >
-                  <View style={styles.ImageWraper} >
-                    <Image source={
+        <FlatList
+          data={myData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => (
+            <View style={styles.MainWraper}>
+              <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
+                <Text style={{color: '#fff', fontSize: 15, fontWeight: 'bold'}}>
+                  {item.user_name}{' '}
+                </Text>
+              </View>
+              <View style={styles.OuterWraper}>
+                <View style={styles.ImageWraper}>
+                  <Image
+                    source={
                       item.img
                         ? {
                             uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
                           }
                         : Avtar
-                    } style={{ width: width / 4, height: 100, borderWidth: 0.2, borderRadius: 10, resizeMode: 'contain' }} />
+                    }
+                    style={{
+                      width: width / 4,
+                      height: 100,
+                      borderWidth: 0.2,
+                      borderRadius: 10,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                </View>
+                <View style={styles.ContentWraper}>
+                  <View style={styles.ListRow}>
+                    <Text style={styles.textHeading}>मिलने का कारण :- </Text>
+                    <Text numberOfLines={6} style={styles.textSubHeading}>
+                      {item.purpose}{' '}
+                    </Text>
                   </View>
-                  <View style={styles.ContentWraper} >
-                    <View style={styles.ListRow} >
-                      <Text style={styles.textHeading}>मिलने का कारण :- </Text>
-                      <Text numberOfLines={6} style={styles.textSubHeading} >{item.purpose} </Text>
-                    </View>
-                    <View style={styles.ListRow} >
-                      <Text style={styles.textHeading}>व्यक्तियो की संख्या :-  </Text>
-                      <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
-                    </View>
-                    <View style={styles.ListRow} >
-                      <Text style={styles.textHeading}>तारीख :-   </Text>
-                      <Text style={styles.textSubHeading}>{item.date}</Text>
-                    </View>
-                    <View style={styles.ListRow} >
-                      <Text style={styles.textHeading}>समय :-   </Text>
-                      <Text style={styles.textSubHeading}>{item.time}</Text>
-                    </View>
+                  <View style={styles.ListRow}>
+                    <Text style={styles.textHeading}>
+                      व्यक्तियो की संख्या :-{' '}
+                    </Text>
+                    <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
+                  </View>
+                  <View style={styles.ListRow}>
+                    <Text style={styles.textHeading}>तारीख :- </Text>
+                    <Text style={styles.textSubHeading}>{item.date}</Text>
+                  </View>
+                  <View style={styles.ListRow}>
+                    <Text style={styles.textHeading}>समय :- </Text>
+                    <Text style={styles.textSubHeading}>{item.time}</Text>
+                  </View>
 
-                    <View style={styles.ViewMore}>
-                      <TouchableOpacity onPress={() => onPressHandler(item)}>
-                        <Text style={{ color: '#fff', fontSize: 10 }}>View More</Text>
-                      </TouchableOpacity>
-                    </View>
-
+                  <View style={styles.ViewMore}>
+                    <TouchableOpacity onPress={() => onPressHandler(item)}>
+                      <Text style={{color: '#fff', fontSize: 10}}>
+                        View More
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
-            )
-          })
-        }
+            </View>
+          )}
+        />
 
         {/* modal  */}
-    <View style={styles.centered_view}>
+        <View style={styles.centered_view}>
           <Modal
             visible={showWarning}
             transparent
@@ -254,7 +224,6 @@ const AddUserInfo = () => {
                     </View>
                   </View>
                 </View>
-             
               </View>
             </View>
           </Modal>
@@ -262,13 +231,12 @@ const AddUserInfo = () => {
         {/* modal ends here */}
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default Completed
+export default Completed;
 
 const styles = StyleSheet.create({
-
   // container: {
   //     flex: 1,
 
@@ -285,8 +253,7 @@ const styles = StyleSheet.create({
     width: width - 50,
     padding: 20,
     borderRadius: 50,
-    textAlign: 'center'
-
+    textAlign: 'center',
   },
   container: {
     flex: 1,
@@ -303,7 +270,7 @@ const styles = StyleSheet.create({
     width: width - 20,
     padding: 15,
     borderRadius: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 
   Model: {
@@ -315,18 +282,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   cancelIcon: {
-    marginLeft: 125
+    marginLeft: 125,
   },
   HeadTable: {
     height: 50,
-    alignContent: "center",
-    backgroundColor: '#ffe0f0'
+    alignContent: 'center',
+    backgroundColor: '#ffe0f0',
   },
   centered_view: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#00000099'
+    backgroundColor: '#00000099',
   },
   warning_modal: {
     width: 300,
@@ -359,7 +326,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 10,
     width: width - 20,
-    borderColor: '#90B3F2'
+    borderColor: '#90B3F2',
   },
 
   UserName: {
@@ -371,28 +338,27 @@ const styles = StyleSheet.create({
     borderColor: 'trasperant',
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
-    width: '100%'
+    width: '100%',
   },
 
   btnWrapper: {
     display: 'flex',
     justifyContent: 'space-around',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   acceptBtn: {
     padding: 10,
     backgroundColor: 'green',
     borderRadius: 10,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   cancelBtn: {
     padding: 10,
     backgroundColor: 'red',
     borderRadius: 10,
     paddingHorizontal: 30,
-    alignItems: 'center'
+    alignItems: 'center',
   },
-
 
   // ------------------------------------------User Card styling---------------
   MainWraper: {
@@ -403,8 +369,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 5,
     overflow: 'hidden',
-    flexWrap: "wrap",
-    position: 'relative'
+    flexWrap: 'wrap',
+    position: 'relative',
   },
   UserName: {
     display: 'flex',
@@ -415,25 +381,22 @@ const styles = StyleSheet.create({
     borderColor: 'trasperant',
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
-    width: '100%'
+    width: '100%',
   },
   OuterWraper: {
     display: 'flex',
     flexDirection: 'row',
-
   },
   ImageWraper: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 5
+    marginLeft: 5,
   },
   ContentWraper: {
     overflow: 'hidden',
-    flexWrap: "wrap",
-    width: width / 1.5
-
-
+    flexWrap: 'wrap',
+    width: width / 1.5,
   },
   ListRow: {
     display: 'flex',
@@ -441,19 +404,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'flex-start',
     marginHorizontal: 5,
-    flexWrap: "wrap",
+    flexWrap: 'wrap',
     overflow: 'hidden',
   },
   textHeading: {
     color: '#000',
     paddingVertical: 5,
     fontWeight: 'bold',
-    fontSize: 10
+    fontSize: 10,
   },
   textSubHeading: {
     color: '#8B8989',
     fontSize: 10,
-
   },
   ViewMore: {
     backgroundColor: '#36648B',
@@ -464,7 +426,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 5,
     marginBottom: 5,
-    marginLeft: 150
-
+    marginLeft: 150,
   },
-})
+});

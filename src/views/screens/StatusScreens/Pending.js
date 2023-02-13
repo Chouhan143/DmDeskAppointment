@@ -4,7 +4,6 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  FlatList,
   Modal,
   Pressable,
   Input,
@@ -12,48 +11,41 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
-import database from '@react-native-firebase/database';
 import Avtar from '../../../../Asets/avtar.png';
 import Icon from 'react-native-vector-icons/Entypo';
 import React from 'react';
 import {useState} from 'react';
 import axios from 'axios';
 import {useEffect} from 'react';
-import {firebase} from '@react-native-firebase/auth';
-import {postData} from '../../../Hooks/ApiHelper';
+import {getData, postData} from '../../../Hooks/ApiHelper';
 import {SkeletonCard} from './SkeletonCard';
-import { useToast } from 'react-native-fast-toast';
+import {useToast} from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import storage from '@react-native-firebase/storage';
+import {
+  Get_Appointment_Data,
+  Update_Status,
+} from '../../../Constants/UrlConstants';
+import {FlatList} from 'react-native';
 
 const {height} = Dimensions.get('screen');
 const {width} = Dimensions.get('screen');
 // var myData = [];
 const Pending = () => {
-  const toast = useToast()
+  const toast = useToast();
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
   const [userData, setUserData] = useState({});
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [dataKey, setDataKey] = useState('');
-  const [imageUrl, setImageUrl] = useState(undefined);
   const [obj, setobj] = useState({});
   const [loader, setloader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [userType, setuserType] = useState("")
+  const [userType, setuserType] = useState('');
 
-  let stopFetchMore = true;
   const onPressHandler = (item, index) => {
+    SetshowWarning(!showWarning);
     setobj(item);
-    setDataKey(index);
     setUserData(item);
-    SetshowWarning(true);
   };
-  const onPressReject = (item, index) => {
-    setDataKey(index);
-    setUserData(item);
-    SetshowWarning(true);
-  };
+
   const onPressCard = () => {
     SetshowWarning(false);
   };
@@ -70,28 +62,23 @@ const Pending = () => {
   }, []);
 
   const AddUserInfo = async () => {
-  const userType = await AsyncStorage.getItem("userType")
-  setuserType(userType)
+    const userType = await AsyncStorage.getItem('userType');
+    setuserType(userType);
     setloader(true);
-   await axios({
-      method: 'get',
-      url: 'https://srninfotech.com/projects/dmdesk/getAppointmentData',
-    })
-      .then(function (response) {
-        const newData = response.data.result.sort(function (a, b) {
-          return a.created_date > b.created_date
-            ? -1
-            : a.created_date < b.created_date
-            ? 1
-            : 0;
-        });
-        const completedData = newData.filter(appointment => appointment.status == 'pending')
-        setMyData(completedData);
-        setloader(false);
-      })
-      .catch(function (error) {
-        console.log('error', error);
-      });
+    const response = await getData(Get_Appointment_Data);
+
+    const newData = response.result.sort(function (a, b) {
+      return a.created_date > b.created_date
+        ? -1
+        : a.created_date < b.created_date
+        ? 1
+        : 0;
+    });
+    const completedData = newData.filter(
+      appointment => appointment.status == 'pending',
+    );
+    setMyData(completedData);
+    setloader(false);
   };
 
   const onPressChangeStatus = async (id, item) => {
@@ -99,13 +86,10 @@ const Pending = () => {
       id: id,
       status: item,
     };
-    const data = await postData(
-      'https://srninfotech.com/projects/dmdesk/updateStatus',
-      payload,
-    );
+    const data = await postData(Update_Status, payload);
     if (data.result) {
       SetshowWarning(false);
-      toast.show("Updated", { type: "success" , position: 'top'});
+      toast.show('Updated', {type: 'success', position: 'top'});
       AddUserInfo();
     }
   };
@@ -117,7 +101,6 @@ const Pending = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       style={{backgroundColor: '#C0D9D9'}}>
-        {console.log(userType)}
       <View style={styles.container}>
         <View style={styles.headingWraper}>
           <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>
@@ -133,9 +116,11 @@ const Pending = () => {
           </View>
         )}
 
-        {myData?.map((item, index) => {
-          return (
-            <View key={index} style={styles.MainWraper}>
+        <FlatList
+          data={myData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => (
+            <View style={styles.MainWraper}>
               <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
                 <Text style={{color: '#fff', fontSize: 15, fontWeight: 'bold'}}>
                   {item.user_name}{' '}
@@ -192,9 +177,9 @@ const Pending = () => {
                 </View>
               </View>
             </View>
-          );
-        })}
-
+          )}
+        />
+       
         {/* -------------------------- Model-------------------------------- */}
         <View style={styles.centered_view}>
           <Modal
@@ -265,31 +250,32 @@ const Pending = () => {
                     </View>
                   </View>
                 </View>
-                {
-                  userType !== "ad" && <View style={styles.warning_button}>
-                  <View style={styles.btnWrapper}>
-                    <View style={styles.acceptBtn}>
-                      <Pressable
-                        onPress={() => onPressChangeStatus(obj.id, 'complete')}
-                        android_ripple={{color: '#fff'}}>
-                        <Text style={[styles.text, {color: '#fff'}]}>
-                          Complete
-                        </Text>
-                      </Pressable>
-                    </View>
-                    <View style={styles.cancelBtn}>
-                      <Pressable
-                        onPress={() => onPressChangeStatus(obj.id, 'reject')}
-                        android_ripple={{color: '#fff'}}>
-                        <Text style={[styles.text, {color: '#fff'}]}>
-                          Reject
-                        </Text>
-                      </Pressable>
+                {userType !== 'ad' && (
+                  <View style={styles.warning_button}>
+                    <View style={styles.btnWrapper}>
+                      <View style={styles.acceptBtn}>
+                        <Pressable
+                          onPress={() =>
+                            onPressChangeStatus(obj.id, 'complete')
+                          }
+                          android_ripple={{color: '#fff'}}>
+                          <Text style={[styles.text, {color: '#fff'}]}>
+                            Complete
+                          </Text>
+                        </Pressable>
+                      </View>
+                      <View style={styles.cancelBtn}>
+                        <Pressable
+                          onPress={() => onPressChangeStatus(obj.id, 'reject')}
+                          android_ripple={{color: '#fff'}}>
+                          <Text style={[styles.text, {color: '#fff'}]}>
+                            Reject
+                          </Text>
+                        </Pressable>
+                      </View>
                     </View>
                   </View>
-                </View>
-                }
-               
+                )}
               </View>
             </View>
           </Modal>

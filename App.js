@@ -6,18 +6,15 @@ import React from 'react'
 // import AppointmentScreen from './src/components/screens/AppointmentScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from './src/views/screens/Home'
 import  LoginScreen from './src/views/screens/LoginScreen'
 import HomeScreenAdmin from './src/views/screens/HomeScreenAdmin';
 import HomeScreenDm from './src/views/screens/HomeScreenDm';
-import HomeScreenPa from './src/views/screens/HomeScreenPa';
 import BookAppointment from './src/views/screens/BookAppointment'
 import AddUserInfo from './src/views/screens/UserScreen/AddUser'
 import Pending from './src/views/screens/StatusScreens/Pending'
 import Completed from './src/views/screens/StatusScreens/Complete'
 import Cancel from './src/views/screens/StatusScreens/Cancel'
-import { DrawerContent } from './src/views/Drawer/DrawerContent';
 // import TabNavigator from './src/views/Navigators/TabNavigator';
 import DrawerNavigation from './src/views/Navigators/DrawerNavigation';
 import ForgotPass from './src/views/screens/UserScreen/ForgotPass';

@@ -1,21 +1,16 @@
-import database from '@react-native-firebase/database';
-import storage from '@react-native-firebase/storage';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, Keyboard, ScrollView, Alert, StyleSheet, StatusBar, TextInput, Image, Dimensions, TouchableOpacity, PermissionsAndroid } from 'react-native';
 import COLORS from '../../conts/colors';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import { useEffect } from "react";
 import axios from 'axios';
 import { useToast } from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Post_Appointment_Data } from '../../Constants/UrlConstants';
 
-let options = {
-  saveToPhotos: true,
-  mediaType: 'photo',
-};
+
 
 const BookAppointment = () => {
   const toast = useToast()
@@ -114,13 +109,11 @@ const BookAppointment = () => {
       formData.append('noofpeople', inputs.noofpeople);
       formData.append('city', cityName);
   
-      console.log(JSON.stringify(formData));
-      axios.post('https://srninfotech.com/projects/dmdesk/insertAppointmentData', formData, {
+      axios.post(Post_Appointment_Data, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       }).then((response) => {
-        console.log(response.data);
         if (response) {
           toast.show("Updated", { type: "success" , position: 'top'});
           navigation.navigate('HomeScreenPa');
@@ -134,59 +127,12 @@ const BookAppointment = () => {
   
   };
 
-
-
-  // const BookApointmentPost = async () => {
-  //   const cityName = await AsyncStorage.getItem("city")
-  //   let payload =  {
-  //     user_name: inputs.user_name,
-  //     depat: inputs.depat,
-  //     purpose: inputs.purpose,
-  //     noofpeople: inputs.noofpeople,
-  //     phone: inputs.phone,
-  //     img: imageUrl,
-  //     city: cityName
-  //   }
-  //   console.log(payload)
-  //  valdiate()
-  //   if (valdiate()) {
-  //     // await uploadImagebookBoo
-  //     await axios({
-  //       method: 'post',
-  //       url: 'https://srninfotech.com/projects/dmdesk/insertAppointmentData',
-  //       data:payload,
-
-  //     })
-  //       .then(function (response) {
-  //         toast.show("Appointment booked", { type: "sucess" });
-  //         console.log("response", JSON.stringify(response.data))
-          
-  //       })
-  //       .catch(function (error) {
-  //       })
-  //   }else {
-  //     toast.show("Fill all inputs first", { type: "danger" });
-  //   }
-  // }
-
-
-
-
-  
-
   const openCamera = async () => {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.CAMERA,
     );
  
   };
-
-
-
-
-  // ------------------------------------------------------------User Image upload uploaded--------------
-
-
 
   // --------------------------------------------------------------
   const handleOnchange = (text, input) => {
@@ -196,12 +142,8 @@ const BookAppointment = () => {
     setErrors(prevState => ({ ...prevState, [input]: error }));
   };
 
-
-  // --------------------------------------------------------------------
-
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
-      {console.log(JSON.stringify("image >"  + image))}
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}>
 

@@ -1,12 +1,10 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Entypo';
-import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import Pending from '../screens/StatusScreens/Pending';
 import Cancel from '../screens/StatusScreens/Cancel';
 import Complete from '../screens/StatusScreens/Complete';
-import HomeScreenPa from '../screens/HomeScreenPa';
 import TabNavigator from './TabNavigator';
 const Drawer = createDrawerNavigator();
 

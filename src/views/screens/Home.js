@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, Image,TouchableOpacity } from 'react-native'
 import Logo from '../../../Asets/GovtLogo.png'
-import Button from '../components/Button';
 import React from 'react'
 
 
@@ -8,15 +7,12 @@ const Home = ({ navigation }) => {
     
     return (
         <View style={styles.container}>
-            
             <Image source={Logo} style={styles.logo} resizeMode="contain" />
             <Text style={styles.text}>Welcome</Text>
-          
           <View style={styles.btnContainer} >
             <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('login')}>
                 <Text style={{fontSize:16, fontWeight:'bold', display:'flex',justifyContent:'center', textAlign:'center'}}>Log In</Text>
             </TouchableOpacity>
-            {/* <Button title='Log In'  onPress={() => navigation.navigate('login')} style={styles.btn}  /> */}
             </View>
             </View>
         

@@ -3,22 +3,20 @@ import {
   View,
   Pressable,
   StyleSheet,
-  TextInput,
   KeyboardAvoidingView,
   ScrollView,
   Keyboard,
   Image,
-  Alert
 } from 'react-native';
 import React, { useState } from 'react'
-import SvgIcon from '../../../../Asets/SvgIcon';
 import axios from 'axios';
 // import { postData } from '../../../Hooks/ApiHelper';
-// import { UrlConstants } from '../../Constants/UrlConstants';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import ForgotPasswordImg from '.././../../../Asets/forgot.png'
 import { useToast } from 'react-native-fast-toast';
+import { postData } from '../../../Hooks/ApiHelper';
+import { Forgot_Password } from '../../../Constants/UrlConstants';
 
 
 
@@ -37,39 +35,50 @@ const ForgotPass = ({ navigation }) => {
 
   const handleLogin = async () => {
     validateSchema()
-    console.log(validateSchema())
     if (validateSchema()) {
       let payload = {
         email: inputs.email,
         newPassword: inputs.newPassword,
         confirmPassword: inputs.confirmPassword,
       }
-      
-      axios
-        .post('https://srninfotech.com/projects/dmdesk/forgetPassword', payload)
-        .then((response) => {
-          console.log(response.data);
-          // console.log(response.data.password_status);
-          if(response.data.result == "true"){
-            
-            if(response.data.passNot == 'false'){
-
-              // Alert.alert("Your password not matched please enter new password and confirm password same")
-            }else{
-              // Alert.alert("password has been successfully changed")
-              navigation.navigate('login');
-            }
-         
-          } else if(response.data.result == "false"){
-            // Alert.alert("Email address does not  exists")
-            navigation.navigate('Forgotpassword');
+     const result =  postData(Forgot_Password, payload)
+      if(result.result) {
+        if(result.result == "true"){
+          if(result.passNot == 'false'){
+          }else{
+            navigation.navigate('login');
           }
+        } else if(result.result == "false"){
+          // Alert.alert("Email address does not  exists")
+          navigation.navigate('Forgotpassword');
+        }
 
-        })
-        .catch((error) => {
-          console.error("something went wong", error.message);
-          setErrors(error.message);
-        });
+      }
+      // axios
+      //   .post('https://srninfotech.com/projects/dmdesk/forgetPassword', payload)
+      //   .then((response) => {
+      //     console.log(response.data);
+      //     // console.log(response.data.password_status);
+      //     if(response.data.result == "true"){
+            
+      //       if(response.data.passNot == 'false'){
+
+      //         // Alert.alert("Your password not matched please enter new password and confirm password same")
+      //       }else{
+      //         // Alert.alert("password has been successfully changed")
+      //         navigation.navigate('login');
+      //       }
+         
+      //     } else if(response.data.result == "false"){
+      //       // Alert.alert("Email address does not  exists")
+      //       navigation.navigate('Forgotpassword');
+      //     }
+
+      //   })
+      //   .catch((error) => {
+      //     console.error("something went wong", error.message);
+      //     setErrors(error.message);
+      //   });
 
     } else {
       toast.show("Fill all inputs first", { type: "danger" });
@@ -121,7 +130,6 @@ const ForgotPass = ({ navigation }) => {
 
   return (
     <ScrollView>
-      {console.log(errors)}
       <KeyboardAvoidingView behavior="position" style={styles.mainCon}>
         <View style={{ paddingHorizontal: 20 }}>
           <Pressable onPress={LoginScreen}>

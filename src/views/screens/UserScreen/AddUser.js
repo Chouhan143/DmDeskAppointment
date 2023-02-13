@@ -1,11 +1,5 @@
 import React from 'react';
-import database from '@react-native-firebase/database';
-import {useNavigation} from '@react-navigation/native';
-import axios from 'axios';
 import {useToast} from 'react-native-fast-toast';
-import {Picker} from '@react-native-picker/picker';
-import {SelectList} from 'react-native-dropdown-select-list';
-
 import {
   View,
   Text,
@@ -19,11 +13,11 @@ import COLORS from '../../../conts/colors';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import SelectDropdown from 'react-native-select-dropdown';
-import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useEffect, useState} from 'react';
 import {postData} from '../../../Hooks/ApiHelper';
+import { Insert_Data } from '../../../Constants/UrlConstants';
 
 const LoginScreen = ({navigation}) => {
   const toast = useToast();
@@ -100,11 +94,9 @@ const LoginScreen = ({navigation}) => {
       user_type: inputs.user_type,
     };
     validate();
-    console.log(validate())
     if (validate()) {
-     
       const result = await postData(
-        'https://srninfotech.com/projects/dmdesk/insertData',
+        Insert_Data,
         payload,
       );
       if (result.result == true) {
@@ -187,21 +179,6 @@ const LoginScreen = ({navigation}) => {
               placeholderTextColor="gray"
               error={errors.city}
             />
-            {/* <SelectList
-              //  handleOnchange={handleChange}
-              onChangeText={text => handleOnchangeValue(text, 'user_type')}
-              onFocus={() => handleError(null, 'user_type')}
-              setSelected={setSelected}
-              data={data}
-              
-              placeholder="Select User Type"
-              placeholderTextColor={{ color: '#BABBC3' }}
-              dropdownStyles={{ color: '#BABBC3', backgroundColor: '#F3F4FB', borderRadius: 0, borderColor: '#F3F4FB', borderBottomColor: '#7978B5' }}
-              dropdownItemStyles={{ color: 'black', borderBottomColor: 'red' }}
-              dropdownTextStyles={{ color: '#7978B5', }}
-              inputStyles={{ color: '#7978B5' }}
-              boxStyles={{ borderRadius: 0, backgroundColor: '#F3F4FB', borderColor: '#F3F4FB', height: 55, marginTop: 15, alignItems: 'center' }}
-            /> */}
             <View
               style={
                 errors.user_type?.length > 0 && {
@@ -212,20 +189,7 @@ const LoginScreen = ({navigation}) => {
                   borderColor: 'red',
                 }
               }>
-              {/* <Picker
-                style={{
-                  color: '#BABBC3',
-                  backgroundColor: '#F3F4FB',
-                }}
-                prompt="Select user type"
-                onFocus={() => handleError(null, 'user_type')}
-                selectedValue={inputs.user_type}
-                onValueChange={(itemValue, itemIndex) => 
-                  handleOnchange(itemValue, 'user_type')
-                }>
-                <Picker.Item enabled={true} label="pa" value="pa" />
-                <Picker.Item color="#fff" label="dm" value="dm" />
-              </Picker> */}
+             
               <SelectDropdown
                buttonStyle={{
                 color: '#BABBC3',
@@ -239,13 +203,9 @@ const LoginScreen = ({navigation}) => {
                 onFocus={() => handleError(null, 'user_type')}
                 defaultButtonText="Select"
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  // text represented after item is selected
-                  // if data array is an array of objects then return selectedItem.property to render after item is selected
                   return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
-                  // text represented for each item in dropdown
-                  // if data array is an array of objects then return item.property to represent item in dropdown
                   return item;
                 }}
               />

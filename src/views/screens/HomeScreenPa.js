@@ -7,6 +7,8 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
+import {ActivityIndicator} from 'react-native';
+
 import {
   responsiveHeight,
   responsiveWidth,
@@ -33,6 +35,7 @@ const HomeScreenPa = ({ navigation }) => {
   const [myData, setMyData] = useState([]);
   const [loader, setloader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [loaderInfo, setloaderInfo] = useState(false);
 
   const OpenAppointment = () => {
     navigation.navigate('Appointment');
@@ -52,14 +55,18 @@ const HomeScreenPa = ({ navigation }) => {
   };
 
   const onRefresh = () => {
+    setloaderInfo(true)
     setRefreshing(true);
     AddUserInfo();
+    setloaderInfo(false)
 
     setTimeout(() => setRefreshing(false), 1000);
   };
 
   useEffect(() => {
+    setloaderInfo(true)
     AddUserInfo();
+    setloaderInfo(false)
   }, []);
 
   const AddUserInfo = () => {
@@ -67,30 +74,29 @@ const HomeScreenPa = ({ navigation }) => {
       method: 'get',
       url: 'https://srninfotech.com/projects/dmdesk/getAppointmentData',
     })
-      .then(function (response) {
-        // console.log("response", JSON.stringify(response.data.result))
-        // console.log(newData)
-        const completedData = response.data.result.filter(
-          appointment => appointment.status == 'complete',
+    .then(function (response) {
+      // console.log("response", JSON.stringify(response.data.result))
+      // console.log(newData)
+      const completedData = response.data.result.filter(
+        appointment => appointment.status == 'complete',
         );
         const pendingData = response.data.result.filter(
           appointment => appointment.status == 'pending',
-        );
-        const rejectData = response.data.result.filter(
-          appointment => appointment.status == 'reject',
-        );
-        setPending(pendingData.length);
-        setCompleted(completedData.length);
-        setRejected(rejectData.length);
-
-        console.log(pendingData);
-        setMyData(completedData);
-      })
-      .catch(function (error) {
-        console.log('error', error);
-      });
-  };
-
+          );
+          const rejectData = response.data.result.filter(
+            appointment => appointment.status == 'reject',
+            );
+            setPending(pendingData.length);
+            setCompleted(completedData.length);
+            setRejected(rejectData.length);
+            
+            setMyData(completedData);
+          })
+          .catch(function (error) {
+            console.log('error', error);
+          });
+        };
+        
   return (
     <>
       <ScrollView
@@ -164,7 +170,11 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
 
                   <View style={styles.textWrapDiv}>
+                  {loaderInfo == true ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
                     <Text style={styles.text}>{pending}</Text>
+                  )}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
                       लंबित
@@ -195,7 +205,12 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
 
                   <View style={styles.textWrapDiv}>
+                    
+                  {loaderInfo == true ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
                     <Text style={styles.text}>{completed}</Text>
+                  )}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
                       
@@ -236,7 +251,14 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
 
                   <View style={styles.textWrapDiv}>
+                  {loaderInfo == true ? (
+                    <View>
+                      <ActivityIndicator size="small" color="white" />
+                    </View>
+                    
+                  ) : (
                     <Text style={styles.text}>{rejected}</Text>
+                  )}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
                       

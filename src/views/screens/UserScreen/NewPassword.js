@@ -25,7 +25,6 @@ const NewPassword = ({ navigation }) => {
         axios
             .post('https://srninfotech.com/projects/dmdesk/login', payload)
             .then((response) => {
-                console.log(response.data);
                 if (response.data.email == "true") {
                     navigation.navigate('');
                 } else if (response.data.email == "false") {

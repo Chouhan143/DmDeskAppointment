@@ -24,10 +24,8 @@ export const AuthProvider = ({children}) => {
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
-        console.log(userInfo);
       })
       .catch(e => {
-        console.log(`register error ${e}`);
         setIsLoading(false);
       });
   };
@@ -59,7 +57,6 @@ export const AuthProvider = ({children}) => {
   })
   .then(response => response.json())
   .then(data => {
-    console.log(data);
   })
   .catch(error => {
     console.error(error);
@@ -79,7 +76,6 @@ export const AuthProvider = ({children}) => {
         },
       )
       .then(res => {
-        console.log(res.data);
         AsyncStorage.removeItem('userInfo');
         AsyncStorage.clear('userInfo');
 
@@ -88,7 +84,6 @@ export const AuthProvider = ({children}) => {
         AsyncStorage.clear()
       })
       .catch(e => {
-        console.log(`logout error ${e}`);
         setIsLoading(false);
       });
   };
@@ -107,7 +102,6 @@ export const AuthProvider = ({children}) => {
       setSplashLoading(false);
     } catch (e) {
       setSplashLoading(false);
-      console.log(`is logged in error ${e}`);
     }
   };
 
