@@ -273,7 +273,7 @@ const HomeScreenPa = ({ navigation }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   paddingVertical: responsiveHeight(1),
-                  paddingHorizontal: responsiveWidth(10),
+                  paddingHorizontal: responsiveWidth(7),
                   borderRadius: responsiveWidth(10),
                 }}
                 onPress={OpenAppointment}>

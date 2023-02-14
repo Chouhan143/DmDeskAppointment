@@ -74,11 +74,11 @@ const Completed = () => {
       }
       style={{backgroundColor: '#C0D9D9'}}>
       <View style={styles.container}>
-        <View style={styles.headingWraper}>
+        {/* <View style={styles.headingWraper}>
           <Text style={{color: '#fff', fontWeight: 'bold', fontSize: responsiveFontSize(2)}}>
             Cancel Appointments
           </Text>
-        </View>
+        </View> */}
         {loader && (
           <View>
             {Array.from({length: 10}, (_, index) => (
