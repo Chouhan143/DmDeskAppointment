@@ -10,8 +10,9 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
-import userAdd from '../../../Asets/plus.png';
-import React from 'react';
+import userAdd from '../../../Asets/plus.png'
+import React from 'react'
+import BookAppointment from './BookAppointment'
 import {
   responsiveHeight,
   responsiveWidth,

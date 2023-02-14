@@ -275,11 +275,12 @@ const styles = StyleSheet.create({
 
   Model: {
     display: 'flex',
-    height: 250,
     paddingLeft: 20,
     width: width - 90,
     borderRadius: 10,
     textAlign: 'center',
+    flexWrap:'wrap',
+    overflow:'hidden'
   },
   cancelIcon: {
     marginLeft: 125,
@@ -296,8 +297,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000099',
   },
   warning_modal: {
-    width: 300,
-    height: 300,
+  width: 300,
+    height: "auto",
     backgroundColor: '#6195C1',
     borderWidth: 1,
     borderColor: '#36648B',

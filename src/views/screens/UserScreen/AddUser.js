@@ -103,7 +103,8 @@ const LoginScreen = ({navigation}) => {
         toast.show('User Added successfully', {
           type: 'success',
           position: 'top',
-        });
+        });0
+        navigation.navigate('HomeScreenAdmin');
       }
     } else {
       toast.show('Fill all inputs first', {type: 'danger'});
@@ -201,7 +202,8 @@ const LoginScreen = ({navigation}) => {
                   handleOnchange(selectedItem, 'user_type')
                 }}
                 onFocus={() => handleError(null, 'user_type')}
-                defaultButtonText="Select"
+                defaultButtonText="Select User"
+         
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem;
                 }}
