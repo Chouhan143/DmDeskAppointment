@@ -6,6 +6,12 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
+import AppointmentIcon from '../../../../Asets/AppointmentIcon.png';
 import { Modal } from 'react-native';
 import React from 'react';
 import axios from 'axios';
@@ -69,7 +75,7 @@ const Completed = () => {
       style={{backgroundColor: '#C0D9D9'}}>
       <View style={styles.container}>
         <View style={styles.headingWraper}>
-          <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>
+          <Text style={{color: '#fff', fontWeight: 'bold', fontSize: responsiveFontSize(2)}}>
             Cancel Appointments
           </Text>
         </View>
@@ -87,7 +93,7 @@ const Completed = () => {
           renderItem={({item, index}) => (
             <View style={styles.MainWraper}>
               <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
-                <Text style={{color: '#fff', fontSize: 15, fontWeight: 'bold'}}>
+                <Text style={{color: '#fff', fontSize: responsiveFontSize(2), fontWeight: 'bold'}}>
                   {item.user_name}{' '}
                 </Text>
               </View>
@@ -102,8 +108,8 @@ const Completed = () => {
                         : Avtar
                     }
                     style={{
-                      width: width / 4,
-                      height: 100,
+                    width: responsiveWidth(20),
+                      height: responsiveWidth(20),
                       borderWidth: 0.2,
                       borderRadius: 10,
                       resizeMode: 'contain',
@@ -163,7 +169,7 @@ const Completed = () => {
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                    <Text style={[styles.text, {color: '#fff', fontSize: 16}]}>
+                    <Text style={[styles.text, {color: '#fff',  fontSize: responsiveFontSize(2)}]}>
                       Appointment
                     </Text>
                     <TouchableOpacity onPress={onPressCard}>
@@ -242,10 +248,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#3e2465',
-    width: width - 50,
+   width: responsiveWidth(100) - 20,
     padding: 20,
     borderRadius: 50,
     textAlign: 'center',
+  },
+    text:{
+fontSize:responsiveFontSize(1.7)
   },
   container: {
     flex: 1,
@@ -266,8 +275,8 @@ const styles = StyleSheet.create({
 
   Model: {
       display: 'flex',
-    paddingLeft: 20,
-    width: width - 90,
+    // paddingLeft: 20,
+     width: responsiveWidth(100) - 60,
     borderRadius: 10,
     textAlign: 'center',
     flexWrap:'wrap',
@@ -288,8 +297,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000099',
   },
   warning_modal: {
-    width: 300,
-    height: "auto",
+  width: responsiveWidth(100) - 20,
+    marginTop: (responsiveHeight(100) - 100) / 15,
     backgroundColor: '#6195C1',
     borderWidth: 1,
     borderColor: '#36648B',
@@ -305,9 +314,17 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 18,
   },
   warning_body: {
-    marginTop: 10,
+   marginTop: responsiveHeight(3),
+    marginBottom: responsiveHeight(2),
     justifyContent: 'center',
     alignItems: 'center',
+  },
+   AppointmentIconStyle:{
+    width:responsiveWidth(5),
+    height:responsiveWidth(5),
+    color:'#ffff'
+    
+
   },
   userContent: {
     display: 'flex',
@@ -389,7 +406,7 @@ const styles = StyleSheet.create({
   ContentWraper: {
     overflow: 'hidden',
     flexWrap: 'wrap',
-    width: width / 1.5,
+     width: responsiveWidth(100) - 100,
   },
   ListRow: {
     display: 'flex',
@@ -404,11 +421,11 @@ const styles = StyleSheet.create({
     color: '#000',
     paddingVertical: 5,
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: responsiveFontSize(1.5),
   },
   textSubHeading: {
     color: '#8B8989',
-    fontSize: 10,
+    fontSize:  responsiveFontSize(1.3),
   },
   ViewMore: {
     backgroundColor: '#36648B',

@@ -7,7 +7,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import AppointmentIcon from '../../../../Asets/AppointmentIcon.png'
 import React from 'react';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 import Avtar from '../../../../Asets/avtar.png';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
@@ -78,7 +84,7 @@ const Completed = () => {
       style={{backgroundColor: '#C0D9D9'}}>
       <View style={styles.container}>
         <View style={styles.headingWraper}>
-          <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>
+          <Text style={{color: '#fff', fontWeight: 'bold', fontSize: responsiveFontSize(2)}}>
             Completed Appointments
           </Text>
         </View>
@@ -96,7 +102,7 @@ const Completed = () => {
           renderItem={({item, index}) => (
             <View style={styles.MainWraper}>
               <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
-                <Text style={{color: '#fff', fontSize: 15, fontWeight: 'bold'}}>
+                <Text style={{color: '#fff',  fontSize: responsiveFontSize(2), fontWeight: 'bold'}}>
                   {item.user_name}{' '}
                 </Text>
               </View>
@@ -111,8 +117,8 @@ const Completed = () => {
                         : Avtar
                     }
                     style={{
-                      width: width / 4,
-                      height: 100,
+                    width: responsiveWidth(20),
+                      height: responsiveWidth(20),
                       borderWidth: 0.2,
                       borderRadius: 10,
                       resizeMode: 'contain',
@@ -172,9 +178,12 @@ const Completed = () => {
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                    <Text style={[styles.text, {color: '#fff', fontSize: 16}]}>
-                      Appointment
-                    </Text>
+                     <View style={{textAlign:'center' , display:'flex', flexDirection:'row',justifyContent:'center'}}>
+                    <Image source={AppointmentIcon} style={styles.AppointmentIconStyle} />
+                      <Text style={[styles.text, { color: '#fff', fontSize: responsiveFontSize(2),marginLeft:10 }]}>
+                        Appointment
+                      </Text>
+                    </View>
                     <TouchableOpacity onPress={onPressCard}>
                       <Icon
                         name="circle-with-cross"
@@ -250,11 +259,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#3e2465',
-    width: width - 50,
+    width: responsiveWidth(100) - 20,
     padding: 20,
     borderRadius: 50,
     textAlign: 'center',
   },
+  text:{
+    fontSize:responsiveFontSize(1.7)
+      },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -275,8 +287,8 @@ const styles = StyleSheet.create({
 
   Model: {
     display: 'flex',
-    paddingLeft: 20,
-    width: width - 90,
+    // paddingLeft: 20,
+    width: responsiveWidth(100) - 60,
     borderRadius: 10,
     textAlign: 'center',
     flexWrap:'wrap',
@@ -297,8 +309,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000099',
   },
   warning_modal: {
-  width: 300,
-    height: "auto",
+    width: responsiveWidth(100) - 20,
+    marginTop: (responsiveHeight(100) - 100) / 15,
     backgroundColor: '#6195C1',
     borderWidth: 1,
     borderColor: '#36648B',
@@ -314,7 +326,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 18,
   },
   warning_body: {
-    marginTop: 10,
+    marginTop: responsiveHeight(3),
+    marginBottom: responsiveHeight(2),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -340,6 +353,13 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
     width: '100%',
+  },
+  AppointmentIconStyle:{
+    width:responsiveWidth(5),
+    height:responsiveWidth(5),
+    color:'#ffff'
+    
+
   },
 
   btnWrapper: {

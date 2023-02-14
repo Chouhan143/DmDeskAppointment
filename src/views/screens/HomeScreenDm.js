@@ -89,7 +89,7 @@ const HomeScreenDm = ({ navigation }) => {
                         justifyContent: 'space-evenly',
                     }}>
                         <TouchableOpacity onPress={PendingHendle} style={{
-                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#80B4B4', paddingVertical: responsiveHeight(1),
+                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F99417', paddingVertical: responsiveHeight(1),
                             paddingHorizontal: responsiveWidth(10),
                             borderRadius: responsiveWidth(10),
                         }}>
@@ -107,7 +107,7 @@ const HomeScreenDm = ({ navigation }) => {
                         </TouchableOpacity>
                         {/*  */}
                         <TouchableOpacity onPress={CompletegHendle} style={{
-                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#80B4B4', paddingVertical: responsiveHeight(1),
+                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#54B435', paddingVertical: responsiveHeight(1),
                             paddingHorizontal: responsiveWidth(10),
                             borderRadius: responsiveWidth(10),
                         }}>
@@ -135,7 +135,7 @@ const HomeScreenDm = ({ navigation }) => {
                     }}>
 
                         <TouchableOpacity onPress={CancelgHendle} style={{
-                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#80B4B4', paddingVertical: responsiveHeight(1),
+                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#DC0000', paddingVertical: responsiveHeight(1),
                             paddingHorizontal: responsiveWidth(10),
                             borderRadius: responsiveWidth(10),
                         }}>
