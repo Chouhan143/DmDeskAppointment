@@ -96,7 +96,7 @@ const HomeScreenDm = ({ navigation }) => {
                             <View style={styles.content_iconWraper} >
                                 <View style={styles.innerView}>
 
-                                    <Icon2 name="progress-clock" color='white' size={28} onPress={navigation.toggleDrawer} />
+                                    <Icon2 name="progress-clock" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
                                 </View>
 
                                 <View style={styles.textWrapDiv}>
@@ -114,7 +114,7 @@ const HomeScreenDm = ({ navigation }) => {
                             <View style={styles.content_iconWraper} >
                                 <View style={styles.innerView}>
 
-                                    <Icon3 name="checkmark-done" color='white' size={28} onPress={navigation.toggleDrawer} />
+                                    <Icon3 name="checkmark-done" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
                                 </View>
 
                                 <View style={styles.textWrapDiv}>
@@ -142,7 +142,7 @@ const HomeScreenDm = ({ navigation }) => {
                             <View style={styles.content_iconWraper} >
                                 <View style={styles.innerView}>
 
-                                    <Icon2 name="cancel" color='white' size={28} onPress={navigation.toggleDrawer} />
+                                    <Icon2 name="cancel" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
                                 </View>
 
                                 <View style={styles.textWrapDiv}>
@@ -221,8 +221,8 @@ const styles = StyleSheet.create({
         marginTop: responsiveHeight(1),
     },
     innerView: {
-        width: 50,
-        height: 50,
+        width: responsiveWidth(14),
+    height: responsiveWidth(14),
         borderColor: '#fff',
         // borderStyle:'dashed',
         borderWidth: 1,

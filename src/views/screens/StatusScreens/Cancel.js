@@ -169,14 +169,15 @@ const Completed = () => {
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                    <Text style={[styles.text, {color: '#fff',  fontSize: responsiveFontSize(2)}]}>
+                     <Image source={AppointmentIcon} style={styles.AppointmentIconStyle} />
+                    <Text style={[styles.text, {color: '#fff',  fontSize: responsiveFontSize(2.4)}]}>
                       Appointment
                     </Text>
                     <TouchableOpacity onPress={onPressCard}>
                       <Icon
                         name="circle-with-cross"
                         color="#fff"
-                        size={20}
+                       size={responsiveFontSize(3)}
                         style={styles.cancelIcon}
                       />
                     </TouchableOpacity>
@@ -320,8 +321,8 @@ fontSize:responsiveFontSize(1.7)
     alignItems: 'center',
   },
    AppointmentIconStyle:{
-    width:responsiveWidth(5),
-    height:responsiveWidth(5),
+    width:responsiveWidth(6),
+    height:responsiveWidth(6),
     color:'#ffff'
     
 

@@ -180,7 +180,7 @@ const Completed = () => {
                     }}>
                      <View style={{textAlign:'center' , display:'flex', flexDirection:'row',justifyContent:'center'}}>
                     <Image source={AppointmentIcon} style={styles.AppointmentIconStyle} />
-                      <Text style={[styles.text, { color: '#fff', fontSize: responsiveFontSize(2),marginLeft:10 }]}>
+                      <Text style={[styles.text, { color: '#fff', fontSize: responsiveFontSize(2.4),marginLeft:10 }]}>
                         Appointment
                       </Text>
                     </View>
@@ -188,7 +188,7 @@ const Completed = () => {
                       <Icon
                         name="circle-with-cross"
                         color="#fff"
-                        size={20}
+                        size={responsiveFontSize(3)}
                         style={styles.cancelIcon}
                       />
                     </TouchableOpacity>
@@ -355,8 +355,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   AppointmentIconStyle:{
-    width:responsiveWidth(5),
-    height:responsiveWidth(5),
+    width:responsiveWidth(6),
+    height:responsiveWidth(6),
     color:'#ffff'
     
 

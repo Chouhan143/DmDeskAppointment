@@ -141,7 +141,7 @@ const HomeScreenAdmin = ({navigation}) => {
                   <Icon2
                     name="progress-clock"
                     color="white"
-                    size={28}
+                    size={responsiveFontSize(5)}
                     onPress={navigation.toggleDrawer}
                   />
                 </View>
@@ -180,7 +180,7 @@ const HomeScreenAdmin = ({navigation}) => {
                   <Icon3
                     name="checkmark-done"
                     color="white"
-                    size={28}
+                    size={responsiveFontSize(5)}
                     onPress={navigation.toggleDrawer}
                   />
                 </View>
@@ -228,7 +228,7 @@ const HomeScreenAdmin = ({navigation}) => {
                   <Icon2
                     name="cancel"
                     color="white"
-                    size={28}
+                    size={responsiveFontSize(5)}
                     onPress={navigation.toggleDrawer}
                   />
                 </View>
@@ -272,7 +272,7 @@ const HomeScreenAdmin = ({navigation}) => {
                     fontWeight: 'bold',
                     fontSize: responsiveFontSize(2),
                   }}>
-                  {' '}
+               
                   Add User
                 </Text>
               </View>
@@ -336,8 +336,8 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(1),
   },
   innerView: {
-    width: 50,
-    height: 50,
+    width: responsiveWidth(14),
+    height: responsiveWidth(14),
     borderColor: '#fff',
     // borderStyle:'dashed',
     borderWidth: 1,
@@ -355,8 +355,8 @@ const styles = StyleSheet.create({
     height: 30,
   },
   userAddImg: {
-    width: 50,
-    height: 50,
+    width: responsiveWidth(15),
+    height: responsiveWidth(15),
   },
 
   userGreeting: {

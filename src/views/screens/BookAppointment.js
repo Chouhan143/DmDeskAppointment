@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 
     marginTop: 10,
-    height: 60
+    height: responsiveHeight(8)
   },
   buttonText: {
     fontSize: 14,

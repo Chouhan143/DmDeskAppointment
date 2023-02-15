@@ -164,7 +164,7 @@ const HomeScreenPa = ({ navigation }) => {
                     <Icon2
                       name="progress-clock"
                       color="white"
-                      size={28}
+                      size={responsiveFontSize(5)}
                       onPress={navigation.toggleDrawer}
                     />
                   </View>
@@ -199,7 +199,7 @@ const HomeScreenPa = ({ navigation }) => {
                     <Icon3
                       name="checkmark-done"
                       color="white"
-                      size={28}
+                      size={responsiveFontSize(5)}
                       onPress={navigation.toggleDrawer}
                     />
                   </View>
@@ -245,7 +245,7 @@ const HomeScreenPa = ({ navigation }) => {
                     <Icon2
                       name="cancel"
                       color="white"
-                      size={28}
+                      size={responsiveFontSize(5)}
                       onPress={navigation.toggleDrawer}
                     />
                   </View>
@@ -351,8 +351,8 @@ const styles = StyleSheet.create({
   },
 
   innerView: {
-    width: 50,
-    height: 50,
+    width: responsiveWidth(14),
+    height: responsiveWidth(14),
     borderColor: '#fff',
     // borderStyle:'dashed',
     borderWidth: 1,
