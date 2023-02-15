@@ -8,6 +8,12 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
+// import OTPInputView from '@twotalltotems/react-native-otp-input'
 import React, { useState } from 'react'
 import axios from 'axios';
 // import { postData } from '../../../Hooks/ApiHelper';
@@ -29,7 +35,7 @@ const ForgotPass = ({ navigation }) => {
   });
   const [errors, setErrors] = React.useState({});
   const LoginScreen = () => {
-    navigation.replace('login');
+    navigation.replace('NewPassword');
   };
 
 
@@ -41,6 +47,7 @@ const ForgotPass = ({ navigation }) => {
         newPassword: inputs.newPassword,
         confirmPassword: inputs.confirmPassword,
       }
+      console.log(payload)
      const result =  postData(Forgot_Password, payload)
       if(result.result) {
         if(result.result == "true"){
@@ -54,32 +61,7 @@ const ForgotPass = ({ navigation }) => {
         }
 
       }
-      // axios
-      //   .post('https://srninfotech.com/projects/dmdesk/forgetPassword', payload)
-      //   .then((response) => {
-      //     console.log(response.data);
-      //     // console.log(response.data.password_status);
-      //     if(response.data.result == "true"){
-            
-      //       if(response.data.passNot == 'false'){
-
-      //         // Alert.alert("Your password not matched please enter new password and confirm password same")
-      //       }else{
-      //         // Alert.alert("password has been successfully changed")
-      //         navigation.navigate('login');
-      //       }
-         
-      //     } else if(response.data.result == "false"){
-      //       // Alert.alert("Email address does not  exists")
-      //       navigation.navigate('Forgotpassword');
-      //     }
-
-      //   })
-      //   .catch((error) => {
-      //     console.error("something went wong", error.message);
-      //     setErrors(error.message);
-      //   });
-
+      
     } else {
       toast.show("Fill all inputs first", { type: "danger" });
     }
@@ -140,7 +122,7 @@ const ForgotPass = ({ navigation }) => {
         <View style={{ position: 'relative', bottom: 0 }}>
           <View style={styles.loginIcon}>
             {/* <SvgIcon icon='forgot' width={240} height={240} /> */}
-            <Image source={ForgotPasswordImg} style={{ width: 260, height: 260 }} resizeMode="contain" />
+            <Image source={ForgotPasswordImg} style={{ width: responsiveWidth(70), height: responsiveWidth(70) }} resizeMode="contain" />
           </View>
           <View style={styles.container}>
             <View style={styles.loginLblCon}>
@@ -153,13 +135,17 @@ const ForgotPass = ({ navigation }) => {
               </Text>
             </View>
            
-              
+          
                 <View style={styles.textCon}>
-                  {/* <TextInput
-                  style={styles.textInput}
-                  placeholder={'Email ID'}
-                  placeholderTextColor={'#aaa'}
-                /> */}
+                {/* <OTPInputView
+                pinCount={6}
+                autoFocusOnLoad
+                style={{width: '80%', height: 70}}
+                codeInputFieldStyle={{color: '#000'}}
+                onCodeFilled={code =>
+                 console.log(code)
+                }
+              /> */}
                   <Input
 
                     onChangeText={text => handleOnchange(text, 'email')}
@@ -233,7 +219,7 @@ const styles = StyleSheet.create({
   },
   loginLbl: {
     color: '#000',
-    fontSize: 30,
+    fontSize: responsiveFontSize(3),
     //   fontFamily: Fonts.type.NotoSansExtraBold,
   },
   at: {
@@ -283,6 +269,7 @@ const styles = StyleSheet.create({
   },
   forgotDesLbl: {
     color: '#000',
+    fontSize:responsiveFontSize(2)
     //   fontFamily: Fonts.type.NotoSansRegular,
   },
 });

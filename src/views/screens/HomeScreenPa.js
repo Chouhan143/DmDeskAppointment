@@ -109,13 +109,13 @@ const HomeScreenPa = ({ navigation }) => {
           <Icon
             name="sort-variant"
             color="#3e2465"
-            size={28}
+            size={responsiveFontSize(4)}
             onPress={navigation.toggleDrawer}
           />
           <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
             Personal Assistent
           </Text>
-          <Icon name="logout" color="#3e2465" size={28} onPress={logout} />
+          <Icon name="logout" color="#3e2465" size={responsiveFontSize(4)} onPress={logout} />
         </View>
 
         <View style={styles.container}>

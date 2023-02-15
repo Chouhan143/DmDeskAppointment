@@ -1,6 +1,12 @@
 import React, { useEffect } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Icon from 'react-native-vector-icons/Entypo';
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize,
+    responsiveScreenFontSize
+  } from "react-native-responsive-dimensions";
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
@@ -29,31 +35,35 @@ export default function TabNavigator() {
                 ),
             }} /> */}
              <Tab.Screen name="Pa" component={HomeScreenPa} options={{
-                tabBarLabel: 'होम',
+                tabBarLabel: 'होम', 
+                tabBarLabelStyle: { fontSize: responsiveScreenFontSize(2.2) },
                 tabBarIcon: ({ color }) => (    
-                    <Icon name="home" color={color} size={26} />
+                    <Icon name="home" color={color} size={responsiveFontSize(3.5)} />
                 ),
             }} />
         
             <Tab.Screen name="Pending_tab" component={Pending}
                 options={{
                     tabBarLabel: 'पेंडिंग',
+                     tabBarLabelStyle: { fontSize: responsiveScreenFontSize(2.2) },
                     tabBarIcon: ({ color }) => (
-                        <Icon2 name="pending" color={color} size={26} />
+                        <Icon2 name="pending" color={color} size={responsiveFontSize(3.5)} />
                     ),
                 }} />
             <Tab.Screen name="Cancel_tab" component={Cancel}
                 options={{
                     tabBarLabel: 'कैंसिल',
+                     tabBarLabelStyle: { fontSize: responsiveScreenFontSize(2.2) },
                     tabBarIcon: ({ color }) => (
-                        <Icon2 name="cancel" color={color} size={26} />
+                        <Icon2 name="cancel" color={color} size={responsiveFontSize(3.5)} />
                     ),
                 }} />
             <Tab.Screen name="Complete_tab" component={Complete}
                 options={{
                     tabBarLabel: 'कम्प्लीट',
+                     tabBarLabelStyle: { fontSize: responsiveScreenFontSize(2.2) },
                     tabBarIcon: ({ color }) => (
-                        <Icon3 name="checkmark-done" color={color} size={26} />
+                        <Icon3 name="checkmark-done" color={color} size={responsiveFontSize(3.5)} />
                     ),
                 }} />
         </Tab.Navigator>

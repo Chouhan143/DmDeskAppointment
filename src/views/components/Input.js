@@ -1,6 +1,11 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import COLORS from '../../conts/colors';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const Input = ({
   label,
@@ -13,7 +18,7 @@ const Input = ({
   const [hidePassword, setHidePassword] = React.useState(password);
   const [isFocused, setIsFocused] = React.useState(false);
   return (
-    <View style={{marginBottom: 20}}>
+    <View style={{marginBottom: responsiveHeight(2.5)}}>
       <Text style={style.label}>{label}</Text>
       <View
         style={[
@@ -29,7 +34,7 @@ const Input = ({
         ]}>
         <Icon
           name={iconName}
-          style={{color: COLORS.darkBlue, fontSize: 22, marginRight: 10}}
+          style={{color: COLORS.darkBlue, fontSize: responsiveFontSize(2.9), marginRight: responsiveWidth(2)}}
         />
         <TextInput
           autoCorrect={false}
@@ -37,6 +42,7 @@ const Input = ({
             onFocus();
             setIsFocused(true);
           }}
+          fontSize={responsiveFontSize(1.6)}
           onBlur={() => setIsFocused(false)}
           secureTextEntry={hidePassword}
           style={{color: COLORS.darkBlue, flex: 1}}
@@ -46,12 +52,12 @@ const Input = ({
           <Icon
             onPress={() => setHidePassword(!hidePassword)}
             name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
-            style={{color: COLORS.darkBlue, fontSize: 22}}
+            style={{color: COLORS.darkBlue, fontSize: responsiveFontSize(2.9)}}
           />
         )}
       </View>
       {error && (
-        <Text style={{marginTop: 7, color: COLORS.red, fontSize: 12}}>
+        <Text style={{marginTop: 7, color: COLORS.red, fontSize:responsiveFontSize(1.6)}}>
           {error}
         </Text>
       )}
@@ -62,11 +68,11 @@ const Input = ({
 const style = StyleSheet.create({
   label: {
     marginVertical: 5,
-    fontSize: 14,
+    fontSize: responsiveFontSize(1.7),
     color: COLORS.grey,
   },
   inputContainer: {
-    height: 55,
+    height: responsiveHeight(8),
     backgroundColor: COLORS.light,
     flexDirection: 'row',
     paddingHorizontal: 15,

@@ -9,6 +9,11 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 import COLORS from '../../../conts/colors';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -126,23 +131,23 @@ const LoginScreen = ({navigation}) => {
       {console.log(errors)}
       <ScrollView>
         <Loader visible={loading} />
-        <View style={{paddingHorizontal: 20, paddingTop: 60}}>
+        <View style={{paddingHorizontal: responsiveWidth(5), paddingTop: responsiveHeight(4)}}>
           <View
             style={{
               display: 'flex',
               justifyContent: 'space-between',
-              flexDirection: 'column-reverse',
-              alignItems: 'center',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
             }}>
             <Text
-              style={{color: COLORS.black, fontSize: 40, fontWeight: 'bold'}}>
+              style={{color: COLORS.black, fontSize: responsiveFontSize(4), fontWeight: 'bold'}}>
               Add User
             </Text>
-          </View>
-          <Text style={{color: COLORS.grey, fontSize: 18, marginVertical: 10}}>
+          <Text style={{color: COLORS.grey, fontSize: responsiveFontSize(2.5), marginVertical: 10}}>
             Enter User Details
           </Text>
-          <View style={{marginVertical: 20}}>
+          </View>
+          <View style={{marginVertical: responsiveHeight(3)}}>
             <Input
               onChangeText={text => handleOnchange(text, 'name')}
               onFocus={() => handleError(null, 'name')}
@@ -175,7 +180,7 @@ const LoginScreen = ({navigation}) => {
               onChangeText={text => handleOnchange(text, 'city')}
               onFocus={() => handleError(null, 'city')}
               iconName="city"
-              label="city"
+              label="City"
               placeholder="Enter your city"
               placeholderTextColor="gray"
               error={errors.city}
@@ -184,7 +189,7 @@ const LoginScreen = ({navigation}) => {
               style={
                 errors.user_type?.length > 0 && {
                   flex: 1,
-                  justifyContent: 'center',
+                  // justifyContent: 'center',
                   alignSelf: 'stretch',
                   borderWidth: 1,
                   borderColor: 'red',
@@ -197,12 +202,14 @@ const LoginScreen = ({navigation}) => {
                 width: '100%',
                 backgroundColor: '#F3F4FB',
               }}
+              dropdownTextHighlightStyle={styles.dropdownTextHighlightStyle}
                 data={values}
                 onSelect={(selectedItem, index) => {
                   handleOnchange(selectedItem, 'user_type')
                 }}
                 onFocus={() => handleError(null, 'user_type')}
                 defaultButtonText="Select User"
+           
          
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem;
@@ -213,7 +220,7 @@ const LoginScreen = ({navigation}) => {
               />
             </View>
             {errors.user_type?.length > 0 && (
-              <Text style={{marginTop: 7, color: COLORS.red, fontSize: 12}}>
+              <Text style={{marginTop: 7, color: COLORS.red, fontSize: responsiveFontSize(1.7)}}>
                 {errors.user_type}
               </Text>
             )}
@@ -231,4 +238,9 @@ const styles = StyleSheet.create({
   logo: {
     width: '20%',
   },
+  dropdownTextHighlightStyle:{
+    fontSize: responsiveFontSize(2),
+    color:'#000',
+
+  }
 });

@@ -2,6 +2,11 @@ import React from 'react';
 import Logo from '../../../Asets/GovtLogo.png'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 
 import { View, Text, SafeAreaView, Keyboard, Alert, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import COLORS from '../../conts/colors';
@@ -16,7 +21,7 @@ import { Login } from '../../Constants/UrlConstants';
 const LoginScreen = ({ navigation }) => {
   const toast = useToast();
 
-  const [inputs, setInputs] = React.useState({ email: '', password: '' });
+  const [inputs, setInputs] = React.useState({ email: 'admin@gmail.com', password: 'admin@123' });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
 
@@ -92,10 +97,10 @@ const LoginScreen = ({ navigation }) => {
     <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
       <View style={{ paddingHorizontal: 20, paddingTop: 60 }}>
         <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column-reverse', alignItems: 'center' }}>
-          <Text style={{ color: COLORS.black, fontSize: 40, fontWeight: 'bold' }}>
+          <Text style={{ color: COLORS.black, fontSize: responsiveFontSize(4), fontWeight: 'bold' }}>
             Log In
           </Text>
-          <Image source={Logo} style={{ width: 100, height: 100 }} resizeMode="contain" />
+          <Image source={Logo} style={{ width: responsiveWidth(30), height: responsiveWidth(30) }} resizeMode="contain" />
         </View>
         <View style={{ marginVertical: 20 }}>
           <Input
@@ -104,6 +109,7 @@ const LoginScreen = ({ navigation }) => {
             iconName="email-outline"
             label="Email"
             placeholder="Enter your email address"
+         
             placeholderTextColor="gray"
             error={errors.email}
           />
@@ -124,7 +130,7 @@ const LoginScreen = ({ navigation }) => {
               color: COLORS.black,
               fontWeight: 'bold',
               textAlign: 'center',
-              fontSize: 16,
+              fontSize: responsiveFontSize(2),
             }}>
             Forgot Password ?
           </Text>

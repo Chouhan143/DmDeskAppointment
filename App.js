@@ -27,7 +27,7 @@ import Cancel from './src/views/screens/StatusScreens/Cancel'
 // import TabNavigator from './src/views/Navigators/TabNavigator';
 import DrawerNavigation from './src/views/Navigators/DrawerNavigation';
 import ForgotPass from './src/views/screens/UserScreen/ForgotPass';
-// import NewPassword from './src/views/screens/UserScreen/NewPassword';
+import NewPassword from './src/views/screens/UserScreen/NewPassword';
 import { ToastProvider } from 'react-native-fast-toast'
 import { Touchable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -77,7 +77,7 @@ const App = ({ navigation }) => {
 
           <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Forgotpassword' component={ForgotPass} options={{ headerShown: false }} />
-          {/* <Stack.Screen name='NewPassword' component={NewPassword} options={{headerShown:false}} />  */}
+          <Stack.Screen name='NewPassword' component={NewPassword} options={{headerShown:false}} /> 
           <Stack.Screen name='HomeScreenDm' component={HomeScreenDm} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenPa' component={DrawerNavigation} options={{ headerShown: false }} />
           <Stack.Screen name='Appointment' component={BookAppointment} options={{ headerShown: false }} />

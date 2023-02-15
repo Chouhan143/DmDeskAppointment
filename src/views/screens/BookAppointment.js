@@ -5,6 +5,11 @@ import { View, Text, SafeAreaView, Keyboard, ScrollView, Alert, StyleSheet, Stat
 import COLORS from '../../conts/colors';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 import axios from 'axios';
 import { useToast } from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -147,17 +152,17 @@ const BookAppointment = () => {
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}>
 
-        <Text style={{ color: COLORS.black, fontSize: 35, fontWeight: 'bold' }}>
+        <Text style={{ color: COLORS.black, fontSize: responsiveFontSize(3.2), fontWeight: 'bold' }}>
           अपॉइंटमेंट
         </Text>
-        <Text style={{ color: COLORS.grey, fontSize: 18, marginVertical: 10 }}>
+        <Text style={{ color: COLORS.grey, fontSize: responsiveFontSize(2.2), marginVertical: responsiveHeight(2) }}>
           कृपया  अपनी जानकारी दर्ज करे
         </Text>
 
 
         {/* ---------------------------------------------------Input Field start-------------------------- */}
 
-        <View style={{ marginVertical: 10 }}>
+        <View style={{ marginVertical:responsiveHeight(2)}}>
           <Input
             onChangeText={text => handleOnchange(text, 'user_name')}
             onFocus={() => handleError(null, 'user_name')}

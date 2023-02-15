@@ -67,11 +67,11 @@ const HomeScreenDm = ({ navigation }) => {
     return (
         <>
             <View style={styles.header}>
-                <Icon name="sort-variant" color='#3e2465' size={28} onPress={navigation.toggleDrawer} />
+                <Icon name="sort-variant" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer} />
                 <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
                     District Magistrate
                 </Text>
-                <Icon name="logout" color='#3e2465' size={28} onPress={logout} />
+                <Icon name="logout" color='#3e2465' size={responsiveFontSize(4)} onPress={logout} />
             </View>
 
             <View style={styles.container}>

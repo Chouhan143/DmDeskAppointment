@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
-  Input,
   Image,
   ScrollView,
   RefreshControl,
@@ -27,12 +26,8 @@ import { getData, postData } from '../../../Hooks/ApiHelper';
 import { SkeletonCard } from './SkeletonCard';
 import { useToast } from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  Get_Appointment_Data,
-  Update_Status,
-} from '../../../Constants/UrlConstants';
+import { Get_Appointment_Data, Update_Status,} from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
-
 const { height } = Dimensions.get('screen');
 const { width } = Dimensions.get('screen');
 // var myData = [];
@@ -239,19 +234,19 @@ const Pending = () => {
                           नाम :- {obj.user_name}
                         </Text>
                         <Text style={[styles.text, { color: '#fff' }]}>
-                          पता/विभाग :- {obj.depat}{' '}
+                          पता/विभाग :- {obj.depat}
                         </Text>
                         <Text style={[styles.text, { color: '#fff' }]}>
-                          मोबाइल नंबर :- {obj.phone}{' '}
+                          मोबाइल नंबर :- {obj.phone}
                         </Text>
                         <Text style={[styles.text, { color: '#fff' }]}>
-                          मिलने का कारण :- {obj.purpose}{' '}
+                          मिलने का कारण :- {obj.purpose}
                         </Text>
                         <Text style={[styles.text, { color: '#fff' }]}>
-                          व्यक्तियो की संख्या :- {obj.noofpeople}{' '}
+                          व्यक्तियो की संख्या :- {obj.noofpeople}
                         </Text>
                         <Text style={[styles.text, { color: '#fff' }]}>
-                          तारीख:- {obj.date}{' '}
+                          तारीख:- {obj.date}
                         </Text>
                         <Text style={[styles.text, { color: '#fff' }]}>
                           समय :- {obj.time}
@@ -377,8 +372,6 @@ fontSize:responsiveFontSize(1.7)
     width:responsiveWidth(5),
     height:responsiveWidth(5),
     color:'#ffff'
-    
-
   },
 
   UserName: {
