@@ -21,7 +21,7 @@ import { Login } from '../../Constants/UrlConstants';
 const LoginScreen = ({ navigation }) => {
   const toast = useToast();
 
-  const [inputs, setInputs] = React.useState({ email: 'admin@gmail.com', password: 'admin@123' });
+  const [inputs, setInputs] = React.useState({ email: 'poddar.akash184@gmail.com', password: 'akash@123' });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
 
@@ -33,9 +33,10 @@ const LoginScreen = ({ navigation }) => {
         email: inputs.email,
         pass: inputs.password
       }
-      console.log(payload)
       setLoading(true)
       const response = await postData(Login,payload)
+      console.log(response)
+
       if(response.l_status == "false") {
         toast.show('Wrong password', {
           type: 'danger',
@@ -125,7 +126,8 @@ const LoginScreen = ({ navigation }) => {
           />
           <Button loader={loading} title="Log In" onPress={handleLogin} />
           <Text
-            onPress={() => navigation.navigate('Forgotpassword')}
+            // onPress={() => navigation.navigate('Forgotpassword')}
+            onPress={() => navigation.navigate('NewPassword')}
             style={{
               color: COLORS.black,
               fontWeight: 'bold',

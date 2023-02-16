@@ -18,35 +18,34 @@ import {
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import ForgotPasswordImg from '.././../../../Asets/otp.png'
-import { postData } from '../../../Hooks/ApiHelper';
-
+import { getData, getData2, postData } from '../../../Hooks/ApiHelper';
+import { useToast } from 'react-native-fast-toast';
 // import SvgIcon from '../../../../Asets/SvgIcon';
 // import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const NewPassword = ({ navigation }) => {
+  const toast = useToast();
+
     const ForgotPasswordScreen = () => {
         navigation.replace('Forgotpassword');
     };
     const [errors, setErrors] = React.useState({});
     const [inputs, setInputs] = useState({
-        email: "",
+        email: "admin@gmail.com",
       });
 
       const handleLogin = async () => {
         validateSchema()
         if (validateSchema()) {
           let payload = {
-            email: inputs.email,
+            "email": inputs.email,
           }
-         const result =  postData(Post_Email_Otp, payload)
-         console.log(payload)
-          if(result.result) {
-            if(result.result == "true"){
-                navigation.navigate('login');
-            } else if(result.result == "false"){
-              // Alert.alert("Email address does not  exists")
-              navigation.navigate('Forgotpassword');
-            }
+         const result = await getData(Post_Email_Otp + `?email=${inputs.email}`)
+         console.log("result" + JSON.stringify(result))
+          if(result.result == "true") {
+            navigation.navigate('Forgotpassword');
+          } else {
+            toast.show("Email id is not registered", { type: "danger" });
           }
         } else {
           toast.show("Fill all inputs first", { type: "danger" });
@@ -81,7 +80,7 @@ const NewPassword = ({ navigation }) => {
 
     return (
         <KeyboardAvoidingView behavior="position" style={styles.mainCon}>
-            <View style={{ padding: 20 }}>
+                <View style={{ padding: 20 }}>
                 <Pressable onPress={ForgotPasswordScreen}>
                     {/* <SvgIcon icon={'back'} width={30} height={30} /> */}
                 </Pressable>

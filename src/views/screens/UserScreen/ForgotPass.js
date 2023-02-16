@@ -23,6 +23,7 @@ import ForgotPasswordImg from '.././../../../Asets/forgot.png'
 import { useToast } from 'react-native-fast-toast';
 import { postData } from '../../../Hooks/ApiHelper';
 import { Forgot_Password } from '../../../Constants/UrlConstants';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 
 
@@ -34,6 +35,8 @@ const ForgotPass = ({ navigation }) => {
     confirmPassword: "",
   });
   const [errors, setErrors] = React.useState({});
+  const [otpNumber, setotpNumber] = useState("")
+
   const LoginScreen = () => {
     navigation.replace('NewPassword');
   };
@@ -108,6 +111,10 @@ const ForgotPass = ({ navigation }) => {
   };
 
 
+  const validateOtp = () => {
+    
+  }
+
 
 
   return (
@@ -137,16 +144,16 @@ const ForgotPass = ({ navigation }) => {
            
           
                 <View style={styles.textCon}>
-                {/* <OTPInputView
+                <OTPInputView
                 pinCount={6}
                 autoFocusOnLoad
                 style={{width: '80%', height: 70}}
                 codeInputFieldStyle={{color: '#000'}}
                 onCodeFilled={code =>
-                 console.log(code)
+                  setotpNumber(code)
                 }
-              /> */}
-                  <Input
+              />
+                  {/* <Input
 
                     onChangeText={text => handleOnchange(text, 'email')}
                     onFocus={() => handleError(null, 'email')}
@@ -154,7 +161,7 @@ const ForgotPass = ({ navigation }) => {
                     placeholder="Enter your email address"
                     placeholderTextColor="gray"
                     error={errors.email}
-                  />
+                  /> */}
 
                   {/* <TextInput
                   style={styles.textInput}
