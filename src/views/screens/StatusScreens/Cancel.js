@@ -9,10 +9,10 @@ import {
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize
-} from "react-native-responsive-dimensions";
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 import AppointmentIcon from '../../../../Asets/AppointmentIcon.png';
-import { Modal } from 'react-native';
+import {Modal} from 'react-native';
 import React from 'react';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -20,16 +20,16 @@ import Avtar from '../../../../Asets/avtar.png';
 import {useState, useEffect} from 'react';
 import {RefreshControl} from 'react-native';
 import {TouchableOpacity} from 'react-native';
-import { SkeletonCard } from './SkeletonCard';
-import { getData } from '../../../Hooks/ApiHelper';
-import { Get_Appointment_Data } from '../../../Constants/UrlConstants';
-import { FlatList } from 'react-native';
+import {SkeletonCard} from './SkeletonCard';
+import {getData} from '../../../Hooks/ApiHelper';
+import {Get_Appointment_Data} from '../../../Constants/UrlConstants';
+import {FlatList} from 'react-native';
 const {height} = Dimensions.get('window');
 const {width} = Dimensions.get('screen');
 const Completed = () => {
   const [obj, setobj] = useState({});
   const [showWarning, SetshowWarning] = useState(false);
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState({});
   const [dataKey, setDataKey] = useState('');
   const [myData, setMyData] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -44,7 +44,7 @@ const Completed = () => {
   };
   const onPressCard = () => {
     SetshowWarning(false);
-  }
+  };
 
   useEffect(() => {
     AddUserInfo();
@@ -52,27 +52,27 @@ const Completed = () => {
 
   const onPressHandler = (item, index) => {
     setobj(item);
-    setDataKey(index)
-    setUserData(item)
+    setDataKey(index);
+    setUserData(item);
     SetshowWarning(true);
-  }
+  };
 
   const AddUserInfo = async () => {
     setloader(true);
 
-    const response = await getData(Get_Appointment_Data)
+    const response = await getData(Get_Appointment_Data);
     const newData = response.result.sort(function (a, b) {
       return a.created_date > b.created_date
         ? -1
         : a.created_date < b.created_date
-          ? 1
-          : 0;
+        ? 1
+        : 0;
     });
-        const rejectData = newData.filter(
-          appointment => appointment.status == 'reject',
-        );
-        setloader(false);
-        setMyData(rejectData);
+    const rejectData = newData.filter(
+      appointment => appointment.status == 'reject',
+    );
+    setloader(false);
+    setMyData(rejectData);
   };
   return (
     <ScrollView
@@ -94,14 +94,20 @@ const Completed = () => {
           </View>
         )}
 
-<FlatList
+        <FlatList
           data={myData}
           keyExtractor={(item, index) => index.toString()}
+          initialNumToRender={4}
           renderItem={({item, index}) => (
             <View style={styles.MainWraper}>
               <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
-                <Text style={{color: '#fff', fontSize: responsiveFontSize(2), fontWeight: 'bold'}}>
-                {item.user_name} ({item.noofpeople})
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: 'bold',
+                  }}>
+                  {item.user_name} ({item.noofpeople})
                 </Text>
               </View>
               <View style={styles.OuterWraper}>
@@ -115,7 +121,7 @@ const Completed = () => {
                         : Avtar
                     }
                     style={{
-                    width: responsiveWidth(20),
+                      width: responsiveWidth(20),
                       height: responsiveWidth(20),
                       borderWidth: 0.2,
                       borderRadius: 10,
@@ -158,8 +164,8 @@ const Completed = () => {
           )}
         />
 
-           {/* modal  */}
-    <View style={styles.centered_view}>
+        {/* modal  */}
+        <View style={styles.centered_view}>
           <Modal
             visible={showWarning}
             transparent
@@ -176,15 +182,22 @@ const Completed = () => {
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                     <Image source={AppointmentIcon} style={styles.AppointmentIconStyle} />
-                    <Text style={[styles.text, {color: '#fff',  fontSize: responsiveFontSize(2.4)}]}>
+                    <Image
+                      source={AppointmentIcon}
+                      style={styles.AppointmentIconStyle}
+                    />
+                    <Text
+                      style={[
+                        styles.text,
+                        {color: '#fff', fontSize: responsiveFontSize(2.4)},
+                      ]}>
                       Appointment
                     </Text>
                     <TouchableOpacity onPress={onPressCard}>
                       <Icon
                         name="circle-with-cross"
                         color="#fff"
-                       size={responsiveFontSize(3)}
+                        size={responsiveFontSize(3)}
                         style={styles.cancelIcon}
                       />
                     </TouchableOpacity>
@@ -229,7 +242,6 @@ const Completed = () => {
                     </View>
                   </View>
                 </View>
-             
               </View>
             </View>
           </Modal>
@@ -256,13 +268,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#3e2465',
-   width: responsiveWidth(100) - 20,
+    width: responsiveWidth(100) - 20,
     padding: 20,
     borderRadius: 50,
     textAlign: 'center',
   },
-    text:{
-fontSize:responsiveFontSize(1.7)
+  text: {
+    fontSize: responsiveFontSize(1.7),
   },
   container: {
     flex: 1,
@@ -282,13 +294,13 @@ fontSize:responsiveFontSize(1.7)
   },
 
   Model: {
-      display: 'flex',
+    display: 'flex',
     // paddingLeft: 20,
-     width: responsiveWidth(100) - 60,
+    width: responsiveWidth(100) - 60,
     borderRadius: 10,
     textAlign: 'center',
-    flexWrap:'wrap',
-    overflow:'hidden'
+    flexWrap: 'wrap',
+    overflow: 'hidden',
   },
   cancelIcon: {
     marginLeft: 125,
@@ -305,7 +317,7 @@ fontSize:responsiveFontSize(1.7)
     backgroundColor: '#00000099',
   },
   warning_modal: {
-  width: responsiveWidth(100) - 20,
+    width: responsiveWidth(100) - 20,
     marginTop: (responsiveHeight(100) - 100) / 15,
     backgroundColor: '#6195C1',
     borderWidth: 1,
@@ -322,17 +334,15 @@ fontSize:responsiveFontSize(1.7)
     borderTopLeftRadius: 18,
   },
   warning_body: {
-   marginTop: responsiveHeight(3),
+    marginTop: responsiveHeight(3),
     marginBottom: responsiveHeight(2),
     justifyContent: 'center',
     alignItems: 'center',
   },
-   AppointmentIconStyle:{
-    width:responsiveWidth(6),
-    height:responsiveWidth(6),
-    color:'#ffff'
-    
-
+  AppointmentIconStyle: {
+    width: responsiveWidth(6),
+    height: responsiveWidth(6),
+    color: '#ffff',
   },
   userContent: {
     display: 'flex',
@@ -414,7 +424,7 @@ fontSize:responsiveFontSize(1.7)
   ContentWraper: {
     overflow: 'hidden',
     flexWrap: 'wrap',
-     width: responsiveWidth(100) - 100,
+    width: responsiveWidth(100) - 100,
   },
   ListRow: {
     display: 'flex',
@@ -433,7 +443,7 @@ fontSize:responsiveFontSize(1.7)
   },
   textSubHeading: {
     color: '#8B8989',
-    fontSize:  responsiveFontSize(1.3),
+    fontSize: responsiveFontSize(1.3),
   },
   ViewMore: {
     backgroundColor: '#36648B',

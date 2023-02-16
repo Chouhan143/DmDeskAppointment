@@ -12,8 +12,8 @@ import {
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize
-} from "react-native-responsive-dimensions";
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 import COLORS from '../../../conts/colors';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -22,7 +22,7 @@ import Loader from '../../components/Loader';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useEffect, useState} from 'react';
 import {postData} from '../../../Hooks/ApiHelper';
-import { Insert_Data } from '../../../Constants/UrlConstants';
+import {Insert_Data} from '../../../Constants/UrlConstants';
 
 const LoginScreen = ({navigation}) => {
   const toast = useToast();
@@ -60,7 +60,8 @@ const LoginScreen = ({navigation}) => {
     if (inputs?.email.length == 0) {
       handleError('Please input email', 'email');
       isValid = !isValid;
-    } else if (inputs?.email.length == 0) {
+    }
+    if (inputs?.email.length == 0) {
       handleError('Please input a valid email', 'email');
       isValid = !isValid;
     }
@@ -68,7 +69,8 @@ const LoginScreen = ({navigation}) => {
     if (inputs?.pass.length == 0) {
       handleError('Please input pass', 'pass');
       isValid = !isValid;
-    } else if (inputs.pass.length < 5) {
+    }
+    if (inputs.pass.length < 5) {
       handleError('Min pass length of 5', 'pass');
       isValid = !isValid;
     }
@@ -100,15 +102,13 @@ const LoginScreen = ({navigation}) => {
     };
     validate();
     if (validate()) {
-      const result = await postData(
-        Insert_Data,
-        payload,
-      );
+      const result = await postData(Insert_Data, payload);
       if (result.result == true) {
         toast.show('User Added successfully', {
           type: 'success',
           position: 'top',
-        });0
+        });
+        0;
         navigation.navigate('HomeScreenAdmin');
       }
     } else {
@@ -128,10 +128,13 @@ const LoginScreen = ({navigation}) => {
   };
   return (
     <SafeAreaView style={{backgroundColor: COLORS.white, flex: 1}}>
-      {console.log(errors)}
       <ScrollView>
         <Loader visible={loading} />
-        <View style={{paddingHorizontal: responsiveWidth(5), paddingTop: responsiveHeight(4)}}>
+        <View
+          style={{
+            paddingHorizontal: responsiveWidth(5),
+            paddingTop: responsiveHeight(4),
+          }}>
           <View
             style={{
               display: 'flex',
@@ -140,12 +143,21 @@ const LoginScreen = ({navigation}) => {
               alignItems: 'flex-start',
             }}>
             <Text
-              style={{color: COLORS.black, fontSize: responsiveFontSize(4), fontWeight: 'bold'}}>
+              style={{
+                color: COLORS.black,
+                fontSize: responsiveFontSize(4),
+                fontWeight: 'bold',
+              }}>
               Add User
             </Text>
-          <Text style={{color: COLORS.grey, fontSize: responsiveFontSize(2.5), marginVertical: 10}}>
-            Enter User Details
-          </Text>
+            <Text
+              style={{
+                color: COLORS.grey,
+                fontSize: responsiveFontSize(2.5),
+                marginVertical: 10,
+              }}>
+              Enter User Details
+            </Text>
           </View>
           <View style={{marginVertical: responsiveHeight(3)}}>
             <Input
@@ -195,22 +207,19 @@ const LoginScreen = ({navigation}) => {
                   borderColor: 'red',
                 }
               }>
-             
               <SelectDropdown
-               buttonStyle={{
-                color: '#BABBC3',
-                width: '100%',
-                backgroundColor: '#F3F4FB',
-              }}
-              dropdownTextHighlightStyle={styles.dropdownTextHighlightStyle}
+                buttonStyle={{
+                  color: '#BABBC3',
+                  width: '100%',
+                  backgroundColor: '#F3F4FB',
+                }}
+                dropdownTextHighlightStyle={styles.dropdownTextHighlightStyle}
                 data={values}
                 onSelect={(selectedItem, index) => {
-                  handleOnchange(selectedItem, 'user_type')
+                  handleOnchange(selectedItem, 'user_type');
                 }}
                 onFocus={() => handleError(null, 'user_type')}
                 defaultButtonText="Select User"
-           
-         
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem;
                 }}
@@ -220,7 +229,12 @@ const LoginScreen = ({navigation}) => {
               />
             </View>
             {errors.user_type?.length > 0 && (
-              <Text style={{marginTop: 7, color: COLORS.red, fontSize: responsiveFontSize(1.7)}}>
+              <Text
+                style={{
+                  marginTop: 7,
+                  color: COLORS.red,
+                  fontSize: responsiveFontSize(1.7),
+                }}>
                 {errors.user_type}
               </Text>
             )}
@@ -238,9 +252,8 @@ const styles = StyleSheet.create({
   logo: {
     width: '20%',
   },
-  dropdownTextHighlightStyle:{
+  dropdownTextHighlightStyle: {
     fontSize: responsiveFontSize(2),
-    color:'#000',
-
-  }
+    color: '#000',
+  },
 });

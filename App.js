@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 // import SignInScreen from './src/components/screens/SignInScreen'
 // import  HomeScreen from './src/views/screens/HomeScreenDm'
 // import DmDashboard from './src/components/screens/DmDashboard';
@@ -6,6 +6,7 @@ import React from 'react'
 // import AppointmentScreen from './src/components/screens/AppointmentScreen';
 import {
 
+  Pressable,
   View,
 
 
@@ -32,6 +33,9 @@ import { ToastProvider } from 'react-native-fast-toast'
 import { Touchable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import HomeScreenPa from './src/views/screens/HomeScreenPa';
+import { AuthContext } from './src/LoginCredencial/context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Uselogout } from './src/Hooks/LogoutHook';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -62,11 +66,12 @@ import HomeScreenPa from './src/views/screens/HomeScreenPa';
 
 
 
-const App = ({ navigation }) => {
+const App = ({ navigation,navigator }) => {
   const Stack = createNativeStackNavigator();
-  // const logout = () => {
-  //   navigation.navigate('login');
-  // };
+
+  const logout = () => {
+    Uselogout(navigation)
+  };
   return (
     <ToastProvider>
 
@@ -84,31 +89,11 @@ const App = ({ navigation }) => {
           <Stack.Screen name='Appointment' component={BookAppointment} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenAdmin' component={HomeScreenAdmin} options={{ headerShown: false }} />
           <Stack.Screen name='userInfo' component={AddUserInfo} options={{ headerShown: false }} />
-          <Stack.Screen name='pending' component={Pending} options={{
-            headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('login')} >
-                <Icon name="logout" color="#fff" size={28} />
-              </TouchableOpacity>
-            ),
-            headerStyle: {
-              height: 100,
-              borderBottomLeftRadius: 50,
-              borderBottomRightRadius: 50,
-              backgroundColor: '#FFBA00',
-              shadowColor: '#000',
-              elevation: 25,
-            },
-            headerTitleStyle: {
-              color: '#fff',
-              fontSize: 17,
-            },
-            headerTintColor: '#fff',
-            headerTitle: 'Pending Appointments',
-          }} />
+          <Stack.Screen name='pending' component={Pending} options={{headerShown: false}} />
           <Stack.Screen name='complete' component={Completed} options={{ headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('login')} >
+              <Pressable onPress={() => logout()} >
                 <Icon name="logout" color="#fff" size={28} />
-              </TouchableOpacity>
+              </Pressable>
             ),
             headerStyle: {
               height: 100,

@@ -105,6 +105,7 @@ const Completed = () => {
         )}
         <FlatList
           data={myData}
+          initialNumToRender={4}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => (
             <View style={styles.MainWraper}>

@@ -1,6 +1,5 @@
 import React from 'react';
 import Logo from '../../../Asets/GovtLogo.png'
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   responsiveHeight,
@@ -12,8 +11,6 @@ import { View, Text, SafeAreaView, Keyboard, Alert, Image, StyleSheet, TextInput
 import COLORS from '../../conts/colors';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import { useState } from 'react';
-import Loader from '../components/Loader';
 import { useToast } from 'react-native-fast-toast';
 import { postData } from '../../Hooks/ApiHelper';
 import { Login } from '../../Constants/UrlConstants';
@@ -22,9 +19,9 @@ const LoginScreen = ({ navigation }) => {
   const toast = useToast();
 
 
-  const [inputs, setInputs] = React.useState({ email: '', password: '' });
+  // const [inputs, setInputs] = React.useState({ email: '', password: '' });
 
-  // const [inputs, setInputs] = React.useState({ email: 'poddar.akash184@gmail.com', password: 'akash@123' });
+  const [inputs, setInputs] = React.useState({ email: 'admin@gmail.com', password: 'admin@123' });
 
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
@@ -49,18 +46,18 @@ const LoginScreen = ({ navigation }) => {
       }
       if (response.user_type == "dm") {
         await AsyncStorage.setItem("userType", response.user_type)
-        navigation.navigate('HomeScreenDm');
+        navigation.replace('HomeScreenDm');
         // await AsyncStorage.set('var', 'HomeScreenDm');
       } else if (response.user_type == "pa") {
         await AsyncStorage.setItem("userType", response.user_type)
        await AsyncStorage.setItem("city", response.city)
        
-        navigation.navigate('HomeScreenPa');
+        navigation.replace('HomeScreenPa');
         // await AsyncStorage.set('var', 'HomeScreenPa');
       }
       else if (response.user_type == "ad") {
         await AsyncStorage.setItem("userType", response.user_type)
-        navigation.navigate('HomeScreenAdmin');
+        navigation.replace('HomeScreenAdmin');
         // await AsyncStorage.set('var', 'HomeScreenAdmin');
       }
       setLoading(false)
@@ -129,7 +126,7 @@ const LoginScreen = ({ navigation }) => {
             password
           />
           <Button loader={loading} title="Log In" onPress={handleLogin} />
-          <Text
+          <Text 
             // onPress={() => navigation.navigate('Forgotpassword')}
             onPress={() => navigation.navigate('NewPassword')}
             style={{

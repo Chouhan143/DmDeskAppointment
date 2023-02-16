@@ -31,7 +31,7 @@ const NewPassword = ({ navigation }) => {
     };
     const [errors, setErrors] = React.useState({});
     const [inputs, setInputs] = useState({
-        email: "admin@gmail.com",
+        email: "",
       });
 
       const handleLogin = async () => {
@@ -43,7 +43,7 @@ const NewPassword = ({ navigation }) => {
          const result = await getData(Post_Email_Otp + `?email=${inputs.email}`)
          console.log("result" + JSON.stringify(result))
           if(result.result == "true") {
-            navigation.navigate('Forgotpassword');
+            navigation.navigate('Forgotpassword', {email: inputs.email});
           } else {
             toast.show("Email id is not registered", { type: "danger" });
           }

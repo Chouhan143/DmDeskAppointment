@@ -11,73 +11,69 @@ import {
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize
-} from "react-native-responsive-dimensions";
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 // import OTPInputView from '@twotalltotems/react-native-otp-input'
-import React, { useState } from 'react'
+import React, {useState} from 'react';
 import axios from 'axios';
 // import { postData } from '../../../Hooks/ApiHelper';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import ForgotPasswordImg from '.././../../../Asets/forgot.png'
-import { useToast } from 'react-native-fast-toast';
-import { postData } from '../../../Hooks/ApiHelper';
-import { Forgot_Password } from '../../../Constants/UrlConstants';
-// import OTPInputView from '@twotalltotems/react-native-otp-input';
+import ForgotPasswordImg from '.././../../../Asets/forgot.png';
+import {useToast} from 'react-native-fast-toast';
+import {postData} from '../../../Hooks/ApiHelper';
+import {Forgot_Password} from '../../../Constants/UrlConstants';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
-
-
-const ForgotPass = ({ navigation }) => {
-  const toast = useToast()
+const ForgotPass = ({navigation, route}, props) => {
+  const toast = useToast();
+  const {email} = route.params;
   const [inputs, setInputs] = useState({
-    email: "",
-    newPassword: "",
-    confirmPassword: "",
+    email: '',
+    newPassword: '',
+    confirmPassword: '',
   });
   const [errors, setErrors] = React.useState({});
-  const [otpNumber, setotpNumber] = useState("")
+  const [otpNumber, setotpNumber] = useState('');
 
   const LoginScreen = () => {
     navigation.replace('NewPassword');
   };
 
-
   const handleLogin = async () => {
-    validateSchema()
+    validateSchema();
     if (validateSchema()) {
       let payload = {
-        email: inputs.email,
+        email: email,
+        otp: otpNumber,
         newPassword: inputs.newPassword,
         confirmPassword: inputs.confirmPassword,
+      };
+      const result = await postData(Forgot_Password, payload);
+      console.log(result);
+      if (result.result == "true") {
+      toast.show('Changed', {type: 'success'});
+      navigation.navigate('login');
+      // if (result.result == 'true') {
+        //   if (result.passNot == 'false') {
+          //   } else {
+            //     navigation.navigate('login');
+            //   }
+            // } else if (result.result == 'false') {
+              //   // Alert.alert("Email address does not  exists")
+              //   navigation.navigate('Forgotpassword');
+              // }
+      } else {
+        toast.show('otp did  not matched', {type: 'danger'});
       }
-      console.log(payload)
-     const result =  postData(Forgot_Password, payload)
-      if(result.result) {
-        if(result.result == "true"){
-          if(result.passNot == 'false'){
-          }else{
-            navigation.navigate('login');
-          }
-        } else if(result.result == "false"){
-          // Alert.alert("Email address does not  exists")
-          navigation.navigate('Forgotpassword');
-        }
-
-      }
-      
     } else {
-      toast.show("Fill all inputs first", { type: "danger" });
+      toast.show('Fill all inputs first', {type: 'danger'});
     }
-  }
-
+  };
 
   function validateSchema() {
     Keyboard.dismiss();
     let isValid = true;
-    if (inputs?.email?.length == 0) {
-      handleError('Please input email', 'email');
-      isValid = !isValid;
-    }
     if (inputs?.newPassword.length == 0) {
       handleError('Please input password', 'newPassword');
       isValid = !isValid;
@@ -90,46 +86,44 @@ const ForgotPass = ({ navigation }) => {
       if (inputs?.newPassword !== inputs.confirmPassword) {
         handleError("Confirm password don't match", 'confirmPassword');
         isValid = !isValid;
-   
-
       }
     }
     if (isValid) {
-      return true
-    }
-    else {
-      return false
+      return true;
+    } else {
+      return false;
     }
   }
 
   const handleOnchange = (text, input) => {
-    setInputs(prevState => ({ ...prevState, [input]: text }));
+    setInputs(prevState => ({...prevState, [input]: text}));
   };
 
   const handleError = (error, input) => {
-    setErrors(prevState => ({ ...prevState, [input]: error }));
+    setErrors(prevState => ({...prevState, [input]: error}));
   };
 
-
   // const validateOtp = () => {
-    
+
   // }
-
-
 
   return (
     <ScrollView>
+      {console.log(JSON.stringify(email))}
       <KeyboardAvoidingView behavior="position" style={styles.mainCon}>
-        <View style={{ paddingHorizontal: 20 }}>
+        <View style={{paddingHorizontal: 20}}>
           <Pressable onPress={LoginScreen}>
             {/* <SvgIcon icon='back' width={30} height={30} /> */}
-
           </Pressable>
         </View>
-        <View style={{ position: 'relative', bottom: 0 }}>
+        <View style={{position: 'relative', bottom: 0}}>
           <View style={styles.loginIcon}>
             {/* <SvgIcon icon='forgot' width={240} height={240} /> */}
-            <Image source={ForgotPasswordImg} style={{ width: responsiveWidth(70), height: responsiveWidth(70) }} resizeMode="contain" />
+            <Image
+              source={ForgotPasswordImg}
+              style={{width: responsiveWidth(70), height: responsiveWidth(70)}}
+              resizeMode="contain"
+            />
           </View>
           <View style={styles.container}>
             <View style={styles.loginLblCon}>
@@ -141,19 +135,16 @@ const ForgotPass = ({ navigation }) => {
                 with your account
               </Text>
             </View>
-           
-          
-                <View style={styles.textCon}>
-                {/* <OTPInputView
+
+            <View style={styles.textCon}>
+              <OTPInputView
                 pinCount={6}
                 autoFocusOnLoad
                 style={{width: '80%', height: 70}}
                 codeInputFieldStyle={{color: '#000'}}
-                onCodeFilled={code =>
-                  setotpNumber(code)
-                }
-              /> */}
-                  {/* <Input
+                onCodeFilled={code => setotpNumber(code)}
+              />
+              {/* <Input
 
                     onChangeText={text => handleOnchange(text, 'email')}
                     onFocus={() => handleError(null, 'email')}
@@ -163,47 +154,47 @@ const ForgotPass = ({ navigation }) => {
                     error={errors.email}
                   /> */}
 
-                  {/* <TextInput
+              {/* <TextInput
                   style={styles.textInput}
                   placeholder={'New Password'}
                   placeholderTextColor={'#aaa'}
                 /> */}
 
-                  <Input
-                    onChangeText={text => handleOnchange(text, 'newPassword')}
-                    onFocus={() => handleError(null, 'newPassword')}
-                    label="New password"
-                    placeholder="New password"
-                    placeholderTextColor="gray"
-                    error={errors.newPassword}
-                  />
-                  {/* <TextInput confirmPassword
+              <Input
+                onChangeText={text => handleOnchange(text, 'newPassword')}
+                onFocus={() => handleError(null, 'newPassword')}
+                label="New password"
+                placeholder="New password"
+                length={6}
+                placeholderTextColor="gray"
+                error={errors.newPassword}
+              />
+              {/* <TextInput confirmPassword
                   style={styles.textInput}
                   placeholder={'Confirm Password'}
                   placeholderTextColor={'#aaa'}
                 /> */}
-                  <Input
-                    onChangeText={text => handleOnchange(text, 'confirmPassword')}
-                    onFocus={() => handleError(null, 'confirmPassword')}
-                    label="Confirm password"
-                    placeholder="Confirm password"
-                    placeholderTextColor="gray"
-                    error={errors.confirmPassword}
-                  />
-                </View>
-             
+              <Input
+                onChangeText={text => handleOnchange(text, 'confirmPassword')}
+                onFocus={() => handleError(null, 'confirmPassword')}
+                label="Confirm password"
+                placeholder="Confirm password"
+                placeholderTextColor="gray"
+                error={errors.confirmPassword}
+              />
+            </View>
 
-            <View style={ { bottom: 20 }}>
+            <View style={{bottom: 20}}>
               <Button title="Log In" onPress={handleLogin} />
             </View>
           </View>
         </View>
       </KeyboardAvoidingView>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default ForgotPass
+export default ForgotPass;
 
 const styles = StyleSheet.create({
   mainCon: {
@@ -243,7 +234,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-start',
     // alignItems:'center'
-    bottom:15
+    bottom: 15,
   },
 
   textInput: {
@@ -276,7 +267,7 @@ const styles = StyleSheet.create({
   },
   forgotDesLbl: {
     color: '#000',
-    fontSize:responsiveFontSize(2)
+    fontSize: responsiveFontSize(2),
     //   fontFamily: Fonts.type.NotoSansRegular,
   },
 });
