@@ -12,21 +12,22 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import userAdd from '../../../Asets/plus.png'
 import React from 'react'
+import Menu from '../components/Menu';
 import BookAppointment from './BookAppointment'
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import {useState} from 'react';
-import {useEffect} from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
-import {getData} from '../../Hooks/ApiHelper';
-import {Get_Appointment_Data} from '../../Constants/UrlConstants';
-import {ActivityIndicator} from 'react-native';
+import { getData } from '../../Hooks/ApiHelper';
+import { Get_Appointment_Data } from '../../Constants/UrlConstants';
+import { ActivityIndicator } from 'react-native';
 
-const {height} = Dimensions.get('window');
-const HomeScreenAdmin = ({navigation}) => {
+const { height } = Dimensions.get('window');
+const HomeScreenAdmin = ({ navigation }) => {
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -118,7 +119,7 @@ const HomeScreenAdmin = ({navigation}) => {
           </Text>
           {/* </View> */}
         </View>
-        <View style={{marginTop: responsiveHeight(6)}}>
+        <View style={{ marginTop: responsiveHeight(6) }}>
           <View
             style={{
               display: 'flex',
@@ -272,15 +273,31 @@ const HomeScreenAdmin = ({navigation}) => {
                     fontWeight: 'bold',
                     fontSize: responsiveFontSize(2),
                   }}>
-               
+
                   Add User
                 </Text>
               </View>
             </TouchableOpacity>
             {/*  */}
           </View>
+
         </View>
+        {/* Bottom Menu start */}
+        {/* <View style={{marginTop:80}}>
+        <View style={{marginBottom:10, borderWidth:0.5,borderColor:'#306060'}}/> 
+        <Menu/>
+        <View style={{marginTop:10, borderWidth:0.5,borderColor:'#306060'}}/> 
+        </View> */}
+        {/* Bottom Menu End */}
+
+        <View style={{ marginTop: responsiveHeight(12) }}>
+          <View style={styles.menuStyle}>
+            <Menu />
+          </View>
+        </View>
+
       </View>
+
     </>
   );
 };
@@ -385,4 +402,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
   },
+  menuStyle: {
+    marginBottom: 10,
+    borderWidth: 0.5,
+    borderColor: '#306060',
+    backgroundColor: '#80B4B4',
+    height: responsiveHeight(10),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

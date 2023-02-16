@@ -15,7 +15,7 @@ import {
   responsiveFontSize
 } from "react-native-responsive-dimensions";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import Menu from '../components/Menu';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import userAdd from '../../../Asets/plus.png';
@@ -45,13 +45,13 @@ const HomeScreenPa = ({ navigation }) => {
   };
 
   const PendingHendle = () => {
-    navigation.navigate('Pending_tab');
+    navigation.navigate('pending');
   };
   const CompletegHendle = () => {
-    navigation.navigate('Complete_tab');
+    navigation.navigate('complete');
   };
   const CancelgHendle = () => {
-    navigation.navigate('Cancel_tab');
+    navigation.navigate('cancel');
   };
 
   const onRefresh = () => {
@@ -293,6 +293,11 @@ const HomeScreenPa = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
+          <View style={{ marginTop: responsiveHeight(12) }}>
+          <View style={styles.menuStyle}>
+            <Menu />
+          </View>
+        </View>
         </View>
       </ScrollView>
     </>
@@ -400,4 +405,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
   },
+  menuStyle: {
+    marginBottom: 10,
+    borderWidth: 0.5,
+    borderColor: '#306060',
+    backgroundColor: '#80B4B4',
+    height: responsiveHeight(10),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

@@ -101,7 +101,7 @@ const Completed = () => {
             <View style={styles.MainWraper}>
               <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
                 <Text style={{color: '#fff', fontSize: responsiveFontSize(2), fontWeight: 'bold'}}>
-                  {item.user_name}{' '}
+                {item.user_name} ({item.noofpeople})
                 </Text>
               </View>
               <View style={styles.OuterWraper}>

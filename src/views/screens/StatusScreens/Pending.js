@@ -124,7 +124,7 @@ const Pending = () => {
             <View style={styles.MainWraper}>
               <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
                 <Text style={{ color: '#fff', fontSize: responsiveFontSize(2), fontWeight: 'bold' }}>
-                  {item.user_name}{' '}
+                  {item.user_name} ({item.noofpeople})
                 </Text>
               </View>
               <View style={styles.OuterWraper}>
@@ -150,12 +150,12 @@ const Pending = () => {
                   <View style={styles.ListRow}>
                     <Text style={styles.textHeading}>मिलने का कारण :- </Text>
                     <Text numberOfLines={6} style={styles.textSubHeading}>
-                      {item.purpose}{' '}
+                      {item.purpose}
                     </Text>
                   </View>
                   <View style={styles.ListRow}>
                     <Text style={styles.textHeading}>
-                      व्यक्तियो की संख्या :-{' '}
+                      व्यक्तियो की संख्या :-
                     </Text>
                     <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
                   </View>

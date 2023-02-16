@@ -31,6 +31,7 @@ import NewPassword from './src/views/screens/UserScreen/NewPassword';
 import { ToastProvider } from 'react-native-fast-toast'
 import { Touchable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import HomeScreenPa from './src/views/screens/HomeScreenPa';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -79,7 +80,7 @@ const App = ({ navigation }) => {
           <Stack.Screen name='Forgotpassword' component={ForgotPass} options={{ headerShown: false }} />
           <Stack.Screen name='NewPassword' component={NewPassword} options={{headerShown:false}} /> 
           <Stack.Screen name='HomeScreenDm' component={HomeScreenDm} options={{ headerShown: false }} />
-          <Stack.Screen name='HomeScreenPa' component={DrawerNavigation} options={{ headerShown: false }} />
+          <Stack.Screen name='HomeScreenPa' component={HomeScreenPa} options={{ headerShown: false }} />
           <Stack.Screen name='Appointment' component={BookAppointment} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenAdmin' component={HomeScreenAdmin} options={{ headerShown: false }} />
           <Stack.Screen name='userInfo' component={AddUserInfo} options={{ headerShown: false }} />

@@ -9,6 +9,14 @@ export const getData = async (url) => {
     console.error(error);
   }
 };
+export const getData2 = async (url) => {
+  try {
+    const response = await axios.get(url);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // Make a POST request
 export const postData = async (url, data) => {

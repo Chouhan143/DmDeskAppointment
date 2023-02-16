@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import React from 'react'
+import Menu from '../components/Menu';
 
 import {
     responsiveHeight,
@@ -156,6 +157,13 @@ const HomeScreenDm = ({ navigation }) => {
                     </View>
 
                 </View>
+                    {/* Bottom Menu start */}
+                    <View style={{ marginTop: responsiveHeight(12)}}>
+          <View style={styles.menuStyle}>
+            <Menu />
+          </View>
+        </View>
+         {/* Bottom Menu End */}
             </View>
            
 
@@ -288,6 +296,16 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    menuStyle: {
+        marginBottom: 10,
+        borderWidth: 0.5,
+        borderColor: '#306060',
+        backgroundColor: '#80B4B4',
+        height: responsiveHeight(10),
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }
 
 })
