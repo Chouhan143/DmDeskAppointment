@@ -189,14 +189,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#C0D9D9',
-        borderTopLeftRadius: 40,
-        borderTopRightRadius: 40,
-        marginTop: 15,
-        // paddingHorizontal: 20,
-        paddingVertical: 40,
-        minHeight: height,
-
-    },
+        borderTopLeftRadius: responsiveWidth(15),
+        borderTopRightRadius: responsiveWidth(15),
+        marginTop: responsiveHeight(3),
+        paddingVertical: responsiveHeight(5),
+        height:responsiveHeight(100)
+      },
     userBox: {
         display: 'flex',
         flexDirection: 'row',
@@ -298,11 +296,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     menuStyle: {
-        marginBottom: 10,
-        borderWidth: 0.5,
+        position:'absolute',
+   
+        marginTop:responsiveHeight(80),
+        // paddingBottom:0,
         borderColor: '#306060',
         backgroundColor: '#80B4B4',
-        height: responsiveHeight(10),
+        width:responsiveWidth(100),
+        // height: responsiveHeight(9),
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'

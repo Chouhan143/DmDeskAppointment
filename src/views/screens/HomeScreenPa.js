@@ -293,12 +293,13 @@ const HomeScreenPa = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{ marginTop: responsiveHeight(12) }}>
+          {/* <View style={{ marginTop: responsiveHeight(10) }}> */}
           <View style={styles.menuStyle}>
             <Menu />
           </View>
         </View>
-        </View>
+        
+        {/* </View> */}
       </ScrollView>
     </>
   );
@@ -316,14 +317,13 @@ const styles = StyleSheet.create({
     // backgroundColor: '#528B8B',
   },
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: '#C0D9D9',
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    marginTop: 15,
-    // paddingHorizontal: 20,
-    paddingVertical: 40,
-    minHeight: height,
+    borderTopLeftRadius: responsiveWidth(15),
+    borderTopRightRadius: responsiveWidth(15),
+    marginTop: responsiveHeight(3),
+    paddingVertical: responsiveHeight(5),
+    height: responsiveHeight(100), 
   },
   userBox: {
     display: 'flex',
@@ -406,11 +406,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   menuStyle: {
-    marginBottom: 10,
-    borderWidth: 0.5,
+    position:'absolute',
+   
+    marginTop:responsiveHeight(80),
+    // paddingBottom:0,
     borderColor: '#306060',
     backgroundColor: '#80B4B4',
-    height: responsiveHeight(10),
+    width:responsiveWidth(100),
+    // height: responsiveHeight(9),
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
