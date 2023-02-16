@@ -21,7 +21,7 @@ import { Login } from '../../Constants/UrlConstants';
 const LoginScreen = ({ navigation }) => {
   const toast = useToast();
 
-  const [inputs, setInputs] = React.useState({ email: 'admin@gmail.com', password: 'admin@123' });
+  const [inputs, setInputs] = React.useState({ email: '', password: '' });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
 

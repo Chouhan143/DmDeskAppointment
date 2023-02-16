@@ -61,7 +61,14 @@ const Completed = () => {
     setloader(true);
 
     const response = await getData(Get_Appointment_Data)
-        const rejectData = response.result.filter(
+    const newData = response.result.sort(function (a, b) {
+      return a.created_date > b.created_date
+        ? -1
+        : a.created_date < b.created_date
+          ? 1
+          : 0;
+    });
+        const rejectData = newData.filter(
           appointment => appointment.status == 'reject',
         );
         setloader(false);
