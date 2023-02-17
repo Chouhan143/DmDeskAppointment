@@ -22,7 +22,7 @@ const HomeScreenDm = ({ navigation }) => {
     const [completed, setCompleted] = useState([]);
     const [rejected, setRejected] = useState([]);
 
-   
+
     const logout = () => {
         navigation.replace('login');
 
@@ -38,7 +38,7 @@ const HomeScreenDm = ({ navigation }) => {
         navigation.navigate('cancel');
     }
 
-    
+
 
 
 
@@ -49,20 +49,20 @@ const HomeScreenDm = ({ navigation }) => {
     const AddUserInfo = async () => {
 
         const response = await getData(Get_Appointment_Data)
-     
-                // console.log("response", JSON.stringify(response.result))
 
-                // console.log(newData)
-                const completedData = response.result.filter(appointment => appointment.status == 'complete')
-                const pendingData = response.result.filter(appointment => appointment.status == 'pending')
-                const rejectData = response.result.filter(appointment => appointment.status == 'reject')
-                setPending(pendingData.length)
-                setCompleted(completedData.length)
-                setRejected(rejectData.length)
+        // console.log("response", JSON.stringify(response.result))
 
-                setMyData(completedData)
+        // console.log(newData)
+        const completedData = response.result.filter(appointment => appointment.status == 'complete')
+        const pendingData = response.result.filter(appointment => appointment.status == 'pending')
+        const rejectData = response.result.filter(appointment => appointment.status == 'reject')
+        setPending(pendingData.length)
+        setCompleted(completedData.length)
+        setRejected(rejectData.length)
 
-           
+        setMyData(completedData)
+
+
     }
 
 
@@ -158,15 +158,14 @@ const HomeScreenDm = ({ navigation }) => {
                     </View>
 
                 </View>
-                    {/* Bottom Menu start */}
-                    <View style={{ marginTop: responsiveHeight(12)}}>
-          <View style={styles.menuStyle}>
-            <Menu />
-          </View>
-        </View>
-         {/* Bottom Menu End */}
+
+
             </View>
-           
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: responsiveHeight(3.5) }}>
+                <View style={styles.menuStyle}>
+                    <Menu />
+                </View>
+            </View>
 
 
         </>
@@ -188,14 +187,15 @@ const styles = StyleSheet.create({
 
     },
     container: {
-        flex: 1,
         backgroundColor: '#C0D9D9',
         borderTopLeftRadius: responsiveWidth(15),
         borderTopRightRadius: responsiveWidth(15),
         marginTop: responsiveHeight(3),
         paddingVertical: responsiveHeight(5),
-        height:responsiveHeight(100)
-      },
+        height: responsiveHeight(75),
+        borderBottomLeftRadius: responsiveWidth(15),
+        borderBottomRightRadius: responsiveWidth(15),
+    },
     userBox: {
         display: 'flex',
         flexDirection: 'row',
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     },
     innerView: {
         width: responsiveWidth(14),
-    height: responsiveWidth(14),
+        height: responsiveWidth(14),
         borderColor: '#fff',
         // borderStyle:'dashed',
         borderWidth: 1,
@@ -297,17 +297,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     menuStyle: {
-        position:'absolute',
-   
-        marginTop:responsiveHeight(80),
-        // paddingBottom:0,
+        Bottom: responsiveHeight(0),
         borderColor: '#306060',
         backgroundColor: '#80B4B4',
-        width:responsiveWidth(100),
+        width: responsiveWidth(80),
         // height: responsiveHeight(9),
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
-      }
+        alignItems: 'center',
+        borderBottomLeftRadius: responsiveWidth(15),
+        borderBottomRightRadius: responsiveWidth(15),
+        borderTopLeftRadius: responsiveWidth(15),
+        borderTopRightRadius: responsiveWidth(15),
+    }
 
 })

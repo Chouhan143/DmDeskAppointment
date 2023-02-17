@@ -21,7 +21,7 @@ const LoginScreen = ({ navigation }) => {
 
   // const [inputs, setInputs] = React.useState({ email: '', password: '' });
 
-  const [inputs, setInputs] = React.useState({ email: 'admin@gmail.com', password: 'admin@123' });
+  const [inputs, setInputs] = React.useState({ email: '', password: '' });
 
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
@@ -33,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
       let payload = {
         email: inputs.email,
         pass: inputs.password
-      }
+      };
       setLoading(true)
       const response = await postData(Login,payload)
       console.log(response)

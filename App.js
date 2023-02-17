@@ -90,45 +90,8 @@ const App = ({ navigation,navigator }) => {
           <Stack.Screen name='HomeScreenAdmin' component={HomeScreenAdmin} options={{ headerShown: false }} />
           <Stack.Screen name='userInfo' component={AddUserInfo} options={{ headerShown: false }} />
           <Stack.Screen name='pending' component={Pending} options={{headerShown: false}} />
-          <Stack.Screen name='complete' component={Completed} options={{ headerRight: () => (
-              <Pressable onPress={() => logout()} >
-                <Icon name="logout" color="#fff" size={28} />
-              </Pressable>
-            ),
-            headerStyle: {
-              height: 100,
-              borderBottomLeftRadius: 50,
-              borderBottomRightRadius: 50,
-              backgroundColor: '#54B435',
-              shadowColor: '#000',
-              elevation: 25,
-            },
-            headerTitleStyle: {
-              color: '#fff',
-              fontSize: 17,
-            },
-            headerTintColor: '#fff',
-            headerTitle: 'Completed Appointments', }} />
-          <Stack.Screen name='cancel' component={Cancel} options={{ headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('login')} >
-                <Icon name="logout" color="#fff" size={28} />
-              </TouchableOpacity>
-            ),
-            headerStyle: {
-              height: 100,
-              borderBottomLeftRadius: 50,
-              borderBottomRightRadius: 50,
-              backgroundColor: '#DC0000',
-              shadowColor: '#000',
-              elevation: 25,
-            },
-            headerTitleStyle: {
-              color: '#fff',
-              fontSize: 17,
-             
-            },
-            headerTintColor: '#fff',
-            headerTitle: 'Canceled Appointments', }} />
+          <Stack.Screen name='complete' component={Completed} options={{headerShown: false }} />
+          <Stack.Screen name='cancel' component={Cancel} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </ToastProvider>

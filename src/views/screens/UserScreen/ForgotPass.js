@@ -137,29 +137,18 @@ const ForgotPass = ({navigation, route}, props) => {
             </View>
 
             <View style={styles.textCon}>
+            <Text style={{color:'gray',fontSize:responsiveFontSize(1.5)}}>
+                Please Enter Otp Here !
+              </Text>
               <OTPInputView
+               placeholderCharacter="_"
                 pinCount={6}
                 autoFocusOnLoad
-                style={{width: '80%', height: 70}}
+                style={{width: responsiveWidth(90), height: responsiveHeight(10)}}
                 codeInputFieldStyle={{color: '#000'}}
                 onCodeFilled={code => setotpNumber(code)}
               />
-              {/* <Input
-
-                    onChangeText={text => handleOnchange(text, 'email')}
-                    onFocus={() => handleError(null, 'email')}
-                    label="Email"
-                    placeholder="Enter your email address"
-                    placeholderTextColor="gray"
-                    error={errors.email}
-                  /> */}
-
-              {/* <TextInput
-                  style={styles.textInput}
-                  placeholder={'New Password'}
-                  placeholderTextColor={'#aaa'}
-                /> */}
-
+         
               <Input
                 onChangeText={text => handleOnchange(text, 'newPassword')}
                 onFocus={() => handleError(null, 'newPassword')}

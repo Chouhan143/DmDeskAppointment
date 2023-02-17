@@ -15,29 +15,30 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+// import ImageModal from 'react-native-image-modal';
 import Avtar from '../../../../Asets/avtar.png';
 import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppointmentIcon from '../../../../Asets/AppointmentIcon.png';
 import React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import {useEffect} from 'react';
-import {getData, postData} from '../../../Hooks/ApiHelper';
-import {SkeletonCard} from './SkeletonCard';
-import {useToast} from 'react-native-fast-toast';
+import { useEffect } from 'react';
+import { getData, postData } from '../../../Hooks/ApiHelper';
+import { SkeletonCard } from './SkeletonCard';
+import { useToast } from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Get_Appointment_Data,
   Update_Status,
 } from '../../../Constants/UrlConstants';
-import {FlatList} from 'react-native';
-import Lightbox from 'react-native-lightbox';
+import { FlatList } from 'react-native';
+// import Lightbox from 'react-native-lightbox';
 
-const {height} = Dimensions.get('screen');
-const {width} = Dimensions.get('screen');
+const { height } = Dimensions.get('screen');
+const { width } = Dimensions.get('screen');
 // var myData = [];
-const Pending = ({navigation}) => {
+const Pending = ({ navigation }) => {
   const toast = useToast();
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
@@ -90,8 +91,8 @@ const Pending = ({navigation}) => {
       return a.created_date > b.created_date
         ? -1
         : a.created_date < b.created_date
-        ? 1
-        : 0;
+          ? 1
+          : 0;
     });
     const completedData = newData.filter(
       appointment => appointment.status == 'pending',
@@ -108,7 +109,7 @@ const Pending = ({navigation}) => {
     const data = await postData(Update_Status, payload);
     if (data.result) {
       SetshowWarning(false);
-      toast.show('Updated', {type: 'success', position: 'top'});
+      toast.show('Updated', { type: 'success', position: 'top' });
       AddUserInfo();
     }
   };
@@ -119,13 +120,14 @@ const Pending = ({navigation}) => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{backgroundColor: '#C0D9D9'}}>
+      style={{ backgroundColor: '#C0D9D9' }}>
       <View style={styles.header}>
         <Icon2
-          name="sort-variant"
+          name="arrow-left-thin-circle-outline"
           color="#3e2465"
           size={responsiveFontSize(4)}
-          onPress={navigation.toggleDrawer}
+          onPress={() => navigation.goBack()}
+        // onPress={navigation.goBack()}
         />
         <Text
           style={{
@@ -151,7 +153,7 @@ const Pending = ({navigation}) => {
 
         {loader && (
           <View>
-            {Array.from({length: 5}, (_, index) => (
+            {Array.from({ length: 5 }, (_, index) => (
               <SkeletonCard width={width - 20} height={120} />
             ))}
           </View>
@@ -161,9 +163,9 @@ const Pending = ({navigation}) => {
           data={myData}
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={4}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <View style={styles.MainWraper}>
-              <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
+              <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
                 <Text
                   style={{
                     color: '#fff',
@@ -180,8 +182,8 @@ const Pending = ({navigation}) => {
                       source={
                         item.img
                           ? {
-                              uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
-                            }
+                            uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                          }
                           : Avtar
                       }
                       style={{
@@ -193,6 +195,7 @@ const Pending = ({navigation}) => {
                       }}
                     />
                   </TouchableOpacity>
+                
                 </View>
                 <View style={styles.ContentWraper}>
                   <View style={styles.ListRow}>
@@ -218,7 +221,7 @@ const Pending = ({navigation}) => {
 
                   <View style={styles.ViewMore}>
                     <TouchableOpacity onPress={() => onPressHandler(item)}>
-                      <Text style={{color: '#fff', fontSize: 10}}>
+                      <Text style={{ color: '#fff', fontSize: 10 }}>
                         View More
                       </Text>
                     </TouchableOpacity>
@@ -295,25 +298,25 @@ const Pending = ({navigation}) => {
                           justifyContent: 'space-between',
                           gap: 10,
                         }}>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           नाम :- {obj.user_name}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           पता/विभाग :- {obj.depat}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           मोबाइल नंबर :- {obj.phone}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           मिलने का कारण :- {obj.purpose}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           व्यक्तियो की संख्या :- {obj.noofpeople}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           तारीख:- {obj.date}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           समय :- {obj.time}
                         </Text>
                       </View>
@@ -328,8 +331,8 @@ const Pending = ({navigation}) => {
                           onPress={() =>
                             onPressChangeStatus(obj.id, 'complete')
                           }
-                          android_ripple={{color: '#fff'}}>
-                          <Text style={[styles.text, {color: '#fff'}]}>
+                          android_ripple={{ color: '#fff' }}>
+                          <Text style={[styles.text, { color: '#fff' }]}>
                             Complete
                           </Text>
                         </Pressable>
@@ -337,8 +340,8 @@ const Pending = ({navigation}) => {
                       <View style={styles.cancelBtn}>
                         <Pressable
                           onPress={() => onPressChangeStatus(obj.id, 'reject')}
-                          android_ripple={{color: '#fff'}}>
-                          <Text style={[styles.text, {color: '#fff'}]}>
+                          android_ripple={{ color: '#fff' }}>
+                          <Text style={[styles.text, { color: '#fff' }]}>
                             Reject
                           </Text>
                         </Pressable>
@@ -363,7 +366,7 @@ const Pending = ({navigation}) => {
             {console.log(selectedImage)}
             <Image
               style={styles.modalImage}
-              source={{uri: selectedImage}}
+              source={{ uri: selectedImage }}
             />
           </View>
         </Modal>

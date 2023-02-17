@@ -24,10 +24,10 @@ const Menu = () => {
                 paddingHorizontal:responsiveWidth(6),
                 borderRightWidth:1,
                 borderRightColor:'#3e2465',
-                borderLeftWidth:1,
+                // borderLeftWidth:1,
                 borderLeftColor:'#3e2465',
                 color: '#fff',
-                fontSize:responsiveFontSize(2),
+                fontSize:responsiveFontSize(1.7),
                 textTransform: 'uppercase',
             
               }} >Pending</Text>
@@ -42,7 +42,7 @@ const Menu = () => {
                 borderRightWidth:1,
                 borderRightColor:'#3e2465',
                 color: '#fff',
-                fontSize:responsiveFontSize(2),
+                fontSize:responsiveFontSize(1.7),
                 textTransform: 'uppercase',
             
               }} >Cancel</Text>
@@ -54,10 +54,10 @@ const Menu = () => {
                 alignItems: 'center',
                 paddingVertical:responsiveWidth(4),
                 paddingHorizontal:responsiveWidth(6),
-                borderRightWidth:1,
+                // borderRightWidth:1,
                 borderRightColor:'#3e2465',
                 color: '#fff',
-                fontSize:responsiveFontSize(2),
+                fontSize:responsiveFontSize(1.7),
                 textTransform: 'uppercase',
             
               }} >Complete</Text>

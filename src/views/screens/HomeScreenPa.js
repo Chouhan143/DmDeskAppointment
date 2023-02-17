@@ -7,7 +7,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import {ActivityIndicator} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 import {
   responsiveHeight,
@@ -74,29 +74,29 @@ const HomeScreenPa = ({ navigation }) => {
       method: 'get',
       url: 'https://srninfotech.com/projects/dmdesk/getAppointmentData',
     })
-    .then(function (response) {
-      // console.log("response", JSON.stringify(response.data.result))
-      // console.log(newData)
-      const completedData = response.data.result.filter(
-        appointment => appointment.status == 'complete',
+      .then(function (response) {
+        // console.log("response", JSON.stringify(response.data.result))
+        // console.log(newData)
+        const completedData = response.data.result.filter(
+          appointment => appointment.status == 'complete',
         );
         const pendingData = response.data.result.filter(
           appointment => appointment.status == 'pending',
-          );
-          const rejectData = response.data.result.filter(
-            appointment => appointment.status == 'reject',
-            );
-            setPending(pendingData.length);
-            setCompleted(completedData.length);
-            setRejected(rejectData.length);
-            
-            setMyData(completedData);
-          })
-          .catch(function (error) {
-            console.log('error', error);
-          });
-        };
-        
+        );
+        const rejectData = response.data.result.filter(
+          appointment => appointment.status == 'reject',
+        );
+        setPending(pendingData.length);
+        setCompleted(completedData.length);
+        setRejected(rejectData.length);
+
+        setMyData(completedData);
+      })
+      .catch(function (error) {
+        console.log('error', error);
+      });
+  };
+
   return (
     <>
       <ScrollView
@@ -170,11 +170,11 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
 
                   <View style={styles.textWrapDiv}>
-                  {loaderInfo == true ? (
-                    <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    <Text style={styles.text}>{pending}</Text>
-                  )}
+                    {loaderInfo == true ? (
+                      <ActivityIndicator size="small" color="white" />
+                    ) : (
+                      <Text style={styles.text}>{pending}</Text>
+                    )}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
                       लंबित
@@ -205,15 +205,15 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
 
                   <View style={styles.textWrapDiv}>
-                    
-                  {loaderInfo == true ? (
-                    <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    <Text style={styles.text}>{completed}</Text>
-                  )}
+
+                    {loaderInfo == true ? (
+                      <ActivityIndicator size="small" color="white" />
+                    ) : (
+                      <Text style={styles.text}>{completed}</Text>
+                    )}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
-                      
+
                       पूर्ण
                     </Text>
                   </View>
@@ -251,17 +251,17 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
 
                   <View style={styles.textWrapDiv}>
-                  {loaderInfo == true ? (
-                    <View>
-                      <ActivityIndicator size="small" color="white" />
-                    </View>
-                    
-                  ) : (
-                    <Text style={styles.text}>{rejected}</Text>
-                  )}
+                    {loaderInfo == true ? (
+                      <View>
+                        <ActivityIndicator size="small" color="white" />
+                      </View>
+
+                    ) : (
+                      <Text style={styles.text}>{rejected}</Text>
+                    )}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
-                      
+
                       अस्वीकृत
                     </Text>
                   </View>
@@ -284,9 +284,8 @@ const HomeScreenPa = ({ navigation }) => {
                       color: '#306060',
                       paddingTop: responsiveHeight(3),
                       fontWeight: 'bold',
-                      fontSize:responsiveFontSize(2)
+                      fontSize: responsiveFontSize(2)
                     }}>
-
                     बुक अपॉइंटमेंट
                   </Text>
                 </View>
@@ -294,11 +293,14 @@ const HomeScreenPa = ({ navigation }) => {
             </View>
           </View>
           {/* <View style={{ marginTop: responsiveHeight(10) }}> */}
+
+        </View>
+        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: responsiveHeight(3.5) }}>
           <View style={styles.menuStyle}>
             <Menu />
           </View>
         </View>
-        
+
         {/* </View> */}
       </ScrollView>
     </>
@@ -317,13 +319,15 @@ const styles = StyleSheet.create({
     // backgroundColor: '#528B8B',
   },
   container: {
-    // flex: 1,
+
     backgroundColor: '#C0D9D9',
     borderTopLeftRadius: responsiveWidth(15),
     borderTopRightRadius: responsiveWidth(15),
     marginTop: responsiveHeight(3),
     paddingVertical: responsiveHeight(5),
-    height: responsiveHeight(100), 
+    height: responsiveHeight(75),
+    borderBottomLeftRadius: responsiveWidth(15),
+    borderBottomRightRadius: responsiveWidth(15),
   },
   userBox: {
     display: 'flex',
@@ -352,7 +356,7 @@ const styles = StyleSheet.create({
   textWrapDiv: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:responsiveHeight(1),
+    marginTop: responsiveHeight(1),
   },
 
   innerView: {
@@ -406,16 +410,17 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   menuStyle: {
-    position:'absolute',
-   
-    marginTop:responsiveHeight(80),
-    // paddingBottom:0,
+    Bottom: responsiveHeight(0),
     borderColor: '#306060',
     backgroundColor: '#80B4B4',
-    width:responsiveWidth(100),
+    width: responsiveWidth(80),
     // height: responsiveHeight(9),
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderBottomLeftRadius: responsiveWidth(15),
+    borderBottomRightRadius: responsiveWidth(15),
+    borderTopLeftRadius: responsiveWidth(15),
+    borderTopRightRadius: responsiveWidth(15),
   }
 });

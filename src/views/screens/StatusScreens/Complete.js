@@ -14,6 +14,7 @@ import {
   responsiveWidth,
   responsiveFontSize
 } from "react-native-responsive-dimensions";
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Avtar from '../../../../Asets/avtar.png';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
@@ -28,7 +29,7 @@ import {FlatList} from 'react-native';
 
 const {height} = Dimensions.get('window');
 const {width} = Dimensions.get('screen');
-const Completed = () => {
+const Completed = ({navigation}) => {
   const toast = useToast();
 
   const [myData, setMyData] = useState([]);
@@ -61,6 +62,10 @@ const Completed = () => {
 
     setTimeout(() => setRefreshing(false), 1000);
   };
+    const logout = () => {
+    navigation.replace('login');
+    AsyncStorage.clear();
+  };
 
   useEffect(() => {
     AddUserInfo();
@@ -89,6 +94,29 @@ const Completed = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       style={{backgroundColor: '#C0D9D9'}}>
+      <View style={styles.header}>
+        <Icon2
+          name="arrow-left-thin-circle-outline"
+          color="#3e2465"
+          size={responsiveFontSize(4)}
+          onPress={() => navigation.goBack()}
+          // onPress={navigation.goBack()}
+        />
+        <Text
+          style={{
+            color: '#306060',
+            fontWeight: 'bold',
+            fontSize: responsiveFontSize(2.2),
+          }}>
+          Complete
+        </Text>
+        <Icon2
+          name="logout"
+          color="#3e2465"
+          size={responsiveFontSize(4)}
+          onPress={logout}
+        />
+      </View>
       <View style={styles.container}>
         {/* <View style={styles.headingWraper}>
           <Text style={{color: '#fff', fontWeight: 'bold', fontSize: responsiveFontSize(2)}}>
@@ -261,6 +289,14 @@ const styles = StyleSheet.create({
   //     backgroundColor: '#C0D9D9',
   //     paddingVertical: 40,
   // },
+   header: {
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    // backgroundColor: '#528B8B',
+  },
   headingWraper: {
     display: 'flex',
     paddingLeft: 20,
