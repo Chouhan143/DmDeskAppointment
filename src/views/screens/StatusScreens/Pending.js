@@ -61,6 +61,17 @@ const Pending = ({ navigation }) => {
     setUserData(`https://srninfotech.com/projects/dmdesk/public/uploads/${item}`);
   };
 
+
+  const onPressEditHandler = (item, index) => {
+    SetshowWarning(!showWarning);
+    setobj(item);
+    setUserData(`https://srninfotech.com/projects/dmdesk/insertAppointmentData`);
+  };
+
+
+
+
+
   const onPressCard = () => {
     SetshowWarning(false);
   };
@@ -219,16 +230,28 @@ const Pending = ({ navigation }) => {
                     <Text style={styles.textSubHeading}>{item.time}</Text>
                   </View>
 
-                  <View style={styles.ViewMore}>
-                    <TouchableOpacity onPress={() => onPressHandler(item)}>
-                      <Text style={{ color: '#fff', fontSize: 10 }}>
-                        View More
-                      </Text>
-                    </TouchableOpacity>
+                  <View style={styles.updateBtns}>
+                    <View style={styles.ViewMore}>
+                      <TouchableOpacity onPress={() => onPressHandler(item)}>
+                        <Text style={{ color: '#fff', fontSize: 10 }}>
+                          View 
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.ViewMore}>
+                      <TouchableOpacity onPress={() => onPressEditHandler(item)}>
+                        <Text style={{ color: '#fff', fontSize: 10 }}>
+                        Edit
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    </View>
+
                   </View>
                 </View>
               </View>
-            </View>
+           
           )}
         />
 
@@ -415,6 +438,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     overflow: 'hidden',
   },
+  updateBtns:{
+    flexDirection: 'row',
+
+  },
   cancelIcon: {
     marginLeft: 125,
   },
@@ -558,13 +585,13 @@ const styles = StyleSheet.create({
   ViewMore: {
     backgroundColor: '#36648B',
     padding: 5,
-    width: 70,
+    width: responsiveWidth(18),
     borderWidth: 0.2,
     borderRadius: 20,
     alignItems: 'center',
     marginTop: 5,
     marginBottom: 5,
-    marginLeft: 150,
+    marginLeft: responsiveWidth(3),
   },
   image: {
     width: 200,

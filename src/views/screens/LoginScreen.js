@@ -71,21 +71,42 @@ const LoginScreen = ({ navigation }) => {
 
   function validateSchema() {
     Keyboard.dismiss();
+    // let isValid = true;
+    // if (inputs?.email?.length == 0) {
+    //   handleError('Please input email', 'email');
+    //   isValid = !isValid;
+    // }
+    // if (inputs?.password?.length == 0) {
+    //   handleError('Please input password', 'password');
+    //   isValid = !isValid;
+    // }
+    // if (!isValid) {
+    //   // login();
+    //   return true
+    // } else {
+    //   return false
+    // }
+
     let isValid = true;
-    if (inputs?.email.length == 0) {
-      handleError('Please input email', 'email');
-      isValid = !isValid;
-    }
-    if (inputs?.password.length == 0) {
-      handleError('Please input password', 'password');
-      isValid = !isValid;
-    }
-    if (isValid) {
-      // login();
-      return true
-    } else {
-      return false
-    }
+
+    const isEmailValid = inputs?.email?.length > 0;
+  if (!isEmailValid) {
+    handleError('Please input email', 'email');
+    isValid = false;
+  }
+
+  const isPasswordValid = inputs?.password?.length > 0;
+  if (!isPasswordValid) {
+    handleError('Please input password', 'password');
+    isValid = false;
+  }
+
+  return isValid;
+
+
+
+
+
   }
 
   const handleOnchange = (text, input) => {

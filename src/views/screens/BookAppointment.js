@@ -120,7 +120,8 @@ const BookAppointment = () => {
         },
       }).then((response) => {
         if (response) {
-          toast.show("Updated", { type: "success" , position: 'top'});
+          console.log(response)
+          toast.show("Appointment Booked", { type: "success" , position: 'top'});
           navigation.navigate('HomeScreenPa');
         }
       }).catch((error) => {
