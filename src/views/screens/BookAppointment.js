@@ -213,7 +213,6 @@ const BookAppointment = () => {
             placeholder="व्यक्तियों की संख्या "
             placeholderTextColor="gray"
             error={errors.noofpeople}
-
           />
 
 

@@ -26,7 +26,6 @@ const LoginScreen = ({ navigation }) => {
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
 
-  
   const handleLogin = async () => {
     validateSchema()
     if (validateSchema()) {
@@ -65,7 +64,6 @@ const LoginScreen = ({ navigation }) => {
     }
   }
 
-
   // ----------------------------------------new credential -----------------
 
 
@@ -102,11 +100,6 @@ const LoginScreen = ({ navigation }) => {
   }
 
   return isValid;
-
-
-
-
-
   }
 
   const handleOnchange = (text, input) => {

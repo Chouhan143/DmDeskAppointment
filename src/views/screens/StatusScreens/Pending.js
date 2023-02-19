@@ -69,9 +69,6 @@ const Pending = ({ navigation }) => {
   };
 
 
-
-
-
   const onPressCard = () => {
     SetshowWarning(false);
   };
