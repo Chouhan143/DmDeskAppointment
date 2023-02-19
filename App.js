@@ -36,6 +36,7 @@ import HomeScreenPa from './src/views/screens/HomeScreenPa';
 import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Uselogout } from './src/Hooks/LogoutHook';
+import EditBookAppointment from './src/views/screens/EditBookAppointment';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -92,6 +93,7 @@ const App = ({ navigation,navigator }) => {
           <Stack.Screen name='pending' component={Pending} options={{headerShown: false}} />
           <Stack.Screen name='complete' component={Completed} options={{headerShown: false }} />
           <Stack.Screen name='cancel' component={Cancel} options={{ headerShown: false }} />
+          <Stack.Screen name='edit-appointment' component={EditBookAppointment} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </ToastProvider>
