@@ -15,7 +15,6 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-// import ImageModal from 'react-native-image-modal';
 import Avtar from '../../../../Asets/avtar.png';
 import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -33,7 +32,12 @@ import {
   Update_Status,
 } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
-// import Lightbox from 'react-native-lightbox';
+// import ImageViewer from 'react-native-image-zoom-viewer';
+
+import FullScreenModal from '../../../Hooks/FullScreenModal';
+import Loader from '../../components/Loader';
+
+
 
 const { height } = Dimensions.get('screen');
 const { width } = Dimensions.get('screen');
@@ -45,10 +49,72 @@ const Pending = ({ navigation }) => {
   const [userData, setUserData] = useState({});
   const [obj, setobj] = useState({});
   const [loader, setloader] = useState(false);
+  const [loader1, setloader1] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [userType, setuserType] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImage, setselectedImage] = useState("");
+  const [selectedModalImage, setselectedModalImage] = useState([])
+  const [listData, setListData] = useState([
+    { key: 'item1', text: 'Item 1' },
+    { key: 'item2', text: 'Item 2' },
+    { key: 'item3', text: 'Item 3' },
+    { key: 'item4', text: 'Item 4' },
+  ]);
+
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const renderLeftActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [0, 100],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    });
+
+    return (
+      <View style={styles.leftAction}>
+        <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>Left Action</Animated.Text>
+      </View>
+    );
+  };
+
+  const renderRightActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [-100, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+
+    const renderItem = ({ item, index }) => {
+      return (
+        <Swipeable
+          ref={swipeableRef}
+          renderLeftActions={renderLeftActions}
+          renderRightActions={renderRightActions}
+          onSwipeableLeftOpen={() => console.log('Swiped Left!')}
+          onSwipeableRightOpen={() => console.log('Swiped Right!')}
+        >
+          <TouchableOpacity style={styles.item}>
+            <Text>{item.title}</Text>
+          </TouchableOpacity>
+        </Swipeable>
+      );
+    };
+
+    return (
+      <View style={styles.rightAction}>
+        <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>Right Action</Animated.Text>
+      </View>
+    );
+  };
+
+  const handleCloseModal = () => {
+    setIsFullScreen(!isFullScreen);
+  }
+  const watchFullImage = (item) => {
+    setIsFullScreen(!isFullScreen);
+    setselectedModalImage(item)
+  }
 
   const toggleModal = item => {
     setModalVisible(!isModalVisible);
@@ -62,11 +128,13 @@ const Pending = ({ navigation }) => {
   };
 
 
+
   const onPressEditHandler = (item, index) => {
     SetshowWarning(!showWarning);
     setobj(item);
     setUserData(`https://srninfotech.com/projects/dmdesk/insertAppointmentData`);
   };
+
 
 
   const onPressCard = () => {
@@ -94,7 +162,6 @@ const Pending = ({ navigation }) => {
     setuserType(userType);
     setloader(true);
     const response = await getData(Get_Appointment_Data);
-
     const newData = response.result.sort(function (a, b) {
       return a.created_date > b.created_date
         ? -1
@@ -122,6 +189,14 @@ const Pending = ({ navigation }) => {
     }
   };
 
+
+  const navigateToEdit = (id) => {
+    // console.log(id)
+    setloader1(true);
+    navigation.navigate("edit-appointment", { id: id })
+    setloader1(false);
+  }
+
   //const imageSource = 'https://srninfotech.com/projects/dmdesk/public/uploads/coffee1.jpg';
   return (
     <ScrollView
@@ -129,13 +204,13 @@ const Pending = ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       style={{ backgroundColor: '#C0D9D9' }}>
+      {/* {isFullScreen && <ImageViewer style={{height: 100}} imageUrls={[{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]} index={0} />} */}
       <View style={styles.header}>
         <Icon2
-          name="arrow-left-thin-circle-outline"
+          name="sort-variant"
           color="#3e2465"
           size={responsiveFontSize(4)}
-          onPress={() => navigation.goBack()}
-        // onPress={navigation.goBack()}
+          onPress={navigation.toggleDrawer}
         />
         <Text
           style={{
@@ -152,6 +227,8 @@ const Pending = ({ navigation }) => {
           onPress={logout}
         />
       </View>
+      <Loader visible={loader1} />
+
       <View style={styles.container}>
         {/* <View style={styles.headingWraper}>
           <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: responsiveFontSize(2) }}>
@@ -182,10 +259,12 @@ const Pending = ({ navigation }) => {
                   }}>
                   {item.user_name} ({item.noofpeople})
                 </Text>
+
               </View>
               <View style={styles.OuterWraper}>
                 <View style={styles.ImageWraper}>
-                  <TouchableOpacity onPress={() => toggleModal(item.img)}>
+                  
+                  <TouchableOpacity onPress={() => watchFullImage(`https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`)}>
                     <Image
                       source={
                         item.img
@@ -203,7 +282,6 @@ const Pending = ({ navigation }) => {
                       }}
                     />
                   </TouchableOpacity>
-                
                 </View>
                 <View style={styles.ContentWraper}>
                   <View style={styles.ListRow}>
@@ -226,29 +304,34 @@ const Pending = ({ navigation }) => {
                     <Text style={styles.textHeading}>समय :- </Text>
                     <Text style={styles.textSubHeading}>{item.time}</Text>
                   </View>
+                  <View style={{ flexDirection: 'row' }}>
+                  <View style={styles.ViewMore}>
+                    <TouchableOpacity onPress={() => onPressHandler(item)}>
+                      <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
+                        View More
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[styles.ViewMore,{marginLeft:responsiveWidth(2)}]}>
+                  <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
+                    <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                  </View>
 
-                  <View style={styles.updateBtns}>
-                    <View style={styles.ViewMore}>
-                      <TouchableOpacity onPress={() => onPressHandler(item)}>
-                        <Text style={{ color: '#fff', fontSize: 10 }}>
-                          View 
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+</View>
 
-                    <View style={styles.ViewMore}>
-                      <TouchableOpacity onPress={() => onPressEditHandler(item)}>
-                        <Text style={{ color: '#fff', fontSize: 10 }}>
-                        Edit
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    </View>
+
+
+
+                  
+                  <View>
 
                   </View>
                 </View>
               </View>
-           
+            </View>
           )}
         />
 
@@ -390,6 +473,7 @@ const Pending = ({ navigation }) => {
             />
           </View>
         </Modal>
+        <FullScreenModal uri={selectedModalImage} visible={isFullScreen} onClose={handleCloseModal} />
       </View>
     </ScrollView>
   );
@@ -434,10 +518,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flexWrap: 'wrap',
     overflow: 'hidden',
-  },
-  updateBtns:{
-    flexDirection: 'row',
-
   },
   cancelIcon: {
     marginLeft: 125,
@@ -582,13 +662,25 @@ const styles = StyleSheet.create({
   ViewMore: {
     backgroundColor: '#36648B',
     padding: 5,
-    width: responsiveWidth(18),
+    width: 70,
     borderWidth: 0.2,
     borderRadius: 20,
     alignItems: 'center',
     marginTop: 5,
     marginBottom: 5,
-    marginLeft: responsiveWidth(3),
+    // marginLeft: 150,
+
+  },
+  ViewMore1: {
+    backgroundColor: '#36648B',
+    padding: 5,
+    width: 70,
+    borderWidth: 0.2,
+    borderRadius: 20,
+    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 200,
   },
   image: {
     width: 200,

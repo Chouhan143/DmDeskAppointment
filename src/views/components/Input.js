@@ -13,6 +13,7 @@ const Input = ({
   error,
   password,
   onFocus = () => {},
+  value,
   ...props
 }) => {
   const [hidePassword, setHidePassword] = React.useState(password);
@@ -38,6 +39,7 @@ const Input = ({
         />
         <TextInput
           autoCorrect={false}
+          value={value}
           onFocus={() => {
             onFocus();
             setIsFocused(true);
