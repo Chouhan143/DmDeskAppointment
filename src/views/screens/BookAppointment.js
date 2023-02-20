@@ -77,22 +77,48 @@ const BookAppointment = () => {
 
   const navigation = useNavigation()
 
-  const pickImage = () => {
-    openCamera()
-    launchCamera({
-      title: 'Select Image',
-      mediaType: 'photo',
-      noData: true,
-      quality: 1.0,
-      allowsEditing: true,
-    }, (response) => {
-      // console.log(JSON.stringify(response.assets[0].uri))
-      if (response.didCancel) {
-      } else if (response.error) {
+  async function requestCameraPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          'title': 'Camera Permission',
+          'message': 'App needs access to your camera'
+        }
+      )
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Camera permission granted");
+        launchCamera({
+          title: 'Select Image',
+          mediaType: 'photo',
+          noData: true,
+          quality: 1.0,
+          allowsEditing: true,
+        }, (response) => {
+          // console.log(JSON.stringify(response.assets[0].uri))
+          if (response?.didCancel) {
+          } else if (response?.error) {
+          } else {
+            setImage(response?.assets[0]);
+          }
+        });
       } else {
-        setImage(response.assets[0]);
+        console.log("Camera permission denied");
       }
-    });
+    } catch (err) {
+      console.warn(err)
+    }
+  }
+
+  
+  
+  
+  
+  
+
+  const pickImage = () => {
+    requestCameraPermission()
+   
   };
 
   const uploadImage = async () => {
