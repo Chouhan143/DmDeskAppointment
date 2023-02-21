@@ -52,63 +52,95 @@ const LoginScreen = ({navigation}) => {
   function validate() {
     Keyboard.dismiss();
     let isValid = true;
-    if (inputs?.name.length == 0) {
+    // if (inputs?.name?.length == 0) {
+    //   handleError('Please input name', 'name');
+    //   isValid = !isValid;
+    // }
+  
+
+    // if (inputs?.email.length == 0) {
+    //   handleError('Please input email', 'email');
+    //   isValid = !isValid;
+    // }
+    // if (inputs?.email.length == 0) {
+    //   handleError('Please input a valid email', 'email');
+    //   isValid = !isValid;
+    // }
+
+    // if (inputs?.pass.length == 0) {
+    //   handleError('Please input pass', 'pass');
+    //   isValid = !isValid;
+    // }
+    // if (inputs.pass.length < 5) {
+    //   handleError('Min pass length of 5', 'pass');
+    //   isValid = !isValid;
+    // }
+
+    // if (inputs?.city.length == 0) {
+    //   handleError('Please Enter city', 'city');
+    //   isValid = !isValid;
+    // }
+
+    // if (inputs?.user_type.length == 0) {
+    //   handleError('Please Enter UserType', 'user_type');
+    //   isValid = !isValid;
+    // }
+    // if (isValid) {
+    //   return true;
+    //   // login();
+    // } else {
+    //   return false;
+    // }
+
+    const isUserName = inputs?.name?.length > 0;
+    if (!isUserName) {
       handleError('Please input name', 'name');
-      isValid = !isValid;
+      isValid = false;
     }
-
-    if (inputs?.email.length == 0) {
+    const isEmailValid = inputs?.email?.length > 0;
+    if (!isEmailValid) {
       handleError('Please input email', 'email');
-      isValid = !isValid;
+      isValid = false;
     }
-    if (inputs?.email.length == 0) {
-      handleError('Please input a valid email', 'email');
-      isValid = !isValid;
-    }
-
-    if (inputs?.pass.length == 0) {
-      handleError('Please input pass', 'pass');
-      isValid = !isValid;
-    }
-    if (inputs.pass.length < 5) {
-      handleError('Min pass length of 5', 'pass');
-      isValid = !isValid;
+    const isPasswordValid = inputs?.pass?.length > 0;
+    if (!isPasswordValid) {
+      handleError('Please input password', 'pass');
+      isValid = false;
     }
 
-    if (inputs?.city.length == 0) {
+    const isCityValid = inputs?.city?.length > 0;
+     if (!isCityValid) {
       handleError('Please Enter city', 'city');
-      isValid = !isValid;
+      isValid = false;
     }
 
-    if (inputs?.user_type.length == 0) {
-      handleError('Please Enter UserType', 'user_type');
-      isValid = !isValid;
-    }
-    if (isValid) {
-      return true;
-      // login();
-    } else {
-      return false;
-    }
+    const isUserValid = inputs?.user_type?.length > 0;
+    if (!isUserValid) {
+        handleError('Please Enter UserType', 'user_type');
+        isValid = false;
+      }
+      return isValid;
   }
 
   const AddUserInfo = async () => {
-    let payload = {
-      name: inputs.name,
-      email: inputs.email,
-      pass: inputs.pass,
-      city: inputs.city,
-      user_type: inputs.user_type,
-    };
-    validate();
+
+    validate()
     if (validate()) {
+      let payload = {
+        name: inputs.name,
+        email: inputs.email,
+        pass: inputs.pass,
+        city: inputs.city,
+        user_type: inputs.user_type,
+      };
       const result = await postData(Insert_Data, payload);
+      console.log(result)
       if (result.result == true) {
         toast.show('User Added successfully', {
-          type: 'success',
+          type: 'success', 
           position: 'top',
         });
-        0;
+       
         navigation.navigate('HomeScreenAdmin');
       }
     } else {

@@ -87,8 +87,10 @@ const EditBookAppointment = ({navigation, route}) => {
     const {id} = route.params;
     const temp = await getData(`${Get_Appointment_Data_by_id}+${id}`)
     const { data } = temp;
+    console.log(temp)
     if (data.length > 0) {
-      const { user_name, depat, purpose, noofpeople, phone, img } = data[0];
+  
+      const { user_name, depat, purpose, noofpeople, phone, img, } = data[0];
       setInputs({
         user_name,
         depat,
@@ -126,6 +128,7 @@ const EditBookAppointment = ({navigation, route}) => {
     if(valdiate()) {
       const formData = new FormData();
       const cityName = await AsyncStorage.getItem("city")
+      formData.append('id', route.params.id);
       // if(formData
       //   .image)
       formData.append('img', image == null ? "": {

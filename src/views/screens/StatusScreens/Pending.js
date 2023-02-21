@@ -33,12 +33,10 @@ import {
 } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
 // import ImageViewer from 'react-native-image-zoom-viewer';
-
+// import SwipeActionList from 'react-native-swipe-action-list';
 import FullScreenModal from '../../../Hooks/FullScreenModal';
 import Loader from '../../components/Loader';
-
-
-
+import { Swipeable } from 'react-native-gesture-handler';
 const { height } = Dimensions.get('screen');
 const { width } = Dimensions.get('screen');
 // var myData = [];
@@ -55,13 +53,6 @@ const Pending = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImage, setselectedImage] = useState("");
   const [selectedModalImage, setselectedModalImage] = useState([])
-  const [listData, setListData] = useState([
-    { key: 'item1', text: 'Item 1' },
-    { key: 'item2', text: 'Item 2' },
-    { key: 'item3', text: 'Item 3' },
-    { key: 'item4', text: 'Item 4' },
-  ]);
-
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   const renderLeftActions = (progress, dragX) => {
@@ -88,7 +79,7 @@ const Pending = ({ navigation }) => {
     const renderItem = ({ item, index }) => {
       return (
         <Swipeable
-          ref={swipeableRef}
+          // ref={swipeableRef}
           renderLeftActions={renderLeftActions}
           renderRightActions={renderRightActions}
           onSwipeableLeftOpen={() => console.log('Swiped Left!')}
@@ -107,6 +98,9 @@ const Pending = ({ navigation }) => {
       </View>
     );
   };
+
+
+
 
   const handleCloseModal = () => {
     setIsFullScreen(!isFullScreen);
@@ -207,10 +201,11 @@ const Pending = ({ navigation }) => {
       {/* {isFullScreen && <ImageViewer style={{height: 100}} imageUrls={[{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]} index={0} />} */}
       <View style={styles.header}>
         <Icon2
-          name="sort-variant"
+          name="arrow-left-thin-circle-outline"
           color="#3e2465"
           size={responsiveFontSize(4)}
-          onPress={navigation.toggleDrawer}
+          // onPress={navigation.toggleDrawer}
+          onPress={() => navigation.goBack()}
         />
         <Text
           style={{
@@ -230,12 +225,6 @@ const Pending = ({ navigation }) => {
       <Loader visible={loader1} />
 
       <View style={styles.container}>
-        {/* <View style={styles.headingWraper}>
-          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: responsiveFontSize(2) }}>
-            Pending Appointments
-          </Text>
-        </View> */}
-
         {loader && (
           <View>
             {Array.from({ length: 5 }, (_, index) => (
@@ -263,7 +252,7 @@ const Pending = ({ navigation }) => {
               </View>
               <View style={styles.OuterWraper}>
                 <View style={styles.ImageWraper}>
-                  
+
                   <TouchableOpacity onPress={() => watchFullImage(`https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`)}>
                     <Image
                       source={
@@ -305,29 +294,22 @@ const Pending = ({ navigation }) => {
                     <Text style={styles.textSubHeading}>{item.time}</Text>
                   </View>
                   <View style={{ flexDirection: 'row' }}>
-                  <View style={styles.ViewMore}>
-                    <TouchableOpacity onPress={() => onPressHandler(item)}>
-                      <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
-                        View More
-                      </Text>
-                    </TouchableOpacity>
+                    <View style={styles.ViewMore}>
+                      <TouchableOpacity onPress={() => onPressHandler(item)}>
+                        <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
+                          View More
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={[styles.ViewMore, { marginLeft: responsiveWidth(2) }]}>
+                      <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
+                        <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
+                          Edit
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  <View style={[styles.ViewMore,{marginLeft:responsiveWidth(2)}]}>
-                  <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
-                    <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
-                      Edit
-                    </Text>
-                  </TouchableOpacity>
-                  </View>
-
-</View>
-
-
-
-
-                  
                   <View>
-
                   </View>
                 </View>
               </View>
