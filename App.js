@@ -37,6 +37,7 @@ import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Uselogout } from './src/Hooks/LogoutHook';
 import EditBookAppointment from './src/views/screens/EditBookAppointment';
+import { DataContextApiProvider } from './src/LoginCredencial/context/DataContextApi';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -74,6 +75,7 @@ const App = ({ navigation,navigator }) => {
     Uselogout(navigation)
   };
   return (
+    <DataContextApiProvider>
     <ToastProvider>
 
       <NavigationContainer>
@@ -97,6 +99,7 @@ const App = ({ navigation,navigator }) => {
         </Stack.Navigator>
       </NavigationContainer>
     </ToastProvider>
+    </DataContextApiProvider>
   )
 }
 

@@ -19,7 +19,7 @@ import Avtar from '../../../../Asets/avtar.png';
 import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppointmentIcon from '../../../../Asets/AppointmentIcon.png';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -37,10 +37,12 @@ import { FlatList } from 'react-native';
 import FullScreenModal from '../../../Hooks/FullScreenModal';
 import Loader from '../../components/Loader';
 import { Swipeable } from 'react-native-gesture-handler';
+import DataContext from '../../../LoginCredencial/context/DataContextApi';
 const { height } = Dimensions.get('screen');
 const { width } = Dimensions.get('screen');
 // var myData = [];
 const Pending = ({ navigation }) => {
+  const {data, count, setcount,getDataFunc}  = useContext(DataContext)
   const toast = useToast();
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
@@ -144,12 +146,22 @@ const Pending = ({ navigation }) => {
 
   useEffect(() => {
     AddUserInfo();
-  }, []);
+  }, [count]);
 
   const logout = () => {
     navigation.replace('login');
     AsyncStorage.clear();
   };
+
+  
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      getDataFunc();
+    });
+  
+    return unsubscribe;
+  }, []);
+
 
   const AddUserInfo = async () => {
     const userType = await AsyncStorage.getItem('userType');
@@ -178,8 +190,11 @@ const Pending = ({ navigation }) => {
     const data = await postData(Update_Status, payload);
     if (data.result) {
       SetshowWarning(false);
-      toast.show('Updated', { type: 'success', position: 'top' });
-      AddUserInfo();
+    await  toast.show('Updated', { type: 'success', position: 'top' });
+    await  AddUserInfo();
+    await getDataFunc();
+    await setcount(count + 1);
+
     }
   };
 
