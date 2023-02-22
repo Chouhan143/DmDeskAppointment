@@ -56,7 +56,7 @@ const HomeScreenPa = ({ navigation }) => {
 
   const onRefresh = () => {
     setloaderInfo(true)
-    setRefreshing(true);
+    setRefreshing (true);
     AddUserInfo();
     setloaderInfo(false)
 

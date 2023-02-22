@@ -26,17 +26,17 @@ import { useEffect } from 'react';
 import { getData, postData } from '../../../Hooks/ApiHelper';
 import { SkeletonCard } from './SkeletonCard';
 import { useToast } from 'react-native-fast-toast';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Get_Appointment_Data,
   Update_Status,
 } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
-// import ImageViewer from 'react-native-image-zoom-viewer';
-// import SwipeActionList from 'react-native-swipe-action-list';
+
 import FullScreenModal from '../../../Hooks/FullScreenModal';
 import Loader from '../../components/Loader';
-import { Swipeable } from 'react-native-gesture-handler';
+
 const { height } = Dimensions.get('screen');
 const { width } = Dimensions.get('screen');
 // var myData = [];
@@ -55,49 +55,6 @@ const Pending = ({ navigation }) => {
   const [selectedModalImage, setselectedModalImage] = useState([])
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  const renderLeftActions = (progress, dragX) => {
-    const scale = dragX.interpolate({
-      inputRange: [0, 100],
-      outputRange: [0, 1],
-      extrapolate: 'clamp',
-    });
-
-    return (
-      <View style={styles.leftAction}>
-        <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>Left Action</Animated.Text>
-      </View>
-    );
-  };
-
-  const renderRightActions = (progress, dragX) => {
-    const scale = dragX.interpolate({
-      inputRange: [-100, 0],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    });
-
-    const renderItem = ({ item, index }) => {
-      return (
-        <Swipeable
-          // ref={swipeableRef}
-          renderLeftActions={renderLeftActions}
-          renderRightActions={renderRightActions}
-          onSwipeableLeftOpen={() => console.log('Swiped Left!')}
-          onSwipeableRightOpen={() => console.log('Swiped Right!')}
-        >
-          <TouchableOpacity style={styles.item}>
-            <Text>{item.title}</Text>
-          </TouchableOpacity>
-        </Swipeable>
-      );
-    };
-
-    return (
-      <View style={styles.rightAction}>
-        <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>Right Action</Animated.Text>
-      </View>
-    );
-  };
 
 
 
@@ -233,8 +190,10 @@ const Pending = ({ navigation }) => {
           </View>
         )}
 
+   
         <FlatList
           data={myData}
+          extraData={myData}
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={4}
           renderItem={({ item, index }) => (
@@ -316,6 +275,17 @@ const Pending = ({ navigation }) => {
             </View>
           )}
         />
+
+
+        
+        <FlatList
+          data={myData}
+          extraData={myData}
+          keyExtractor={(item, index) => index.toString()}
+          initialNumToRender={4}
+          renderItem={renderItem}
+        />
+
 
         {/* -------------------------- Model-------------------------------- */}
         <View style={styles.centered_view}>
