@@ -19,16 +19,19 @@ import Menu from '../components/Menu';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import userAdd from '../../../Asets/plus.png';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { ScrollView } from 'react-native';
 import { RefreshControl } from 'react-native';
+import DataContext from '../../LoginCredencial/context/DataContextApi';
 
 const { height } = Dimensions.get('window');
 
 const HomeScreenPa = ({ navigation }) => {
+  const {data, count}  = useContext(DataContext)
+
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -67,23 +70,25 @@ const HomeScreenPa = ({ navigation }) => {
     setloaderInfo(true)
     AddUserInfo();
     setloaderInfo(false)
+  }, [count]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      AddUserInfo();
+    });
+  
+    return unsubscribe;
   }, []);
 
   const AddUserInfo = () => {
-    axios({
-      method: 'get',
-      url: 'https://srninfotech.com/projects/dmdesk/getAppointmentData',
-    })
-      .then(function (response) {
-        // console.log("response", JSON.stringify(response.data.result))
-        // console.log(newData)
-        const completedData = response.data.result.filter(
+
+        const completedData = data.filter(
           appointment => appointment.status == 'complete',
         );
-        const pendingData = response.data.result.filter(
+        const pendingData = data.filter(
           appointment => appointment.status == 'pending',
         );
-        const rejectData = response.data.result.filter(
+        const rejectData = data.filter(
           appointment => appointment.status == 'reject',
         );
         setPending(pendingData.length);
@@ -91,10 +96,6 @@ const HomeScreenPa = ({ navigation }) => {
         setRejected(rejectData.length);
 
         setMyData(completedData);
-      })
-      .catch(function (error) {
-        console.log('error', error);
-      });
   };
 
   return (

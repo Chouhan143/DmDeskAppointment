@@ -1,6 +1,6 @@
 import { launchCamera } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, SafeAreaView, Keyboard, ScrollView, Alert, StyleSheet, StatusBar, TextInput, Image, Dimensions, TouchableOpacity, PermissionsAndroid } from 'react-native';
 import COLORS from '../../conts/colors';
 import Button from '../components/Button';
@@ -14,10 +14,12 @@ import axios from 'axios';
 import { useToast } from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Post_Appointment_Data } from '../../Constants/UrlConstants';
+import DataContext from '../../LoginCredencial/context/DataContextApi';
 
 
 
 const BookAppointment = () => {
+  const {setcount,count}  = useContext(DataContext)
   const toast = useToast()
   const [inputs, setInputs] = useState({
     user_name: '',
@@ -144,11 +146,12 @@ const BookAppointment = () => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      }).then((response) => {
+      }).then(async (response) => {
         if (response) {
           console.log(response)
           toast.show("Appointment Booked", { type: "success" , position: 'top'});
-          navigation.navigate('HomeScreenPa');
+         await setcount(count+1)
+         await navigation.navigate('HomeScreenPa');
         }
       }).catch((error) => {
         console.log(error);
