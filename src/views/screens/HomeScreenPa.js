@@ -36,7 +36,7 @@ const HomeScreenPa = ({ navigation }) => {
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
   const [myData, setMyData] = useState([]);
-  const [loader, setloader] = useState(false);
+  // const [loader, setloader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [loaderInfo, setloaderInfo] = useState(false);
 
@@ -72,13 +72,13 @@ const HomeScreenPa = ({ navigation }) => {
     setloaderInfo(false)
   }, [count]);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', () => {
-      AddUserInfo();
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('beforeRemove', () => {
+  //     AddUserInfo();
+  //   });
   
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
   const AddUserInfo = () => {
 
@@ -94,7 +94,6 @@ const HomeScreenPa = ({ navigation }) => {
         setPending(pendingData.length);
         setCompleted(completedData.length);
         setRejected(rejectData.length);
-
         setMyData(completedData);
   };
 

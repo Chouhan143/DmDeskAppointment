@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Image,ScrollView, TouchableOpacity, Dimensions, FlatList } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import React from 'react'
+import { RefreshControl } from 'react-native';
 import Menu from '../components/Menu';
-
+import { useContext } from 'react';
 import {
     responsiveHeight,
     responsiveWidth,
@@ -15,13 +16,15 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { getData } from '../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../Constants/UrlConstants';
-
+import DataContext from '../../LoginCredencial/context/DataContextApi'
 const { height } = Dimensions.get('window');
 const HomeScreenDm = ({ navigation }) => {
+    const {data, count}  = useContext(DataContext)
     const [pending, setPending] = useState([]);
     const [completed, setCompleted] = useState([]);
     const [rejected, setRejected] = useState([]);
-
+    const [refreshing, setRefreshing] = useState(false);
+    const [loaderInfo, setloaderInfo] = useState(false);
 
     const logout = () => {
         navigation.replace('login');
@@ -38,13 +41,32 @@ const HomeScreenDm = ({ navigation }) => {
         navigation.navigate('cancel');
     }
 
+    const onRefresh = () => {
+        setloaderInfo(true)
+        setRefreshing(true);
+        AddUserInfo();
+        setloaderInfo(false)
 
-
-
+        setTimeout(() => setRefreshing(false), 1000);
+    };
 
     useEffect(() => {
+        setloaderInfo(true)
         AddUserInfo();
+        setloaderInfo(false)
+    }, [count]);
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', () => {
+            AddUserInfo();
+        });
+
+        return unsubscribe;
     }, []);
+
+    // useEffect(() => {
+    //     AddUserInfo();
+    // }, []);
 
     const AddUserInfo = async () => {
 
@@ -68,106 +90,130 @@ const HomeScreenDm = ({ navigation }) => {
 
     return (
         <>
-            <View style={styles.header}>
-                <Icon name="sort-variant" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer} />
-                <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
-                    District Magistrate
-                </Text>
-                <Icon name="logout" color='#3e2465' size={responsiveFontSize(4)} onPress={logout} />
-            </View>
-
-            <View style={styles.container}>
-                <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
-                    <Text style={{ alignItems: 'center', fontSize: responsiveFontSize(2.6), fontWeight: 'bold', color: '#306060', }}>DM Desk</Text>
-                    <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.5), }}>
-                        अपॉइंटमेंट स्टेटस
+            <ScrollView
+                scrollEnabled={false}
+                nestedScrollEnabled={false}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }>
+                <View style={styles.header}>
+                    <Icon name="sort-variant" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer} />
+                    <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
+                        District Magistrate
                     </Text>
-                    {/* </View> */}
+                    <Icon name="logout" color='#3e2465' size={responsiveFontSize(4)} onPress={logout} />
                 </View>
-                <View style={{ marginTop: responsiveHeight(6) }}>
-                    <View style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
-                    }}>
-                        <TouchableOpacity onPress={PendingHendle} style={{
-                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F99417', paddingVertical: responsiveHeight(1),
-                            paddingHorizontal: responsiveWidth(10),
-                            borderRadius: responsiveWidth(10),
+
+                <View style={styles.container}>
+                    <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
+                        <Text style={{ alignItems: 'center', fontSize: responsiveFontSize(2.6), fontWeight: 'bold', color: '#306060', }}>DM Desk</Text>
+                        <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.5), }}>
+                            अपॉइंटमेंट स्टेटस
+                        </Text>
+                        {/* </View> */}
+                    </View>
+                    <View style={{ marginTop: responsiveHeight(6) }}>
+                        <View style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-evenly',
                         }}>
-                            <View style={styles.content_iconWraper} >
-                                <View style={styles.innerView}>
+                            <TouchableOpacity onPress={PendingHendle} style={{
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F99417', paddingVertical: responsiveHeight(1),
+                                paddingHorizontal: responsiveWidth(10),
+                                borderRadius: responsiveWidth(10),
+                            }}>
+                                <View style={styles.content_iconWraper} >
+                                    <View style={styles.innerView}>
 
-                                    <Icon2 name="progress-clock" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
-                                </View>
+                                        <Icon2 name="progress-clock" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
+                                    </View>
 
-                                <View style={styles.textWrapDiv}>
-                                    <Text style={styles.text}>{pending}</Text>
-                                    <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>लंबित </Text>
+                                    <View style={styles.textWrapDiv}>
+                                        {loaderInfo == true ? (
+                                            <ActivityIndicator size="small" color="white" />
+                                        ) : (
+                                            <Text style={styles.text}>{pending}</Text>
+                                        )}
+
+                                        <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>लंबित </Text>
+                                    </View>
                                 </View>
-                            </View>
-                        </TouchableOpacity>
-                        {/*  */}
-                        <TouchableOpacity onPress={CompletegHendle} style={{
-                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#54B435', paddingVertical: responsiveHeight(1),
-                            paddingHorizontal: responsiveWidth(10),
-                            borderRadius: responsiveWidth(10),
+                            </TouchableOpacity>
+                            {/*  */}
+                            <TouchableOpacity onPress={CompletegHendle} style={{
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#54B435', paddingVertical: responsiveHeight(1),
+                                paddingHorizontal: responsiveWidth(10),
+                                borderRadius: responsiveWidth(10),
+                            }}>
+                                <View style={styles.content_iconWraper} >
+                                    <View style={styles.innerView}>
+
+                                        <Icon3 name="checkmark-done" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
+                                    </View>
+
+                                    <View style={styles.textWrapDiv}>
+                                        {loaderInfo == true ? (
+                                            <ActivityIndicator size="small" color="white" />
+                                        ) : (
+                                            <Text style={styles.text}>{completed}</Text>
+                                        )}
+
+                                        <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}> पूर्ण </Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                            {/*  */}
+
+
+                        </View>
+                        <View style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            marginTop: responsiveHeight(4),
+                            marginLeft: responsiveWidth(10)
                         }}>
-                            <View style={styles.content_iconWraper} >
-                                <View style={styles.innerView}>
 
-                                    <Icon3 name="checkmark-done" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
+                            <TouchableOpacity onPress={CancelgHendle} style={{
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#DC0000', paddingVertical: responsiveHeight(1),
+                                paddingHorizontal: responsiveWidth(10),
+                                borderRadius: responsiveWidth(10),
+                            }}>
+                                <View style={styles.content_iconWraper} >
+                                    <View style={styles.innerView}>
+
+                                        <Icon2 name="cancel" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
+                                    </View>
+
+                                    <View style={styles.textWrapDiv}>
+                                        {loaderInfo == true ? (
+                                            <View>
+                                                <ActivityIndicator size="small" color="white" />
+                                            </View>
+
+                                        ) : (
+                                            <Text style={styles.text}>{rejected}</Text>
+                                        )}
+
+                                        <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}> अस्वीकृत </Text>
+                                    </View>
                                 </View>
+                            </TouchableOpacity>
 
-                                <View style={styles.textWrapDiv}>
-                                    <Text style={styles.text}>{completed}</Text>
-                                    <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}> पूर्ण </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                        {/*  */}
 
+                        </View>
 
                     </View>
-                    <View style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        marginTop: responsiveHeight(4),
-                        marginLeft: responsiveWidth(10)
-                    }}>
-
-                        <TouchableOpacity onPress={CancelgHendle} style={{
-                            display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#DC0000', paddingVertical: responsiveHeight(1),
-                            paddingHorizontal: responsiveWidth(10),
-                            borderRadius: responsiveWidth(10),
-                        }}>
-                            <View style={styles.content_iconWraper} >
-                                <View style={styles.innerView}>
-
-                                    <Icon2 name="cancel" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
-                                </View>
-
-                                <View style={styles.textWrapDiv}>
-                                    <Text style={styles.text}>{rejected}</Text>
-                                    <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}> अस्वीकृत </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
 
 
+                </View>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: responsiveHeight(3.5) }}>
+                    <View style={styles.menuStyle}>
+                        <Menu />
                     </View>
-
                 </View>
 
-
-            </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: responsiveHeight(3.5) }}>
-                <View style={styles.menuStyle}>
-                    <Menu />
-                </View>
-            </View>
-
-
+            </ScrollView>
         </>
 
     )

@@ -33,18 +33,14 @@ import {
   Update_Status,
 } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
-
 import FullScreenModal from '../../../Hooks/FullScreenModal';
 import Loader from '../../components/Loader';
-
-
-
-import { Swipeable } from 'react-native-gesture-handler';
+// import { Swipeable } from 'react-native-gesture-handler';
 import DataContext from '../../../LoginCredencial/context/DataContextApi';
-
 const { height } = Dimensions.get('screen');
 const { width } = Dimensions.get('screen');
 // var myData = [];
+
 const Pending = ({ navigation }) => {
   const {data, count, setcount,getDataFunc}  = useContext(DataContext)
   const toast = useToast();
@@ -60,10 +56,6 @@ const Pending = ({ navigation }) => {
   const [selectedImage, setselectedImage] = useState("");
   const [selectedModalImage, setselectedModalImage] = useState([])
   const [isFullScreen, setIsFullScreen] = useState(false);
-
-
-
-
 
   const handleCloseModal = () => {
     setIsFullScreen(!isFullScreen);
@@ -296,15 +288,7 @@ const Pending = ({ navigation }) => {
         />
 
 
-        
-        <FlatList
-          data={myData}
-          extraData={myData}
-          keyExtractor={(item, index) => index.toString()}
-          initialNumToRender={4}
-          renderItem={renderItem}
-        />
-
+      
 
         {/* -------------------------- Model-------------------------------- */}
         <View style={styles.centered_view}>

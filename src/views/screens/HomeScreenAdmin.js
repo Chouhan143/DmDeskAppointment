@@ -7,6 +7,8 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
+import { RefreshControl } from 'react-native';
+import { ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
@@ -21,17 +23,21 @@ import {
 } from 'react-native-responsive-dimensions';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { useContext } from 'react';
 import axios from 'axios';
 import { getData } from '../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../Constants/UrlConstants';
 import { ActivityIndicator } from 'react-native';
-
+import DataContext from '../../LoginCredencial/context/DataContextApi'
 const { height } = Dimensions.get('window');
 const HomeScreenAdmin = ({ navigation }) => {
+  const {data, count}  = useContext(DataContext)
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
   const [loaderInfo, setloaderInfo] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [myData, setMyData] = useState([]);
 
   const AddUser = () => {
     navigation.navigate('userInfo');
@@ -49,31 +55,53 @@ const HomeScreenAdmin = ({ navigation }) => {
   const CancelgHendle = () => {
     navigation.navigate('cancel');
   };
-  useEffect(() => {
-    setloaderInfo(true);
-    AddUserInfo();
-    setloaderInfo(false);
-  }, []);
+  // useEffect(() => {
+  //   setloaderInfo(true);
+  //   AddUserInfo();
+  //   setloaderInfo(false);
+  // }, []);
 
-  const AddUserInfo = async () => {
-    const response = await getData(Get_Appointment_Data);
-    const completedData = response.result.filter(
+  const onRefresh = () => {
+    setloaderInfo(true)
+    setRefreshing (true);
+    AddUserInfo();
+    setloaderInfo(false)
+
+    setTimeout(() => setRefreshing(false), 1000);
+  };
+
+  useEffect(() => {
+    setloaderInfo(true)
+    AddUserInfo();
+    setloaderInfo(false)
+  }, [count]);
+
+
+  const AddUserInfo =  () => {
+    const completedData = data.filter(
       appointment => appointment.status == 'complete',
     );
-    const pendingData = response.result.filter(
+    const pendingData = data.filter(
       appointment => appointment.status == 'pending',
     );
-    const rejectData = response.result.filter(
+    const rejectData = data.filter(
       appointment => appointment.status == 'reject',
     );
     setPending(pendingData.length);
     setCompleted(completedData.length);
     setRejected(rejectData.length);
     setMyData(completedData);
-  };
+};
+ 
 
   return (
     <>
+     <ScrollView
+        scrollEnabled={false}
+        nestedScrollEnabled={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
       <View style={styles.header}>
         <Icon
           name="sort-variant"
@@ -298,7 +326,7 @@ const HomeScreenAdmin = ({ navigation }) => {
             <Menu />
           </View>
           </View>
-
+</ScrollView>
     </>
   );
 };
