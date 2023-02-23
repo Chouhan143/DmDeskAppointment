@@ -42,7 +42,7 @@ const { width } = Dimensions.get('screen');
 // var myData = [];
 
 const Pending = ({ navigation }) => {
-  const {data, count, setcount,getDataFunc}  = useContext(DataContext)
+  const { data, count, setcount, getDataFunc } = useContext(DataContext)
   const toast = useToast();
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
@@ -93,7 +93,6 @@ const Pending = ({ navigation }) => {
   const onRefresh = () => {
     setRefreshing(true);
     AddUserInfo();
-
     setTimeout(() => setRefreshing(false), 1000);
   };
 
@@ -101,19 +100,24 @@ const Pending = ({ navigation }) => {
     AddUserInfo();
   }, [count]);
 
+  // useEffect(() => {
+  //   AddUserInfo();
+  // });
+
   const logout = () => {
     navigation.replace('login');
     AsyncStorage.clear();
   };
 
-  
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
       getDataFunc();
     });
-  
     return unsubscribe;
   }, []);
+
+
 
 
   const AddUserInfo = async () => {
@@ -143,10 +147,10 @@ const Pending = ({ navigation }) => {
     const data = await postData(Update_Status, payload);
     if (data.result) {
       SetshowWarning(false);
-    await  toast.show('Updated', { type: 'success', position: 'top' });
-    await  AddUserInfo();
-    await getDataFunc();
-    await setcount(count + 1);
+      await toast.show('Updated', { type: 'success', position: 'top' });
+      await AddUserInfo();
+      await getDataFunc();
+      await setcount(count + 1);
 
     }
   };
@@ -159,14 +163,10 @@ const Pending = ({ navigation }) => {
     setloader1(false);
   }
 
-  //const imageSource = 'https://srninfotech.com/projects/dmdesk/public/uploads/coffee1.jpg';
+
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
+    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       style={{ backgroundColor: '#C0D9D9' }}>
-      {/* {isFullScreen && <ImageViewer style={{height: 100}} imageUrls={[{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]} index={0} />} */}
       <View style={styles.header}>
         <Icon2
           name="arrow-left-thin-circle-outline"
@@ -192,6 +192,7 @@ const Pending = ({ navigation }) => {
       </View>
       <Loader visible={loader1} />
 
+
       <View style={styles.container}>
         {loader && (
           <View>
@@ -201,7 +202,7 @@ const Pending = ({ navigation }) => {
           </View>
         )}
 
-   
+
         <FlatList
           data={myData}
           extraData={myData}
@@ -267,7 +268,7 @@ const Pending = ({ navigation }) => {
                     <View style={styles.ViewMore}>
                       <TouchableOpacity onPress={() => onPressHandler(item)}>
                         <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
-                          View More
+                          View
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -288,7 +289,7 @@ const Pending = ({ navigation }) => {
         />
 
 
-      
+
 
         {/* -------------------------- Model-------------------------------- */}
         <View style={styles.centered_view}>
@@ -430,6 +431,7 @@ const Pending = ({ navigation }) => {
         </Modal>
         <FullScreenModal uri={selectedModalImage} visible={isFullScreen} onClose={handleCloseModal} />
       </View>
+
     </ScrollView>
   );
 };
@@ -616,7 +618,8 @@ const styles = StyleSheet.create({
   },
   ViewMore: {
     backgroundColor: '#36648B',
-    padding: 5,
+    paddingHorizontal: responsiveWidth(1.5),
+    paddingVertical: responsiveHeight(1.2),
     width: 70,
     borderWidth: 0.2,
     borderRadius: 20,

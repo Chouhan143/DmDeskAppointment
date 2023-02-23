@@ -31,7 +31,6 @@ const { height } = Dimensions.get('window');
 
 const HomeScreenPa = ({ navigation }) => {
   const {data, count}  = useContext(DataContext)
-
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -72,13 +71,16 @@ const HomeScreenPa = ({ navigation }) => {
     setloaderInfo(false)
   }, [count]);
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('beforeRemove', () => {
-  //     AddUserInfo();
-  //   });
+ 
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      AddUserInfo();
+    });
   
-  //   return unsubscribe;
-  // }, []);
+    return unsubscribe;
+  }, []);
 
   const AddUserInfo = () => {
 

@@ -41,37 +41,34 @@ const BookAppointment = () => {
     Keyboard.dismiss();
     let isValid = true;
 
-    if (inputs?.user_name.length == 0) {
+    if (!inputs?.user_name?.length > 0) {
       handleError('Please input username', 'user_name');
-      isValid = !isValid;
+      isValid = false;
     }
 
-    if (inputs?.depat.length == 0) {
+    if (!inputs?.depat?.length > 0) {
       handleError('Please input Department', 'depat');
-      isValid = !isValid;
+      isValid = false;
     }
 
-    if (inputs?.phone.length == 0) {
+    if (!inputs?.phone?.length > 0) {
       handleError('Please input phone number', 'phone');
-      isValid = !isValid; 
-    } else if (inputs?.phone.length !== 10) {
+      isValid = false; 
+    } else if (inputs?.phone?.length !== 10) {
       handleError('Mobile Number must be 10 digit', 'phone');
+      isValid = false;
     }
-    if (inputs?.purpose.length == 0) {
+    if (!inputs?.purpose?.length > 0) {
       handleError('Please input Purpose', 'purpose');
-      isValid = !isValid;
+      isValid = false;
     }
-    if (inputs?.noofpeople.length == 0) {
+    if (!inputs?.noofpeople?.length > 0) {
       handleError('Please input No. Of Peoples', 'noofpeople');
-      isValid = !isValid;
-    } else if (inputs?.noofpeople.length > 2) {
+      isValid = false;
+    } else if (!inputs?.noofpeople?.length > 2) {
       handleError('No. Of People Length Should be Maximum 2 digit', 'noofpeople')
     }
-    if (isValid) {
-      return true
-    } else {
-      return false
-    }
+    return isValid;
   };
 
 
