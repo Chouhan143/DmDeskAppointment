@@ -19,30 +19,31 @@ import Avtar from '../../../../Asets/avtar.png';
 import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppointmentIcon from '../../../../Asets/AppointmentIcon.png';
-import React, { useContext } from 'react';
-import { useState } from 'react';
+import React, {useContext} from 'react';
+import {useState} from 'react';
 import axios from 'axios';
-import { useEffect } from 'react';
-import { getData, postData } from '../../../Hooks/ApiHelper';
-import { SkeletonCard } from './SkeletonCard';
-import { useToast } from 'react-native-fast-toast';
+import {useEffect} from 'react';
+import {getData, postData} from '../../../Hooks/ApiHelper';
+import {SkeletonCard} from './SkeletonCard';
+import {useToast} from 'react-native-fast-toast';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Get_Appointment_Data,
   Update_Status,
 } from '../../../Constants/UrlConstants';
-import { FlatList } from 'react-native';
+import {FlatList} from 'react-native';
 import FullScreenModal from '../../../Hooks/FullScreenModal';
 import Loader from '../../components/Loader';
 // import { Swipeable } from 'react-native-gesture-handler';
 import DataContext from '../../../LoginCredencial/context/DataContextApi';
-const { height } = Dimensions.get('screen');
-const { width } = Dimensions.get('screen');
+import Swipeout from 'react-native-swipeout';
+const {height} = Dimensions.get('screen');
+const {width} = Dimensions.get('screen');
 // var myData = [];
 
-const Pending = ({ navigation }) => {
-  const {data, count, setcount,getDataFunc}  = useContext(DataContext)
+const Pending = ({navigation}) => {
+  const {data, count, setcount, getDataFunc} = useContext(DataContext);
   const toast = useToast();
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
@@ -53,17 +54,134 @@ const Pending = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [userType, setuserType] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedImage, setselectedImage] = useState("");
-  const [selectedModalImage, setselectedModalImage] = useState([])
+  const [selectedImage, setselectedImage] = useState('');
+  const [selectedModalImage, setselectedModalImage] = useState([]);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [listData, setListData] = useState([
+    {id: '1', title: 'Item 1'},
+    {id: '2', title: 'Item 2'},
+    {id: '3', title: 'Item 3'},
+    {id: '4', title: 'Item 4'},
+    {id: '5', title: 'Item 5'},
+  ]);
+
+  const renderItem = ({item}) => {
+    const swipeBtns = [
+      {
+        text: 'Reject',
+        backgroundColor: 'red',
+        // onPress: () => handleSwipeLeft(item.id),
+      },
+    ];
+    const LeftBtns = [
+      {
+        text: 'Accept',
+        backgroundColor: 'green',
+        // onPress: () => handleSwipeLeft(item.id),
+      },
+    ];
+
+    return (
+      <Swipeout left={LeftBtns} right={swipeBtns}>
+        {/* <View style={{ padding: 10 }}>
+          <Text>{item.title}</Text>
+        </View> */}
+        <View style={styles.MainWraper}>
+          <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: responsiveFontSize(2),
+                fontWeight: 'bold',
+              }}>
+              {item.user_name} ({item.noofpeople})
+            </Text>
+          </View>
+          <View style={styles.OuterWraper}>
+            <View style={styles.ImageWraper}>
+              <TouchableOpacity
+                onPress={() =>
+                  watchFullImage(
+                    `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                  )
+                }>
+                {/* <Image
+                      source={
+                        item.img
+                          ? {
+                            uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                          }
+                          : Avtar
+                      }
+                      style={{
+                        width: responsiveWidth(20),
+                        height: responsiveWidth(20),
+                        borderWidth: 0.2,
+                        borderRadius: 10,
+                        resizeMode: 'contain',
+                      }}
+                    /> */}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.ContentWraper}>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>मिलने का कारण :- </Text>
+                <Text numberOfLines={6} style={styles.textSubHeading}>
+                  {item.purpose}
+                </Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>व्यक्तियो की संख्या :-</Text>
+                <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>तारीख :- </Text>
+                <Text style={styles.textSubHeading}>{item.date}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>समय :- </Text>
+                <Text style={styles.textSubHeading}>{item.time}</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <View style={styles.ViewMore}>
+                  <TouchableOpacity onPress={() => onPressHandler(item)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: responsiveFontSize(1.5),
+                      }}>
+                      View More
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={[styles.ViewMore, {marginLeft: responsiveWidth(2)}]}>
+                  <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: responsiveFontSize(1.5),
+                      }}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View></View>
+            </View>
+          </View>
+        </View>
+      </Swipeout>
+    );
+  };
 
   const handleCloseModal = () => {
     setIsFullScreen(!isFullScreen);
-  }
-  const watchFullImage = (item) => {
+  };
+  const watchFullImage = item => {
     setIsFullScreen(!isFullScreen);
-    setselectedModalImage(item)
-  }
+    setselectedModalImage(item);
+  };
 
   const toggleModal = item => {
     setModalVisible(!isModalVisible);
@@ -73,18 +191,18 @@ const Pending = ({ navigation }) => {
   const onPressHandler = (item, index) => {
     SetshowWarning(!showWarning);
     setobj(item);
-    setUserData(`https://srninfotech.com/projects/dmdesk/public/uploads/${item}`);
+    setUserData(
+      `https://srninfotech.com/projects/dmdesk/public/uploads/${item}`,
+    );
   };
-
-
 
   const onPressEditHandler = (item, index) => {
     SetshowWarning(!showWarning);
     setobj(item);
-    setUserData(`https://srninfotech.com/projects/dmdesk/insertAppointmentData`);
+    setUserData(
+      `https://srninfotech.com/projects/dmdesk/insertAppointmentData`,
+    );
   };
-
-
 
   const onPressCard = () => {
     SetshowWarning(false);
@@ -106,15 +224,13 @@ const Pending = ({ navigation }) => {
     AsyncStorage.clear();
   };
 
-  
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
       getDataFunc();
     });
-  
+
     return unsubscribe;
   }, []);
-
 
   const AddUserInfo = async () => {
     const userType = await AsyncStorage.getItem('userType');
@@ -125,8 +241,8 @@ const Pending = ({ navigation }) => {
       return a.created_date > b.created_date
         ? -1
         : a.created_date < b.created_date
-          ? 1
-          : 0;
+        ? 1
+        : 0;
     });
     const completedData = newData.filter(
       appointment => appointment.status == 'pending',
@@ -143,21 +259,19 @@ const Pending = ({ navigation }) => {
     const data = await postData(Update_Status, payload);
     if (data.result) {
       SetshowWarning(false);
-    await  toast.show('Updated', { type: 'success', position: 'top' });
-    await  AddUserInfo();
-    await getDataFunc();
-    await setcount(count + 1);
-
+      await toast.show('Updated', {type: 'success', position: 'top'});
+      await AddUserInfo();
+      await getDataFunc();
+      await setcount(count + 1);
     }
   };
 
-
-  const navigateToEdit = (id) => {
+  const navigateToEdit = id => {
     // console.log(id)
     setloader1(true);
-    navigation.navigate("edit-appointment", { id: id })
+    navigation.navigate('edit-appointment', {id: id});
     setloader1(false);
-  }
+  };
 
   //const imageSource = 'https://srninfotech.com/projects/dmdesk/public/uploads/coffee1.jpg';
   return (
@@ -165,7 +279,7 @@ const Pending = ({ navigation }) => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{ backgroundColor: '#C0D9D9' }}>
+      style={{backgroundColor: '#C0D9D9'}}>
       {/* {isFullScreen && <ImageViewer style={{height: 100}} imageUrls={[{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]} index={0} />} */}
       <View style={styles.header}>
         <Icon2
@@ -195,13 +309,12 @@ const Pending = ({ navigation }) => {
       <View style={styles.container}>
         {loader && (
           <View>
-            {Array.from({ length: 5 }, (_, index) => (
+            {Array.from({length: 5}, (_, index) => (
               <SkeletonCard width={width - 20} height={120} />
             ))}
           </View>
         )}
 
-   
         <FlatList
           data={myData}
           extraData={myData}
@@ -286,9 +399,11 @@ const Pending = ({ navigation }) => {
             </View>
           )}
         />
-
-
-      
+        {/* <FlatList
+          data={listData}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+        /> */}
 
         {/* -------------------------- Model-------------------------------- */}
         <View style={styles.centered_view}>
@@ -356,25 +471,25 @@ const Pending = ({ navigation }) => {
                           justifyContent: 'space-between',
                           gap: 10,
                         }}>
-                        <Text style={[styles.text, { color: '#fff' }]}>
+                        <Text style={[styles.text, {color: '#fff'}]}>
                           नाम :- {obj.user_name}
                         </Text>
-                        <Text style={[styles.text, { color: '#fff' }]}>
+                        <Text style={[styles.text, {color: '#fff'}]}>
                           पता/विभाग :- {obj.depat}
                         </Text>
-                        <Text style={[styles.text, { color: '#fff' }]}>
+                        <Text style={[styles.text, {color: '#fff'}]}>
                           मोबाइल नंबर :- {obj.phone}
                         </Text>
-                        <Text style={[styles.text, { color: '#fff' }]}>
+                        <Text style={[styles.text, {color: '#fff'}]}>
                           मिलने का कारण :- {obj.purpose}
                         </Text>
-                        <Text style={[styles.text, { color: '#fff' }]}>
+                        <Text style={[styles.text, {color: '#fff'}]}>
                           व्यक्तियो की संख्या :- {obj.noofpeople}
                         </Text>
-                        <Text style={[styles.text, { color: '#fff' }]}>
+                        <Text style={[styles.text, {color: '#fff'}]}>
                           तारीख:- {obj.date}
                         </Text>
-                        <Text style={[styles.text, { color: '#fff' }]}>
+                        <Text style={[styles.text, {color: '#fff'}]}>
                           समय :- {obj.time}
                         </Text>
                       </View>
@@ -389,8 +504,8 @@ const Pending = ({ navigation }) => {
                           onPress={() =>
                             onPressChangeStatus(obj.id, 'complete')
                           }
-                          android_ripple={{ color: '#fff' }}>
-                          <Text style={[styles.text, { color: '#fff' }]}>
+                          android_ripple={{color: '#fff'}}>
+                          <Text style={[styles.text, {color: '#fff'}]}>
                             Complete
                           </Text>
                         </Pressable>
@@ -398,8 +513,8 @@ const Pending = ({ navigation }) => {
                       <View style={styles.cancelBtn}>
                         <Pressable
                           onPress={() => onPressChangeStatus(obj.id, 'reject')}
-                          android_ripple={{ color: '#fff' }}>
-                          <Text style={[styles.text, { color: '#fff' }]}>
+                          android_ripple={{color: '#fff'}}>
+                          <Text style={[styles.text, {color: '#fff'}]}>
                             Reject
                           </Text>
                         </Pressable>
@@ -422,13 +537,14 @@ const Pending = ({ navigation }) => {
               <Text style={styles.closeText}>Close</Text>
             </TouchableOpacity>
             {console.log(selectedImage)}
-            <Image
-              style={styles.modalImage}
-              source={{ uri: selectedImage }}
-            />
+            <Image style={styles.modalImage} source={{uri: selectedImage}} />
           </View>
         </Modal>
-        <FullScreenModal uri={selectedModalImage} visible={isFullScreen} onClose={handleCloseModal} />
+        <FullScreenModal
+          uri={selectedModalImage}
+          visible={isFullScreen}
+          onClose={handleCloseModal}
+        />
       </View>
     </ScrollView>
   );
@@ -624,7 +740,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     // marginLeft: 150,
-
   },
   ViewMore1: {
     backgroundColor: '#36648B',

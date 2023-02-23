@@ -45,6 +45,7 @@
     "react-native-svg": "^13.7.0",
     "react-native-swipe-action-list": "^0.0.6",
     "react-native-swipe-list-view": "^3.2.9",
+    "react-native-swipeout": "^2.3.6",
     "react-native-vector-icons": "^9.2.0"
   },
   "devDependencies": {
