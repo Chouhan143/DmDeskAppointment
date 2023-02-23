@@ -37,12 +37,17 @@ import FullScreenModal from '../../../Hooks/FullScreenModal';
 import Loader from '../../components/Loader';
 // import { Swipeable } from 'react-native-gesture-handler';
 import DataContext from '../../../LoginCredencial/context/DataContextApi';
+import Swipeout from 'react-native-swipeout';
 const { height } = Dimensions.get('screen');
 const { width } = Dimensions.get('screen');
 // var myData = [];
 
 const Pending = ({ navigation }) => {
   const { data, count, setcount, getDataFunc } = useContext(DataContext)
+=======
+const Pending = ({navigation}) => {
+  const {data, count, setcount, getDataFunc} = useContext(DataContext);
+>>>>>>> 30c54341ebf1972e02eb08516648fff16005c81c
   const toast = useToast();
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
@@ -53,17 +58,134 @@ const Pending = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [userType, setuserType] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedImage, setselectedImage] = useState("");
-  const [selectedModalImage, setselectedModalImage] = useState([])
+  const [selectedImage, setselectedImage] = useState('');
+  const [selectedModalImage, setselectedModalImage] = useState([]);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [listData, setListData] = useState([
+    { id: '1', title: 'Item 1' },
+    { id: '2', title: 'Item 2' },
+    { id: '3', title: 'Item 3' },
+    { id: '4', title: 'Item 4' },
+    { id: '5', title: 'Item 5' },
+  ]);
+
+  const renderItem = ({ item }) => {
+    const swipeBtns = [
+      {
+        text: 'Reject',
+        backgroundColor: 'red',
+        // onPress: () => handleSwipeLeft(item.id),
+      },
+    ];
+    const LeftBtns = [
+      {
+        text: 'Accept',
+        backgroundColor: 'green',
+        // onPress: () => handleSwipeLeft(item.id),
+      },
+    ];
+
+    return (
+      <Swipeout left={LeftBtns} right={swipeBtns}>
+        {/* <View style={{ padding: 10 }}>
+          <Text>{item.title}</Text>
+        </View> */}
+        <View style={styles.MainWraper}>
+          <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: responsiveFontSize(2),
+                fontWeight: 'bold',
+              }}>
+              {item.user_name} ({item.noofpeople})
+            </Text>
+          </View>
+          <View style={styles.OuterWraper}>
+            <View style={styles.ImageWraper}>
+              <TouchableOpacity
+                onPress={() =>
+                  watchFullImage(
+                    `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                  )
+                }>
+                {/* <Image
+                      source={
+                        item.img
+                          ? {
+                            uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                          }
+                          : Avtar
+                      }
+                      style={{
+                        width: responsiveWidth(20),
+                        height: responsiveWidth(20),
+                        borderWidth: 0.2,
+                        borderRadius: 10,
+                        resizeMode: 'contain',
+                      }}
+                    /> */}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.ContentWraper}>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>मिलने का कारण :- </Text>
+                <Text numberOfLines={6} style={styles.textSubHeading}>
+                  {item.purpose}
+                </Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>व्यक्तियो की संख्या :-</Text>
+                <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>तारीख :- </Text>
+                <Text style={styles.textSubHeading}>{item.date}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>समय :- </Text>
+                <Text style={styles.textSubHeading}>{item.time}</Text>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={styles.ViewMore}>
+                  <TouchableOpacity onPress={() => onPressHandler(item)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: responsiveFontSize(1.5),
+                      }}>
+                      View More
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={[styles.ViewMore, { marginLeft: responsiveWidth(2) }]}>
+                  <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: responsiveFontSize(1.5),
+                      }}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View></View>
+            </View>
+          </View>
+        </View>
+      </Swipeout>
+    );
+  };
 
   const handleCloseModal = () => {
     setIsFullScreen(!isFullScreen);
-  }
-  const watchFullImage = (item) => {
+  };
+  const watchFullImage = item => {
     setIsFullScreen(!isFullScreen);
-    setselectedModalImage(item)
-  }
+    setselectedModalImage(item);
+  };
 
   const toggleModal = item => {
     setModalVisible(!isModalVisible);
@@ -73,18 +195,18 @@ const Pending = ({ navigation }) => {
   const onPressHandler = (item, index) => {
     SetshowWarning(!showWarning);
     setobj(item);
-    setUserData(`https://srninfotech.com/projects/dmdesk/public/uploads/${item}`);
+    setUserData(
+      `https://srninfotech.com/projects/dmdesk/public/uploads/${item}`,
+    );
   };
-
-
 
   const onPressEditHandler = (item, index) => {
     SetshowWarning(!showWarning);
     setobj(item);
-    setUserData(`https://srninfotech.com/projects/dmdesk/insertAppointmentData`);
+    setUserData(
+      `https://srninfotech.com/projects/dmdesk/insertAppointmentData`,
+    );
   };
-
-
 
   const onPressCard = () => {
     SetshowWarning(false);
@@ -110,63 +232,79 @@ const Pending = ({ navigation }) => {
   };
 
 
+
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
       getDataFunc();
     });
+
     return unsubscribe;
   }, []);
 
 
 
 
-  const AddUserInfo = async () => {
-    const userType = await AsyncStorage.getItem('userType');
-    setuserType(userType);
-    setloader(true);
-    const response = await getData(Get_Appointment_Data);
-    const newData = response.result.sort(function (a, b) {
-      return a.created_date > b.created_date
-        ? -1
-        : a.created_date < b.created_date
-          ? 1
-          : 0;
-    });
-    const completedData = newData.filter(
-      appointment => appointment.status == 'pending',
-    );
-    setMyData(completedData);
-    setloader(false);
+const AddUserInfo = async () => {
+  const userType = await AsyncStorage.getItem('userType');
+  setuserType(userType);
+  setloader(true);
+  const response = await getData(Get_Appointment_Data);
+  const newData = response.result.sort(function (a, b) {
+    return a.created_date > b.created_date
+      ? -1
+      : a.created_date < b.created_date
+        ? 1
+        : 0;
+  });
+  const completedData = newData.filter(
+    appointment => appointment.status == 'pending',
+  );
+  setMyData(completedData);
+  setloader(false);
+};
+
+const onPressChangeStatus = async (id, item) => {
+  let payload = {
+    id: id,
+    status: item,
   };
-
-  const onPressChangeStatus = async (id, item) => {
-    let payload = {
-      id: id,
-      status: item,
-    };
-    const data = await postData(Update_Status, payload);
-    if (data.result) {
-      SetshowWarning(false);
-      await toast.show('Updated', { type: 'success', position: 'top' });
-      await AddUserInfo();
-      await getDataFunc();
-      await setcount(count + 1);
-
-    }
-  };
+  const data = await postData(Update_Status, payload);
+  if (data.result) {
+    SetshowWarning(false);
+    await toast.show('Updated', { type: 'success', position: 'top' });
+    await AddUserInfo();
+    await getDataFunc();
+    await setcount(count + 1);
 
 
-  const navigateToEdit = (id) => {
-    // console.log(id)
-    setloader1(true);
-    navigation.navigate("edit-appointment", { id: id })
-    setloader1(false);
+    await toast.show('Updated', { type: 'success', position: 'top' });
+    await AddUserInfo();
+    await getDataFunc();
+    await setcount(count + 1);
+
   }
+};
+
+const navigateToEdit = id => {
+  // console.log(id)
+  setloader1(true);
+  navigation.navigate('edit-appointment', { id: id });
+  setloader1(false);
+};
 
 
-  return (
-    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+return (
+  // <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+  //   style={{ backgroundColor: '#C0D9D9' }}>
+
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       style={{ backgroundColor: '#C0D9D9' }}>
+      {/* {isFullScreen && <ImageViewer style={{height: 100}} imageUrls={[{ url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'}]} index={0} />} */}
+
       <View style={styles.header}>
         <Icon2
           name="arrow-left-thin-circle-outline"
@@ -201,6 +339,7 @@ const Pending = ({ navigation }) => {
             ))}
           </View>
         )}
+
 
 
         <FlatList
@@ -289,6 +428,13 @@ const Pending = ({ navigation }) => {
         />
 
 
+
+
+        {/* <FlatList
+          data={listData}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+        /> */}
 
 
         {/* -------------------------- Model-------------------------------- */}
@@ -423,38 +569,39 @@ const Pending = ({ navigation }) => {
               <Text style={styles.closeText}>Close</Text>
             </TouchableOpacity>
             {console.log(selectedImage)}
-            <Image
-              style={styles.modalImage}
-              source={{ uri: selectedImage }}
-            />
+            <Image style={styles.modalImage} source={{ uri: selectedImage }} />
           </View>
         </Modal>
-        <FullScreenModal uri={selectedModalImage} visible={isFullScreen} onClose={handleCloseModal} />
+        <FullScreenModal
+          uri={selectedModalImage}
+          visible={isFullScreen}
+          onClose={handleCloseModal}
+        />
       </View>
 
     </ScrollView>
-  );
+    );
 };
 
-export default Pending;
+    export default Pending
 
-const styles = StyleSheet.create({
-  header: {
-    padding: 20,
+    const styles = StyleSheet.create({
+      header: {
+      padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
 
     // backgroundColor: '#528B8B',
   },
-  container: {
-    flex: 1,
+    container: {
+      flex: 1,
     alignItems: 'center',
     backgroundColor: '#C0D9D9',
     paddingVertical: 20,
   },
-  headingWraper: {
-    display: 'flex',
+    headingWraper: {
+      display: 'flex',
     paddingLeft: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -464,11 +611,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'center',
   },
-  text: {
-    fontSize: responsiveFontSize(1.7),
+    text: {
+      fontSize: responsiveFontSize(1.7),
   },
-  Model: {
-    display: 'flex',
+    Model: {
+      display: 'flex',
     // paddingLeft: responsiveWidth(1),
     width: responsiveWidth(100) - 60,
     borderRadius: 10,
@@ -476,26 +623,26 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     overflow: 'hidden',
   },
-  cancelIcon: {
-    marginLeft: 125,
+    cancelIcon: {
+      marginLeft: 125,
   },
 
-  centered_view: {
-    flex: 1,
+    centered_view: {
+      flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#00000099',
   },
-  warning_modal: {
-    width: responsiveWidth(100) - 20,
+    warning_modal: {
+      width: responsiveWidth(100) - 20,
     marginTop: (responsiveHeight(100) - 100) / 15,
     backgroundColor: '#6195C1',
     borderWidth: 1,
     borderColor: '#36648B',
     borderRadius: 20,
   },
-  warning_title: {
-    position: 'relative',
+    warning_title: {
+      position: 'relative',
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -503,14 +650,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 18,
     borderTopLeftRadius: 18,
   },
-  warning_body: {
-    marginTop: responsiveHeight(3),
+    warning_body: {
+      marginTop: responsiveHeight(3),
     marginBottom: responsiveHeight(2),
     justifyContent: 'center',
     alignItems: 'center',
   },
-  userContent: {
-    display: 'flex',
+    userContent: {
+      display: 'flex',
     alignItems: 'center',
     alignSelf: 'flex-end',
     backgroundColor: '#6195C1',
@@ -520,14 +667,14 @@ const styles = StyleSheet.create({
     width: width - 20,
     borderColor: '#90B3F2',
   },
-  AppointmentIconStyle: {
-    width: responsiveWidth(6),
+    AppointmentIconStyle: {
+      width: responsiveWidth(6),
     height: responsiveWidth(6),
     color: '#ffff',
   },
 
-  UserName: {
-    display: 'flex',
+    UserName: {
+      display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#0000',
@@ -538,31 +685,31 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 
-  btnWrapper: {
-    display: 'flex',
+    btnWrapper: {
+      display: 'flex',
     justifyContent: 'space-around',
     flexDirection: 'row',
     marginTop: 10,
     paddingBottom: 10,
   },
-  acceptBtn: {
-    padding: 10,
+    acceptBtn: {
+      padding: 10,
     backgroundColor: 'green',
     borderRadius: 10,
     paddingHorizontal: 20,
   },
-  cancelBtn: {
-    padding: 10,
+    cancelBtn: {
+      padding: 10,
     backgroundColor: 'red',
     borderRadius: 10,
     paddingHorizontal: 30,
     alignItems: 'center',
   },
 
-  // ------------------------------------------User Card styling---------------
-  MainWraper: {
-    // flex: 1,
-    display: 'flex',
+    // ------------------------------------------User Card styling---------------
+    MainWraper: {
+      // flex: 1,
+      display: 'flex',
     width: width - 20,
     backgroundColor: '#fff',
     borderRadius: 20,
@@ -571,8 +718,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     position: 'relative',
   },
-  UserName: {
-    display: 'flex',
+    UserName: {
+      display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#0000',
@@ -582,23 +729,23 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 10,
     width: '100%',
   },
-  OuterWraper: {
-    display: 'flex',
+    OuterWraper: {
+      display: 'flex',
     flexDirection: 'row',
   },
-  ImageWraper: {
-    display: 'flex',
+    ImageWraper: {
+      display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 5,
   },
-  ContentWraper: {
-    overflow: 'hidden',
+    ContentWraper: {
+      overflow: 'hidden',
     flexWrap: 'wrap',
     width: responsiveWidth(100) - 100,
   },
-  ListRow: {
-    display: 'flex',
+    ListRow: {
+      display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'flex-start',
@@ -606,18 +753,18 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     overflow: 'hidden',
   },
-  textHeading: {
-    color: '#000',
+    textHeading: {
+      color: '#000',
     paddingVertical: 5,
     fontWeight: 'bold',
     fontSize: responsiveFontSize(1.5),
   },
-  textSubHeading: {
-    color: '#8B8989',
+    textSubHeading: {
+      color: '#8B8989',
     fontSize: responsiveFontSize(1.3),
   },
-  ViewMore: {
-    backgroundColor: '#36648B',
+    ViewMore: {
+      backgroundColor: '#36648B',
     paddingHorizontal: responsiveWidth(1.5),
     paddingVertical: responsiveHeight(1.2),
     width: 70,
@@ -627,10 +774,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     // marginLeft: 150,
-
   },
-  ViewMore1: {
-    backgroundColor: '#36648B',
+    ViewMore1: {
+      backgroundColor: '#36648B',
     padding: 5,
     width: 70,
     borderWidth: 0.2,
@@ -640,28 +786,28 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginLeft: 200,
   },
-  image: {
-    width: 200,
+    image: {
+      width: 200,
     height: 200,
   },
-  container2: {
-    flex: 1,
+    container2: {
+      flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  modalContainer: {
-    flex: 1,
+    modalContainer: {
+      flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  closeText: {
-    fontSize: 20,
+    closeText: {
+      fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
     color: 'black',
   },
-  modalImage: {
-    width: '100%',
+    modalImage: {
+      width: '100%',
     height: '100%',
   },
 });

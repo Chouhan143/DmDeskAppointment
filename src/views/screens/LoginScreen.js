@@ -19,9 +19,9 @@ const LoginScreen = ({ navigation }) => {
   const toast = useToast();
 
 
-  const [inputs, setInputs] = React.useState({ email: '', password: '' });
+  // const [inputs, setInputs] = React.useState({ email: '', password: '' });
 
-  // const [inputs, setInputs] = React.useState({ email: 'test@gmail.com', password: 'test@123' });
+  const [inputs, setInputs] = React.useState({ email: 'test@gmail.com', password: 'test@123' });
 
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
