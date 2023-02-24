@@ -30,7 +30,7 @@ import DataContext from '../../LoginCredencial/context/DataContextApi';
 const { height } = Dimensions.get('window');
 
 const HomeScreenPa = ({ navigation }) => {
-  const {data, count}  = useContext(DataContext)
+  const {data, count,getDataFunc}  = useContext(DataContext)
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -60,6 +60,7 @@ const HomeScreenPa = ({ navigation }) => {
     setloaderInfo(true)
     setRefreshing (true);
     AddUserInfo();
+    getDataFunc();
     setloaderInfo(false)
 
     setTimeout(() => setRefreshing(false), 1000);
@@ -68,6 +69,7 @@ const HomeScreenPa = ({ navigation }) => {
   useEffect(() => {
     setloaderInfo(true)
     AddUserInfo();
+    getDataFunc();
     setloaderInfo(false)
   }, [count]);
 

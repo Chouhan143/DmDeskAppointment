@@ -93,6 +93,7 @@ const Pending = ({ navigation }) => {
         borderWidth:1,
         borderRadius:10,
         // onPress: () => handleSwipeLeft(item.id),
+        onPress:() => onPressChangeStatus(item.id, 'reject')
       
       }
 
@@ -102,7 +103,7 @@ const Pending = ({ navigation }) => {
         text: 'Complete',
         backgroundColor: 'green',
         // onPress: () => handleSwipeLeft(item.id),
-        onPress:() => onPressChangeStatus(obj.id, 'complete')
+        onPress:() => onPressChangeStatus(item.id, 'complete')
         // onPress:() => {handleComplete}
       },
     ];
