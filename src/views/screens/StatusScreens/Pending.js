@@ -36,7 +36,6 @@ import { FlatList } from 'react-native';
 import FullScreenModal from '../../../Hooks/FullScreenModal';
 import Loader from '../../components/Loader';
 // import { Swipeable } from 'react-native-gesture-handler';
-import { SwipeActionList } from 'react-native-swipe-action-list';
 import DataContext from '../../../LoginCredencial/context/DataContextApi';
 import Swipeout from 'react-native-swipeout';
 const { height } = Dimensions.get('screen');
@@ -47,7 +46,6 @@ const { width } = Dimensions.get('screen');
 
 const Pending = ({ navigation }) => {
   const { data, count, setcount, getDataFunc } = useContext(DataContext);
-
   const toast = useToast();
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
@@ -61,39 +59,20 @@ const Pending = ({ navigation }) => {
   const [selectedImage, setselectedImage] = useState('');
   const [selectedModalImage, setselectedModalImage] = useState([]);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  // const [openItemIndex, setOpenItemIndex] = useState(-1);
-  const [listData, setListData] = useState([
-    { id: '1', title: 'Item 1' },
-    { id: '2', title: 'Item 2' },
-    { id: '3', title: 'Item 3' },
-    { id: '4', title: 'Item 4' },
-    { id: '5', title: 'Item 5' },
-  ]);
-  const [completed, setCompleted] = useState([]);
-
+  const [openItemIndex, setOpenItemIndex] = useState(-1);
+  // const [currentDate, setCurrentDate] = useState('');
+  // const [datWiseData,setDateWiseData] =useState('');
 
 
   const renderItem = ({ item }) => {
 
-    const handleComplete = () => {
-     
-      const completedData = data.filter(
-        appointment => appointment.status == 'complete',
-      );
-      setCompleted(completedData);
-    };
-
-
-
     const swipeBtns = [
       {
         text: 'Reject',
-        color:'#fff',
+        color: '#fff',
         backgroundColor: 'red',
-        borderWidth:1,
-        borderRadius:10,
-        // onPress: () => handleSwipeLeft(item.id),
-      
+        onPress: () => onPressChangeStatus(item.id, 'reject')
+
       }
 
     ];
@@ -101,24 +80,20 @@ const Pending = ({ navigation }) => {
       {
         text: 'Complete',
         backgroundColor: 'green',
-        // onPress: () => handleSwipeLeft(item.id),
-        onPress:() => onPressChangeStatus(obj.id, 'complete')
-        // onPress:() => {handleComplete}
+        onPress: () => onPressChangeStatus(item.id, 'complete')
+
       },
     ];
 
     return (
-      <Swipeout 
-      left={LeftBtns}
-       right={swipeBtns}
-      //  onOpen={() => handleSwipeoutOpen(index)}
-        // onClose={handleSwipeoutClose}
-        // disabled={openItemIndex !== -1 && openItemIndex !== index}
-        autoClose={true}
-        >
-        {/* <View style={{ padding: 10 }}>
-          <Text>{item.title}</Text>
-        </View> */}
+      <Swipeout
+        left={LeftBtns}
+        right={swipeBtns}
+        // autoClose={true}
+        close={openItemIndex !== -1 && openItemIndex !== item.id}
+        onOpen={() => setOpenItemIndex(item.id)}
+        onClose={() => setOpenItemIndex(-1)}
+      >
         <View style={styles.MainWraper}>
           <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
             <Text
@@ -140,21 +115,21 @@ const Pending = ({ navigation }) => {
                   )
                 }>
                 <Image
-                      source={
-                        item.img
-                          ? {
-                            uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
-                          }
-                          : Avtar
+                  source={
+                    item.img
+                      ? {
+                        uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
                       }
-                      style={{
-                        width: responsiveWidth(20),
-                        height: responsiveWidth(20),
-                        borderWidth: 0.2,
-                        borderRadius: 10,
-                        resizeMode: 'contain',
-                      }}
-                    />
+                      : Avtar
+                  }
+                  style={{
+                    width: responsiveWidth(20),
+                    height: responsiveWidth(20),
+                    borderWidth: 0.2,
+                    borderRadius: 10,
+                    resizeMode: 'contain',
+                  }}
+                />
               </TouchableOpacity>
             </View>
             <View style={styles.ContentWraper}>
@@ -184,7 +159,7 @@ const Pending = ({ navigation }) => {
                         color: '#fff',
                         fontSize: responsiveFontSize(1.5),
                       }}>
-                      View More
+                      View
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -209,7 +184,10 @@ const Pending = ({ navigation }) => {
     );
   };
 
-
+  // useEffect(() => {
+  //   const date = new Date().toLocaleDateString();
+  //   setCurrentDate(date);
+  // }, []);
 
   const handleCloseModal = () => {
     setIsFullScreen(!isFullScreen);
@@ -254,15 +232,23 @@ const Pending = ({ navigation }) => {
     AddUserInfo();
   }, [count]);
 
-  // useEffect(() => {
-  //   AddUserInfo();
-  // });
+
 
   const logout = () => {
     navigation.replace('login');
     AsyncStorage.clear();
   };
 
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     AddUserInfo();
+  //   }, 5000);
+
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
 
 
 
@@ -289,12 +275,21 @@ const Pending = ({ navigation }) => {
           ? 1
           : 0;
     });
+    // console.log(response.result)
     const completedData = newData.filter(
       appointment => appointment.status == 'pending',
     );
-    setMyData(completedData);
+ 
+    const currentDate = new Date().toISOString().slice(0, 10);
+
+    const filteredData = completedData.filter(appointment => appointment.status === 'pending' && appointment.date === currentDate);
+    setMyData(filteredData);
     setloader(false);
+   
   };
+
+
+
 
   const onPressChangeStatus = async (id, item) => {
     let payload = {
@@ -308,13 +303,6 @@ const Pending = ({ navigation }) => {
       await AddUserInfo();
       await getDataFunc();
       await setcount(count + 1);
-
-
-      await toast.show('Updated', { type: 'success', position: 'top' });
-      await AddUserInfo();
-      await getDataFunc();
-      await setcount(count + 1);
-
     }
   };
 
@@ -464,7 +452,7 @@ const Pending = ({ navigation }) => {
           renderItem={renderItem}
         />
 
-       
+
 
 
 

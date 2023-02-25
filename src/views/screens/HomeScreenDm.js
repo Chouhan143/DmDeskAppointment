@@ -46,7 +46,6 @@ const HomeScreenDm = ({ navigation }) => {
         setRefreshing(true);
         AddUserInfo();
         setloaderInfo(false)
-
         setTimeout(() => setRefreshing(false), 1000);
     };
 
@@ -71,17 +70,16 @@ const HomeScreenDm = ({ navigation }) => {
     const AddUserInfo = async () => {
 
         const response = await getData(Get_Appointment_Data)
-
-        // console.log("response", JSON.stringify(response.result))
-
-        // console.log(newData)
         const completedData = response.result.filter(appointment => appointment.status == 'complete')
+
         const pendingData = response.result.filter(appointment => appointment.status == 'pending')
+        const currentDate = new Date().toISOString().slice(0, 10);
+        const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === currentDate);
+
         const rejectData = response.result.filter(appointment => appointment.status == 'reject')
-        setPending(pendingData.length)
+        setPending(filteredData.length)
         setCompleted(completedData.length)
         setRejected(rejectData.length)
-
         setMyData(completedData)
 
 
@@ -169,7 +167,7 @@ const HomeScreenDm = ({ navigation }) => {
                         </View>
                         <View style={{
                             display: 'flex',
-                            flexDirection: 'row',
+                            flexDirection:'row',
                             marginTop: responsiveHeight(4),
                             marginLeft: responsiveWidth(10)
                         }}>

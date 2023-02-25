@@ -109,12 +109,6 @@ const BookAppointment = () => {
     }
   }
 
-  
-  
-  
-  
-  
-
   const pickImage = () => {
     requestCameraPermission()
    

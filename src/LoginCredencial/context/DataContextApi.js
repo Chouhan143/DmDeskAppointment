@@ -18,7 +18,6 @@ export function DataContextApiProvider({children}) {
     console.log("run")
     const dataResides = await getData(Get_Appointment_Data);
     await setData(dataResides.result)
-    
   };
 
   return (
