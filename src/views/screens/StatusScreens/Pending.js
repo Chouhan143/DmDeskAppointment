@@ -71,8 +71,11 @@ const Pending = ({ navigation }) => {
         text: 'Reject',
         color: '#fff',
         backgroundColor: 'red',
+
         onPress: () => onPressChangeStatus(item.id, 'reject')
 
+       
+      
       }
 
     ];
@@ -80,7 +83,11 @@ const Pending = ({ navigation }) => {
       {
         text: 'Complete',
         backgroundColor: 'green',
+
         onPress: () => onPressChangeStatus(item.id, 'complete')
+
+        // onPress: () => handleSwipeLeft(item.id),
+        // onPress:() => {handleComplete}
 
       },
     ];
