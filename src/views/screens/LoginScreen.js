@@ -38,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
       console.log(response)
 
       if(response.l_status == "false") {
-        toast.show('Wrong password', {
+        toast.show('Wrong email or password', {
           type: 'danger',
           position: 'top',
         });
@@ -49,8 +49,7 @@ const LoginScreen = ({ navigation }) => {
         // await AsyncStorage.set('var', 'HomeScreenDm');
       } else if (response.user_type == "pa") {
         await AsyncStorage.setItem("userType", response.user_type)
-       await AsyncStorage.setItem("city", response.city)
-       
+        await AsyncStorage.setItem("city", response.city)
         navigation.replace('HomeScreenPa');
         // await AsyncStorage.set('var', 'HomeScreenPa');
       }
@@ -69,24 +68,7 @@ const LoginScreen = ({ navigation }) => {
 
   function validateSchema() {
     Keyboard.dismiss();
-    // let isValid = true;
-    // if (inputs?.email?.length == 0) {
-    //   handleError('Please input email', 'email');
-    //   isValid = !isValid;
-    // }
-    // if (inputs?.password?.length == 0) {
-    //   handleError('Please input password', 'password');
-    //   isValid = !isValid;
-    // }
-    // if (!isValid) {
-    //   // login();
-    //   return true
-    // } else {
-    //   return false
-    // }
-
     let isValid = true;
-
     const isEmailValid = inputs?.email?.length > 0;
   if (!isEmailValid) {
     handleError('Please input email', 'email');

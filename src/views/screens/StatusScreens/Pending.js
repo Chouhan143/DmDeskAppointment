@@ -74,8 +74,8 @@ const Pending = ({ navigation }) => {
 
         onPress: () => onPressChangeStatus(item.id, 'reject')
 
-       
-      
+
+
       }
 
     ];
@@ -286,13 +286,13 @@ const Pending = ({ navigation }) => {
     const completedData = newData.filter(
       appointment => appointment.status == 'pending',
     );
- 
+
     const currentDate = new Date().toISOString().slice(0, 10);
 
     const filteredData = completedData.filter(appointment => appointment.status === 'pending' && appointment.date === currentDate);
     setMyData(filteredData);
     setloader(false);
-   
+
   };
 
 
@@ -555,7 +555,7 @@ const Pending = ({ navigation }) => {
                     </View>
                   </View>
                 </View>
-                {userType !== 'ad' && (
+                {userType !== 'ad' && userType !== 'pa' &&  (
                   <View style={styles.warning_button}>
                     <View style={styles.btnWrapper}>
                       <View style={styles.acceptBtn}>
@@ -580,7 +580,7 @@ const Pending = ({ navigation }) => {
                       </View>
                     </View>
                   </View>
-                )}
+                )}      
               </View>
             </View>
           </Modal>

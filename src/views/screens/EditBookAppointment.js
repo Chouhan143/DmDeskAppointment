@@ -20,8 +20,8 @@ import Loader from '../components/Loader';
 
 
 
-const EditBookAppointment = ({navigation, route}) => {
- 
+const EditBookAppointment = ({ navigation, route }) => {
+
 
   const toast = useToast()
   const [inputs, setInputs] = useState({
@@ -30,13 +30,13 @@ const EditBookAppointment = ({navigation, route}) => {
     purpose: '',
     noofpeople: '',
     phone: '',
-    img:'',
+    img: '',
   });
   const [errors, setErrors] = useState({});
   const [imageUrl, setImageUrl] = useState(undefined);
   const [image, setImage] = useState(null);
   const [laoder, setlaoder] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(false);
   // const [Image, setImage] = useState(undefined);
   // ----------------------------------------Validation section start------------------------------------------
 
@@ -57,7 +57,7 @@ const EditBookAppointment = ({navigation, route}) => {
 
     if (inputs?.phone.length == 0) {
       handleError('Please input phone number', 'phone');
-      isValid = !isValid; 
+      isValid = !isValid;
     } else if (inputs?.phone.length !== 10) {
       handleError('Mobile Number must be 10 digit', 'phone');
     }
@@ -84,12 +84,13 @@ const EditBookAppointment = ({navigation, route}) => {
 
   const getUserInfo = async () => {
     setlaoder(true)
-    const {id} = route.params;
+    const { id } = route.params;
+    console.log(route.params)
     const temp = await getData(`${Get_Appointment_Data_by_id}+${id}`)
     const { data } = temp;
     console.log(temp)
     if (data.length > 0) {
-  
+
       const { user_name, depat, purpose, noofpeople, phone, img, } = data[0];
       setInputs({
         user_name,
@@ -105,33 +106,61 @@ const EditBookAppointment = ({navigation, route}) => {
   // ----------------------------------------Validation section end ------------------------------------------
 
 
-  const pickImage = () => {
-    openCamera()
-    launchCamera({
-      title: 'Select Image',
-      mediaType: 'photo',
-      noData: true,
-      quality: 1.0,
-      allowsEditing: true,
-    }, (response) => {
-      // console.log(JSON.stringify(response.assets[0].uri))
-      if (response.didCancel) {
-      } else if (response.error) {
+  async function requestCameraPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          'title': 'Camera Permission',
+          'message': 'App needs access to your camera'
+        }
+      )
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Camera permission granted");
+        launchCamera({
+          title: 'Select Image',
+          mediaType: 'photo',
+          noData: true,
+          quality: 1.0,
+          allowsEditing: true,
+        }, (response) => {
+          // console.log(JSON.stringify(response.assets[0].uri))
+          if (response?.didCancel) {
+          } else if (response?.error) {
+          } else {
+            setImage(response?.assets[0]);
+          }
+        });
       } else {
-        setImage(response.assets[0]);
+        console.log("Camera permission denied");
       }
-    });
+    } catch (err) {
+      console.warn(err)
+    }
+  }
+
+
+
+  const pickImage = () => {
+    requestCameraPermission()
   };
 
+
+
+
   const uploadImage = async () => {
+    if (isLoading) {
+      return; // do nothing if already loading
+    }
+    setIsLoading(true);
     valdiate()
-    if(valdiate()) {
+    if (valdiate()) {
       const formData = new FormData();
       const cityName = await AsyncStorage.getItem("city")
       formData.append('id', route.params.id);
       // if(formData
       //   .image)
-      formData.append('img', image == null ? "": {
+      formData.append('img', image == null ? "" : {
         uri: image.uri,
         name: image.fileName,
         type: image.type,
@@ -142,31 +171,26 @@ const EditBookAppointment = ({navigation, route}) => {
       formData.append('purpose', inputs.purpose);
       formData.append('noofpeople', inputs.noofpeople);
       formData.append('city', cityName);
-     await axios.post(Update_Appointment_Data, formData, {
+      await axios.post(Update_Appointment_Data, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       }).then((response) => {
         if (response) {
           console.log(response.data)
-          toast.show("Appointment updated", { type: "success" , position: 'top'});
+          toast.show("Appointment updated", { type: "success", position: 'top' });
           navigation.navigate('HomeScreenPa');
         }
       }).catch((error) => {
         console.log(error);
       });
-    }else {
-           toast.show("Fill all inputs first", { type: "danger" });
-       }
-  
+    } else {
+      toast.show("Fill all inputs first", { type: "danger" });
+    }
+
   };
 
-  const openCamera = async () => {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-    );
- 
-  };
+
 
   // --------------------------------------------------------------
   const handleOnchange = (text, input) => {
@@ -180,12 +204,12 @@ const EditBookAppointment = ({navigation, route}) => {
     <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}>
-   {
-     console.log(JSON.stringify(inputs))
-   }
+        {
+          console.log(JSON.stringify(inputs))
+        }
 
 
-<Loader visible={laoder} />
+        <Loader visible={laoder} />
 
         <Text style={{ color: COLORS.black, fontSize: responsiveFontSize(3.2), fontWeight: 'bold' }}>
           अपॉइंटमेंट
@@ -197,7 +221,7 @@ const EditBookAppointment = ({navigation, route}) => {
 
         {/* ---------------------------------------------------Input Field start-------------------------- */}
 
-        <View style={{ marginVertical:responsiveHeight(2)}}>
+        <View style={{ marginVertical: responsiveHeight(2) }}>
           <Input
             onChangeText={text => handleOnchange(text, 'user_name')}
             onFocus={() => handleError(null, 'user_name')}
@@ -266,12 +290,12 @@ const EditBookAppointment = ({navigation, route}) => {
           </View>
 
           {/* ------------------------------------------------------ */}
-         
 
 
 
-            <Button onPress={uploadImage} title="Update" />
-            {/* navigation.navigate('HomeScreenPa'); */}
+
+          <Button onPress={uploadImage} title="Update" disabled={isLoading} />
+          {/* navigation.navigate('HomeScreenPa'); */}
         </View>
 
         {/* ---------------------------------------Input Field End-------------------------- */}

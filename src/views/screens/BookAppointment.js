@@ -32,7 +32,7 @@ const BookAppointment = () => {
   const [errors, setErrors] = useState({});
   const [imageUrl, setImageUrl] = useState(undefined);
   const [image, setImage] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   // const [Image, setImage] = useState(undefined);
   // ----------------------------------------Validation section start------------------------------------------
 
@@ -115,12 +115,14 @@ const BookAppointment = () => {
   };
 
   const uploadImage = async () => {
+    if (isLoading) {
+      return; // do nothing if already loading
+    }
+    setIsLoading(true);
     valdiate()
     if(valdiate()) {
       const formData = new FormData();
       const cityName = await AsyncStorage.getItem("city")
-      // if(formData
-      //   .image)
       formData.append('img', image == null ? "": {
         uri: image.uri,
         name: image.fileName,
@@ -153,12 +155,7 @@ const BookAppointment = () => {
   
   };
 
-  const openCamera = async () => {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-    );
  
-  };
 
   // --------------------------------------------------------------
   const handleOnchange = (text, input) => {
@@ -251,7 +248,7 @@ const BookAppointment = () => {
 
 
 
-            <Button onPress={uploadImage} title="Submit" />
+            <Button onPress={uploadImage} title="Submit"  disabled={isLoading} />
             {/* navigation.navigate('HomeScreenPa'); */}
         </View>
 

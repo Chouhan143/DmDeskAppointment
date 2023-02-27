@@ -81,11 +81,7 @@ const HomeScreenDm = ({ navigation }) => {
         setCompleted(completedData.length)
         setRejected(rejectData.length)
         setMyData(completedData)
-
-
     }
-
-
     return (
         <>
             <ScrollView

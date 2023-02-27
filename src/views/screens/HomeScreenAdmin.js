@@ -66,7 +66,6 @@ const HomeScreenAdmin = ({ navigation }) => {
     setRefreshing (true);
     AddUserInfo();
     setloaderInfo(false)
-
     setTimeout(() => setRefreshing(false), 1000);
   };
 
@@ -76,6 +75,14 @@ const HomeScreenAdmin = ({ navigation }) => {
     setloaderInfo(false)
   }, [count]);
 
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+        AddUserInfo();
+    });
+
+    return unsubscribe;
+}, []);
 
   const AddUserInfo =  () => {
     const completedData = data.filter(
@@ -91,6 +98,15 @@ const HomeScreenAdmin = ({ navigation }) => {
     setCompleted(completedData.length);
     setRejected(rejectData.length);
     setMyData(completedData);
+
+    // const response = await getData(Get_Appointment_Data)
+    //     const completedData = response.result.filter(appointment => appointment.status == 'complete')
+    //     const pendingData = response.result.filter(appointment => appointment.status == 'pending')
+    //     const rejectData = response.result.filter(appointment => appointment.status == 'reject')
+    //     setPending(pendingData.length)
+    //     setCompleted(completedData.length)
+    //     setRejected(rejectData.length)
+    //     setMyData(completedData)
 };
  
 
@@ -226,8 +242,8 @@ const HomeScreenAdmin = ({ navigation }) => {
                       color: '#fff',
                       fontWeight: 'bold',
                     }}>
-                    {' '}
-                    पूर्ण{' '}
+                    
+                    पूर्ण
                   </Text>
                 </View>
               </View>
@@ -274,8 +290,8 @@ const HomeScreenAdmin = ({ navigation }) => {
                       color: '#fff',
                       fontWeight: 'bold',
                     }}>
-                    {' '}
-                    अस्वीकृत{' '}
+                    
+                    अस्वीकृत
                   </Text>
                 </View>
               </View>

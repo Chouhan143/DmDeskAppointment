@@ -38,60 +38,11 @@ const LoginScreen = ({navigation}) => {
   const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState('');
   const values = ['dm', 'pa'];
-  // -----------------------
-  const [selected, setSelected] = React.useState('');
-  const [selectedValue, setSelectedValue] = useState('item1');
 
-  // const [selecte, setSelecte] = useState(data[0].value);
-  // const data = [
-  //   { key: '1', value: 'DM' },
-  //   { key: '2', value: 'PA' },
-
-  // ]
-  // ---------------------------------------------
+ 
   function validate() {
     Keyboard.dismiss();
     let isValid = true;
-    // if (inputs?.name?.length == 0) {
-    //   handleError('Please input name', 'name');
-    //   isValid = !isValid;
-    // }
-  
-
-    // if (inputs?.email.length == 0) {
-    //   handleError('Please input email', 'email');
-    //   isValid = !isValid;
-    // }
-    // if (inputs?.email.length == 0) {
-    //   handleError('Please input a valid email', 'email');
-    //   isValid = !isValid;
-    // }
-
-    // if (inputs?.pass.length == 0) {
-    //   handleError('Please input pass', 'pass');
-    //   isValid = !isValid;
-    // }
-    // if (inputs.pass.length < 5) {
-    //   handleError('Min pass length of 5', 'pass');
-    //   isValid = !isValid;
-    // }
-
-    // if (inputs?.city.length == 0) {
-    //   handleError('Please Enter city', 'city');
-    //   isValid = !isValid;
-    // }
-
-    // if (inputs?.user_type.length == 0) {
-    //   handleError('Please Enter UserType', 'user_type');
-    //   isValid = !isValid;
-    // }
-    // if (isValid) {
-    //   return true;
-    //   // login();
-    // } else {
-    //   return false;
-    // }
-
     const isUserName = inputs?.name?.length > 0;
     if (!isUserName) {
       handleError('Please input name', 'name');
@@ -102,9 +53,9 @@ const LoginScreen = ({navigation}) => {
       handleError('Please input email', 'email');
       isValid = false;
     }
-    const isPasswordValid = inputs?.pass?.length > 0;
+    const isPasswordValid = inputs?.pass?.length >= 6;
     if (!isPasswordValid) {
-      handleError('Please input password', 'pass');
+      handleError('Password must be at least 6 characters long', 'pass');
       isValid = false;
     }
 
