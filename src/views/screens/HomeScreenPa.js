@@ -90,7 +90,6 @@ const HomeScreenPa = ({ navigation }) => {
           appointment => appointment.status == 'complete',
         );
 
-
         const pendingData = data.filter(
           appointment => appointment.status == 'pending',
         );

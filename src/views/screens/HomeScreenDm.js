@@ -70,6 +70,7 @@ const HomeScreenDm = ({ navigation }) => {
     const AddUserInfo = async () => {
 
         const response = await getData(Get_Appointment_Data)
+        console.log(response)
         const completedData = response.result.filter(appointment => appointment.status == 'complete')
 
         const pendingData = response.result.filter(appointment => appointment.status == 'pending')

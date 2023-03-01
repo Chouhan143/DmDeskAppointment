@@ -31,7 +31,7 @@ import { ActivityIndicator } from 'react-native';
 import DataContext from '../../LoginCredencial/context/DataContextApi'
 const { height } = Dimensions.get('window');
 const HomeScreenAdmin = ({ navigation }) => {
-  const {data, count}  = useContext(DataContext)
+  const {data, count,getDataFunc}  = useContext(DataContext)
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -65,6 +65,7 @@ const HomeScreenAdmin = ({ navigation }) => {
     setloaderInfo(true)
     setRefreshing (true);
     AddUserInfo();
+    // getDataFunc();
     setloaderInfo(false)
     setTimeout(() => setRefreshing(false), 1000);
   };
@@ -72,9 +73,10 @@ const HomeScreenAdmin = ({ navigation }) => {
   useEffect(() => {
     setloaderInfo(true)
     AddUserInfo();
+    // getDataFunc();
     setloaderInfo(false)
   }, [count]);
-
+// console.log(getDataFunc())
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
@@ -84,13 +86,16 @@ const HomeScreenAdmin = ({ navigation }) => {
     return unsubscribe;
 }, []);
 
+
   const AddUserInfo =  () => {
     const completedData = data.filter(
       appointment => appointment.status == 'complete',
     );
+    console.log(completedData)
     const pendingData = data.filter(
       appointment => appointment.status == 'pending',
     );
+    console.log(pendingData)
     const rejectData = data.filter(
       appointment => appointment.status == 'reject',
     );
@@ -98,17 +103,8 @@ const HomeScreenAdmin = ({ navigation }) => {
     setCompleted(completedData.length);
     setRejected(rejectData.length);
     setMyData(completedData);
-
-    // const response = await getData(Get_Appointment_Data)
-    //     const completedData = response.result.filter(appointment => appointment.status == 'complete')
-    //     const pendingData = response.result.filter(appointment => appointment.status == 'pending')
-    //     const rejectData = response.result.filter(appointment => appointment.status == 'reject')
-    //     setPending(pendingData.length)
-    //     setCompleted(completedData.length)
-    //     setRejected(rejectData.length)
-    //     setMyData(completedData)
 };
- 
+
 
   return (
     <>

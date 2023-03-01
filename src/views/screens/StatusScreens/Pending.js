@@ -48,6 +48,7 @@ const Pending = ({ navigation }) => {
   const { data, count, setcount, getDataFunc } = useContext(DataContext);
   const toast = useToast();
   const [myData, setMyData] = useState([]);
+  const [filterData, setfilterData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
   const [userData, setUserData] = useState({});
   const [obj, setobj] = useState({});
@@ -286,17 +287,20 @@ const Pending = ({ navigation }) => {
     const completedData = newData.filter(
       appointment => appointment.status == 'pending',
     );
-
     const currentDate = new Date().toISOString().slice(0, 10);
-
-    const filteredData = completedData.filter(appointment => appointment.status === 'pending' && appointment.date === currentDate);
-    setMyData(filteredData);
-    setloader(false);
-
+    if (userType == 'ad') {
+      const completedData = newData.filter(
+        appointment => appointment.status == 'pending',
+      );
+      setMyData(newData);
+      setloader(false);
+    } else {
+      const filteredData = completedData.filter(appointment => appointment.status === 'pending' && appointment.date === currentDate);
+      setMyData(filteredData);
+      setloader(false);
+    }
+    
   };
-
-
-
 
   const onPressChangeStatus = async (id, item) => {
     let payload = {
@@ -456,6 +460,7 @@ const Pending = ({ navigation }) => {
         <FlatList
           data={myData}
           keyExtractor={item => item.id}
+          initialNumToRender={4}
           renderItem={renderItem}
         />
 
@@ -555,7 +560,7 @@ const Pending = ({ navigation }) => {
                     </View>
                   </View>
                 </View>
-                {userType !== 'ad' && userType !== 'pa' &&  (
+                {userType !== 'ad' && userType !== 'pa' && (
                   <View style={styles.warning_button}>
                     <View style={styles.btnWrapper}>
                       <View style={styles.acceptBtn}>
@@ -580,7 +585,7 @@ const Pending = ({ navigation }) => {
                       </View>
                     </View>
                   </View>
-                )}      
+                )}
               </View>
             </View>
           </Modal>
