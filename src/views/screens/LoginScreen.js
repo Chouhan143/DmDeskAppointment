@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from '../../../Asets/GovtLogo.png'
+import Logo from './../../../src/assets/images/GovtLogo.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   responsiveHeight,

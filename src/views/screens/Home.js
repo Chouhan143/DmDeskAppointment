@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image,TouchableOpacity } from 'react-native'
-import Logo from '../../../Asets/GovtLogo.png'
+import Logo from '../../assets/images/GovtLogo.png';
 import React from 'react'
 
 

@@ -19,7 +19,9 @@ import DataContext from '../../LoginCredencial/context/DataContextApi';
 
 
 const BookAppointment = () => {
-  const {setcount,count}  = useContext(DataContext)
+
+  const { setcount, count } = useContext(DataContext)
+  const [image, setImage] = useState(null);
   const toast = useToast()
   const [inputs, setInputs] = useState({
     user_name: '',
@@ -27,20 +29,18 @@ const BookAppointment = () => {
     purpose: '',
     noofpeople: '',
     phone: '',
-    img:'',
+    img: '',
   });
   const [errors, setErrors] = useState({});
-  const [imageUrl, setImageUrl] = useState(undefined);
-  const [image, setImage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  // const [Image, setImage] = useState(undefined);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+
   // ----------------------------------------Validation section start------------------------------------------
 
 
   function valdiate() {
     Keyboard.dismiss();
     let isValid = true;
-
     if (!inputs?.user_name?.length > 0) {
       handleError('Please input username', 'user_name');
       isValid = false;
@@ -53,7 +53,7 @@ const BookAppointment = () => {
 
     if (!inputs?.phone?.length > 0) {
       handleError('Please input phone number', 'phone');
-      isValid = false; 
+      isValid = false;
     } else if (inputs?.phone?.length !== 10) {
       handleError('Mobile Number must be 10 digit', 'phone');
       isValid = false;
@@ -65,10 +65,12 @@ const BookAppointment = () => {
     if (!inputs?.noofpeople?.length > 0) {
       handleError('Please input No. Of Peoples', 'noofpeople');
       isValid = false;
-    } else if (!inputs?.noofpeople?.length > 2) {
+    } else if (inputs?.noofpeople?.length > 2) {
       handleError('No. Of People Length Should be Maximum 2 digit', 'noofpeople')
+      isValid = false;
     }
     return isValid;
+
   };
 
 
@@ -111,19 +113,15 @@ const BookAppointment = () => {
 
   const pickImage = () => {
     requestCameraPermission()
-   
   };
 
   const uploadImage = async () => {
-    if (isLoading) {
-      return; // do nothing if already loading
-    }
-    setIsLoading(true);
-    valdiate()
-    if(valdiate()) {
+
+    if (!buttonDisabled && valdiate()) {
+      setButtonDisabled(true);
       const formData = new FormData();
       const cityName = await AsyncStorage.getItem("city")
-      formData.append('img', image == null ? "": {
+      formData.append('img', image == null ? "" : {
         uri: image.uri,
         name: image.fileName,
         type: image.type,
@@ -134,7 +132,7 @@ const BookAppointment = () => {
       formData.append('purpose', inputs.purpose);
       formData.append('noofpeople', inputs.noofpeople);
       formData.append('city', cityName);
-  
+
       axios.post(Post_Appointment_Data, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -142,20 +140,18 @@ const BookAppointment = () => {
       }).then(async (response) => {
         if (response) {
           console.log(response)
-          toast.show("Appointment Booked", { type: "success" , position: 'top'});
-         await setcount(count+1)
-         await navigation.navigate('HomeScreenPa');
+          toast.show("Appointment Booked", { type: "success", position: 'top' });
+          await setcount(count + 1)
+          await navigation.navigate('HomeScreenPa');
         }
       }).catch((error) => {
         console.log(error);
       });
-    }else {
-           toast.show("Fill all inputs first", { type: "danger" });
-       }
-  
-  };
+    } else {
+      toast.show("Fill all inputs first", { type: "danger" });
+    }
 
- 
+  };
 
   // --------------------------------------------------------------
   const handleOnchange = (text, input) => {
@@ -180,7 +176,7 @@ const BookAppointment = () => {
 
         {/* ---------------------------------------------------Input Field start-------------------------- */}
 
-        <View style={{ marginVertical:responsiveHeight(2)}}>
+        <View style={{ marginVertical: responsiveHeight(2) }}>
           <Input
             onChangeText={text => handleOnchange(text, 'user_name')}
             onFocus={() => handleError(null, 'user_name')}
@@ -239,17 +235,12 @@ const BookAppointment = () => {
             <Text style={styles.buttonText}>फोटो सेलेक्ट करे</Text>
           </TouchableOpacity>
           <View style={styles.container}>
-            {/* <Text style={{color:'red'}}>{items.name}</Text> */}
-            {/* <Image style={styles.imageStyle} source={{uri: galleryPhoto}} /> */}
           </View>
 
           {/* ------------------------------------------------------ */}
-         
 
 
-
-            <Button onPress={uploadImage} title="Submit"  disabled={isLoading} />
-            {/* navigation.navigate('HomeScreenPa'); */}
+          <Button onPress={uploadImage} title="Submit" disabled={buttonDisabled} />
         </View>
 
         {/* ---------------------------------------Input Field End-------------------------- */}

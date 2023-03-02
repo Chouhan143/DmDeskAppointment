@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import AppointmentIcon from '../../../../Asets/AppointmentIcon.png'
+import AppointmentIcon from '../../../assets/images/AppointmentIcon.png';
 import React from 'react';
 import {
   responsiveHeight,
@@ -15,7 +15,7 @@ import {
   responsiveFontSize
 } from "react-native-responsive-dimensions";
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Avtar from '../../../../Asets/avtar.png';
+import Avtar from '../../../assets/images/avtar.png';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import {RefreshControl} from 'react-native';
@@ -185,8 +185,8 @@ const Completed = ({navigation}) => {
 
                   <View style={styles.ViewMore}>
                     <TouchableOpacity onPress={() => onPressHandler(item)}>
-                      <Text style={{color: '#fff', fontSize: 10}}>
-                        View More
+                      <Text style={{color: '#fff', fontSize: responsiveFontSize(1.5)}}>
+                        View
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
   ContentWraper: {
     overflow: 'hidden',
     flexWrap: 'wrap',
-    width: width / 1.5,
+    width: responsiveWidth(100) - 100,
   },
   ListRow: {
     display: 'flex',
@@ -476,15 +476,17 @@ const styles = StyleSheet.create({
     color: '#000',
     paddingVertical: 5,
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: responsiveFontSize(1.5),
   },
   textSubHeading: {
     color: '#8B8989',
-    fontSize: 10,
+    fontSize: responsiveFontSize(1.3),
   },
   ViewMore: {
     backgroundColor: '#36648B',
-    padding: 5,
+    // padding: 5,
+    paddingHorizontal: responsiveWidth(1.5),
+    paddingVertical: responsiveHeight(1.2),
     width: 70,
     borderWidth: 0.2,
     borderRadius: 20,

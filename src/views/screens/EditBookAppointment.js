@@ -1,7 +1,7 @@
 import { launchCamera } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, Keyboard, ScrollView, Alert, StyleSheet, StatusBar, TextInput, Image, Dimensions, TouchableOpacity, PermissionsAndroid } from 'react-native';
+import { View, Text, SafeAreaView, Keyboard, ScrollView, StyleSheet, Image, Dimensions, TouchableOpacity, PermissionsAndroid } from 'react-native';
 import COLORS from '../../conts/colors';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -18,11 +18,7 @@ import { useEffect } from 'react';
 import { getData } from '../../Hooks/ApiHelper';
 import Loader from '../components/Loader';
 
-
-
 const EditBookAppointment = ({ navigation, route }) => {
-
-
   const toast = useToast()
   const [inputs, setInputs] = useState({
     user_name: '',
@@ -33,33 +29,30 @@ const EditBookAppointment = ({ navigation, route }) => {
     img: '',
   });
   const [errors, setErrors] = useState({});
-  const [imageUrl, setImageUrl] = useState(undefined);
   const [image, setImage] = useState(null);
   const [laoder, setlaoder] = useState(false)
-  const [isLoading, setIsLoading] = useState(false);
-  // const [Image, setImage] = useState(undefined);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
   // ----------------------------------------Validation section start------------------------------------------
 
 
   function valdiate() {
     Keyboard.dismiss();
     let isValid = true;
-
     if (inputs?.user_name.length == 0) {
       handleError('Please input username', 'user_name');
       isValid = !isValid;
     }
-
     if (inputs?.depat.length == 0) {
       handleError('Please input Department', 'depat');
       isValid = !isValid;
     }
-
     if (inputs?.phone.length == 0) {
       handleError('Please input phone number', 'phone');
       isValid = !isValid;
     } else if (inputs?.phone.length !== 10) {
       handleError('Mobile Number must be 10 digit', 'phone');
+      isValid = !isValid;
     }
     if (inputs?.purpose.length == 0) {
       handleError('Please input Purpose', 'purpose');
@@ -139,22 +132,13 @@ const EditBookAppointment = ({ navigation, route }) => {
     }
   }
 
-
-
   const pickImage = () => {
     requestCameraPermission()
   };
 
-
-
-
   const uploadImage = async () => {
-    if (isLoading) {
-      return; // do nothing if already loading
-    }
-    setIsLoading(true);
-    valdiate()
-    if (valdiate()) {
+    if (!buttonDisabled && valdiate()) {
+      setButtonDisabled(true); 
       const formData = new FormData();
       const cityName = await AsyncStorage.getItem("city")
       formData.append('id', route.params.id);
@@ -285,17 +269,11 @@ const EditBookAppointment = ({ navigation, route }) => {
             <Text style={styles.buttonText}>फोटो सेलेक्ट करे</Text>
           </TouchableOpacity>
           <View style={styles.container}>
-            {/* <Text style={{color:'red'}}>{items.name}</Text> */}
-            {/* <Image style={styles.imageStyle} source={{uri: galleryPhoto}} /> */}
           </View>
 
           {/* ------------------------------------------------------ */}
 
-
-
-
-          <Button onPress={uploadImage} title="Update" disabled={isLoading} />
-          {/* navigation.navigate('HomeScreenPa'); */}
+          <Button onPress={uploadImage} title="Update" disabled={buttonDisabled} />
         </View>
 
         {/* ---------------------------------------Input Field End-------------------------- */}

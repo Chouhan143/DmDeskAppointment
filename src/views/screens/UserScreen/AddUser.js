@@ -1,5 +1,5 @@
 import React from 'react';
-import {useToast} from 'react-native-fast-toast';
+import { useToast } from 'react-native-fast-toast';
 import {
   View,
   Text,
@@ -19,12 +19,12 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import SelectDropdown from 'react-native-select-dropdown';
 import Loader from '../../components/Loader';
-import {ScrollView} from 'react-native-gesture-handler';
-import {useEffect, useState} from 'react';
-import {postData} from '../../../Hooks/ApiHelper';
-import {Insert_Data} from '../../../Constants/UrlConstants';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useEffect, useState } from 'react';
+import { postData } from '../../../Hooks/ApiHelper';
+import { Insert_Data } from '../../../Constants/UrlConstants';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
   const toast = useToast();
   const [inputs, setInputs] = React.useState({
     name: '',
@@ -39,7 +39,7 @@ const LoginScreen = ({navigation}) => {
   const [message, setMessage] = React.useState('');
   const values = ['dm', 'pa'];
 
- 
+
   function validate() {
     Keyboard.dismiss();
     let isValid = true;
@@ -48,11 +48,20 @@ const LoginScreen = ({navigation}) => {
       handleError('Please input name', 'name');
       isValid = false;
     }
+    // const isEmailValid = inputs?.email?.length > 0;
+    // if (!isEmailValid) {
+    //   handleError('Please input email', 'email');
+    //   isValid = false;
+    // }
     const isEmailValid = inputs?.email?.length > 0;
     if (!isEmailValid) {
       handleError('Please input email', 'email');
       isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputs.email)) {
+      handleError('Please input a valid email', 'email');
+      isValid = false;
     }
+
     const isPasswordValid = inputs?.pass?.length >= 6;
     if (!isPasswordValid) {
       handleError('Password must be at least 6 characters long', 'pass');
@@ -60,17 +69,17 @@ const LoginScreen = ({navigation}) => {
     }
 
     const isCityValid = inputs?.city?.length > 0;
-     if (!isCityValid) {
+    if (!isCityValid) {
       handleError('Please Enter city', 'city');
       isValid = false;
     }
 
     const isUserValid = inputs?.user_type?.length > 0;
     if (!isUserValid) {
-        handleError('Please Enter UserType', 'user_type');
-        isValid = false;
-      }
-      return isValid;
+      handleError('Please Enter UserType', 'user_type');
+      isValid = false;
+    }
+    return isValid;
   }
 
   const AddUserInfo = async () => {
@@ -88,29 +97,29 @@ const LoginScreen = ({navigation}) => {
       console.log(result)
       if (result.result == true) {
         toast.show('User Added successfully', {
-          type: 'success', 
+          type: 'success',
           position: 'top',
         });
-       
+
         navigation.navigate('HomeScreenAdmin');
       }
     } else {
-      toast.show('Fill all inputs first', {type: 'danger'});
+      toast.show('Fill all inputs first', { type: 'danger' });
     }
   };
 
   const handleOnchange = (text, input) => {
-    setInputs(prevState => ({...prevState, [input]: text}));
+    setInputs(prevState => ({ ...prevState, [input]: text }));
   };
 
   const handleOnchangeValue = (itemValue, input) => {
-    setInputs(prevState => ({...prevState, [input]: itemValue}));
+    setInputs(prevState => ({ ...prevState, [input]: itemValue }));
   };
   const handleError = (error, input) => {
-    setErrors(prevState => ({...prevState, [input]: error}));
+    setErrors(prevState => ({ ...prevState, [input]: error }));
   };
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.white, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
       <ScrollView>
         <Loader visible={loading} />
         <View
@@ -142,7 +151,7 @@ const LoginScreen = ({navigation}) => {
               Enter User Details
             </Text>
           </View>
-          <View style={{marginVertical: responsiveHeight(3)}}>
+          <View style={{ marginVertical: responsiveHeight(3) }}>
             <Input
               onChangeText={text => handleOnchange(text, 'name')}
               onFocus={() => handleError(null, 'name')}

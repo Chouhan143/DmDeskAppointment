@@ -15,10 +15,10 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import Avtar from '../../../../Asets/avtar.png';
+import Avtar from '../../../assets/images/avtar.png';
 import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import AppointmentIcon from '../../../../Asets/AppointmentIcon.png';
+import AppointmentIcon from '../../../assets/images/AppointmentIcon.png';
 import React, { useContext } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
@@ -65,6 +65,8 @@ const Pending = ({ navigation }) => {
   // const [datWiseData,setDateWiseData] =useState('');
 
 
+  
+
   const renderItem = ({ item }) => {
 
     const swipeBtns = [
@@ -72,11 +74,7 @@ const Pending = ({ navigation }) => {
         text: 'Reject',
         color: '#fff',
         backgroundColor: 'red',
-
         onPress: () => onPressChangeStatus(item.id, 'reject')
-
-
-
       }
 
     ];
@@ -84,12 +82,7 @@ const Pending = ({ navigation }) => {
       {
         text: 'Complete',
         backgroundColor: 'green',
-
         onPress: () => onPressChangeStatus(item.id, 'complete')
-
-        // onPress: () => handleSwipeLeft(item.id),
-        // onPress:() => {handleComplete}
-
       },
     ];
 
@@ -192,10 +185,196 @@ const Pending = ({ navigation }) => {
     );
   };
 
-  // useEffect(() => {
-  //   const date = new Date().toLocaleDateString();
-  //   setCurrentDate(date);
-  // }, []);
+  const renderItemPa = ({ item }) => {
+
+
+    return (
+     
+        <View style={styles.MainWraper}>
+          <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: responsiveFontSize(2),
+                fontWeight: 'bold',
+              }}>
+              {item.user_name} ({item.noofpeople})
+            </Text>
+          </View>
+
+          <View style={styles.OuterWraper}>
+            <View style={styles.ImageWraper}>
+              <TouchableOpacity
+                onPress={() =>
+                  watchFullImage(
+                    `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                  )
+                }>
+                <Image
+                  source={
+                    item.img
+                      ? {
+                        uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                      }
+                      : Avtar
+                  }
+                  style={{
+                    width: responsiveWidth(20),
+                    height: responsiveWidth(20),
+                    borderWidth: 0.2,
+                    borderRadius: 10,
+                    resizeMode: 'contain',
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.ContentWraper}>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>मिलने का कारण :- </Text>
+                <Text numberOfLines={6} style={styles.textSubHeading}>
+                  {item.purpose}
+                </Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>व्यक्तियो की संख्या :-</Text>
+                <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>तारीख :- </Text>
+                <Text style={styles.textSubHeading}>{item.date}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>समय :- </Text>
+                <Text style={styles.textSubHeading}>{item.time}</Text>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={styles.ViewMore}>
+                  <TouchableOpacity onPress={() => onPressHandler(item)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: responsiveFontSize(1.5),
+                      }}>
+                      View
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={[styles.ViewMore, { marginLeft: responsiveWidth(2) }]}>
+                  <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: responsiveFontSize(1.5),
+                      }}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View></View>
+            </View>
+          </View>
+        </View>
+     
+    );
+  };
+
+  const renderItemAdmin = ({ item }) => {
+
+
+    return (
+     
+        <View style={styles.MainWraper}>
+          <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: responsiveFontSize(2),
+                fontWeight: 'bold',
+              }}>
+              {item.user_name} ({item.noofpeople})
+            </Text>
+          </View>
+
+          <View style={styles.OuterWraper}>
+            <View style={styles.ImageWraper}>
+              <TouchableOpacity
+                onPress={() =>
+                  watchFullImage(
+                    `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                  )
+                }>
+                <Image
+                  source={
+                    item.img
+                      ? {
+                        uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                      }
+                      : Avtar
+                  }
+                  style={{
+                    width: responsiveWidth(20),
+                    height: responsiveWidth(20),
+                    borderWidth: 0.2,
+                    borderRadius: 10,
+                    resizeMode: 'contain',
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.ContentWraper}>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>मिलने का कारण :- </Text>
+                <Text numberOfLines={6} style={styles.textSubHeading}>
+                  {item.purpose}
+                </Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>व्यक्तियो की संख्या :-</Text>
+                <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>तारीख :- </Text>
+                <Text style={styles.textSubHeading}>{item.date}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>समय :- </Text>
+                <Text style={styles.textSubHeading}>{item.time}</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                <View style={styles.ViewMore}>
+                  <TouchableOpacity onPress={() => onPressHandler(item)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: responsiveFontSize(1.5),
+                      }}>
+                      View
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {/* <View
+                  style={[styles.ViewMore, { marginLeft: responsiveWidth(2) }]}>
+                  <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: responsiveFontSize(1.5),
+                      }}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                </View> */}
+              </View>
+              <View></View>
+            </View>
+          </View>
+        </View>
+     
+    );
+  };
+
 
   const handleCloseModal = () => {
     setIsFullScreen(!isFullScreen);
@@ -218,13 +397,7 @@ const Pending = ({ navigation }) => {
     );
   };
 
-  const onPressEditHandler = (item, index) => {
-    SetshowWarning(!showWarning);
-    setobj(item);
-    setUserData(
-      `https://srninfotech.com/projects/dmdesk/insertAppointmentData`,
-    );
-  };
+
 
   const onPressCard = () => {
     SetshowWarning(false);
@@ -240,25 +413,17 @@ const Pending = ({ navigation }) => {
     AddUserInfo();
   }, [count]);
 
-
+  useEffect(() => {
+    const timer = setInterval(() => {
+      AddUserInfo();
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
   const logout = () => {
     navigation.replace('login');
     AsyncStorage.clear();
   };
-
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     AddUserInfo();
-  //   }, 5000);
-
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
-
-
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
@@ -267,8 +432,6 @@ const Pending = ({ navigation }) => {
 
     return unsubscribe;
   }, []);
-
-
 
 
   const AddUserInfo = async () => {
@@ -299,7 +462,7 @@ const Pending = ({ navigation }) => {
       setMyData(filteredData);
       setloader(false);
     }
-    
+
   };
 
   const onPressChangeStatus = async (id, item) => {
@@ -357,113 +520,44 @@ const Pending = ({ navigation }) => {
           onPress={logout}
         />
       </View>
-      <Loader visible={loader1} />
-
+      {/* <Loader visible={loader1} /> */}
 
       <View style={styles.container}>
-        {loader && (
+        {/* {loader && (
           <View>
             {Array.from({ length: 5 }, (_, index) => (
               <SkeletonCard width={width - 20} height={120} />
             ))}
           </View>
-        )}
+        )} */}
 
 
-
-        {/*main <FlatList
-          data={myData}
-          extraData={myData}
-          keyExtractor={(item, index) => index.toString()}
-          initialNumToRender={4}
-          renderItem={({ item, index }) => (
-            <View style={styles.MainWraper}>
-              <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontSize: responsiveFontSize(2),
-                    fontWeight: 'bold',
-                  }}>
-                  {item.user_name} ({item.noofpeople})
-                </Text>
-
-              </View>
-              <View style={styles.OuterWraper}>
-                <View style={styles.ImageWraper}>
-
-                  <TouchableOpacity onPress={() => watchFullImage(`https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`)}>
-                    <Image
-                      source={
-                        item.img
-                          ? {
-                            uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
-                          }
-                          : Avtar
-                      }
-                      style={{
-                        width: responsiveWidth(20),
-                        height: responsiveWidth(20),
-                        borderWidth: 0.2,
-                        borderRadius: 10,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.ContentWraper}>
-                  <View style={styles.ListRow}>
-                    <Text style={styles.textHeading}>मिलने का कारण :- </Text>
-                    <Text numberOfLines={6} style={styles.textSubHeading}>
-                      {item.purpose}
-                    </Text>
-                  </View>
-                  <View style={styles.ListRow}>
-                    <Text style={styles.textHeading}>
-                      व्यक्तियो की संख्या :-
-                    </Text>
-                    <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
-                  </View>
-                  <View style={styles.ListRow}>
-                    <Text style={styles.textHeading}>तारीख :- </Text>
-                    <Text style={styles.textSubHeading}>{item.date}</Text>
-                  </View>
-                  <View style={styles.ListRow}>
-                    <Text style={styles.textHeading}>समय :- </Text>
-                    <Text style={styles.textSubHeading}>{item.time}</Text>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.ViewMore}>
-                      <TouchableOpacity onPress={() => onPressHandler(item)}>
-                        <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
-                          View
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={[styles.ViewMore, { marginLeft: responsiveWidth(2) }]}>
-                      <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
-                        <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
-                          Edit
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View>
-                  </View>
-                </View>
-              </View>
-            </View>
-          )}
-        /> */}
-
-
-        <FlatList
-          data={myData}
+        {userType === 'dm' && (
+          <FlatList data={myData}
           keyExtractor={item => item.id}
           initialNumToRender={4}
           renderItem={renderItem}
-        />
+         />
+        )
+        }
 
+        {userType === 'pa' && (
+          <FlatList data={myData}
+          keyExtractor={item => item.id}
+          initialNumToRender={4}
+          renderItem={renderItemPa}
+         />
+        )
+        }
+
+        {userType === 'ad' && (
+          <FlatList data={myData}
+          keyExtractor={item => item.id}
+          initialNumToRender={4}
+          renderItem={renderItemAdmin}
+         />
+        )
+        }
 
 
 

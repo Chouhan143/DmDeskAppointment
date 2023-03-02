@@ -19,7 +19,7 @@ import axios from 'axios';
 // import { postData } from '../../../Hooks/ApiHelper';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import ForgotPasswordImg from '.././../../../Asets/forgot.png';
+import ForgotPasswordImg from '../../../assets/images/forgot.png';
 import {useToast} from 'react-native-fast-toast';
 import {postData} from '../../../Hooks/ApiHelper';
 import {Forgot_Password} from '../../../Constants/UrlConstants';
@@ -52,7 +52,7 @@ const ForgotPass = ({navigation, route}, props) => {
       const result = await postData(Forgot_Password, payload);
       console.log(result);
       if (result.result == "true") {
-      toast.show('Changed', {type: 'success'});
+      toast.show('Reset Password Successful', {type: 'success'});
       navigation.navigate('login');
       // if (result.result == 'true') {
         //   if (result.passNot == 'false') {
@@ -174,7 +174,7 @@ const ForgotPass = ({navigation, route}, props) => {
             </View>
 
             <View style={{bottom: 20}}>
-              <Button title="Log In" onPress={handleLogin} />
+              <Button title="Reset" onPress={handleLogin} />
             </View>
           </View>
         </View>

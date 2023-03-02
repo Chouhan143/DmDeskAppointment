@@ -17,7 +17,7 @@ import {
   } from "react-native-responsive-dimensions";
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import ForgotPasswordImg from '.././../../../Asets/otp.png'
+import ForgotPasswordImg from '../../../assets/images/otp.png';
 import { getData, getData2, postData } from '../../../Hooks/ApiHelper';
 import { useToast } from 'react-native-fast-toast';
 // import SvgIcon from '../../../../Asets/SvgIcon';
@@ -25,7 +25,7 @@ import { useToast } from 'react-native-fast-toast';
 
 const NewPassword = ({ navigation }) => {
   const toast = useToast();
-
+  const [isLoading, setIsLoading] = useState(false);
     const ForgotPasswordScreen = () => {
         navigation.replace('Forgotpassword');
     };
@@ -35,11 +35,9 @@ const NewPassword = ({ navigation }) => {
       });
 
       const handleLogin = async () => {
-        validateSchema()
+        setIsLoading(true); // disable button
+        // validateSchema()
         if (validateSchema()) {
-          let payload = {
-            "email": inputs.email,
-          }
          const result = await getData(Post_Email_Otp + `?email=${inputs.email}`)
          console.log("result" + JSON.stringify(result))
           if(result.result == "true") {
@@ -50,6 +48,7 @@ const NewPassword = ({ navigation }) => {
         } else {
           toast.show("Fill all inputs first", { type: "danger" });
         }
+        setIsLoading(false); // enable button
       }
     
       function validateSchema() {
@@ -111,7 +110,7 @@ const NewPassword = ({ navigation }) => {
                         />
 
                         <View style={{ bottom: 10, }}>
-                            <Button title="Submit" onPress={handleLogin} />
+                            <Button title="Submit" onPress={handleLogin} disabled={isLoading}  />
                         </View>
                         {/* <View style={[styles.loginCon, { marginTop: 30 }]}>
                             <Pressable

@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Menu from '../components/Menu';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
-import userAdd from '../../../Asets/plus.png';
+// import userAdd from '../../../src/assets/images/plus.png';
 import React, { useContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -73,7 +73,7 @@ const HomeScreenPa = ({ navigation }) => {
     setloaderInfo(false)
   }, [count]);
 
- 
+
 
 
   useEffect(() => {
@@ -112,7 +112,8 @@ const HomeScreenPa = ({ navigation }) => {
         nestedScrollEnabled={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        }
+        >
         <View style={styles.header}>
           <Icon
             name="sort-variant"
@@ -285,7 +286,8 @@ const HomeScreenPa = ({ navigation }) => {
                   borderRadius: responsiveWidth(10),
                 }}
                 onPress={OpenAppointment}>
-                <Image source={userAdd} style={styles.userAddImg} />
+                {/* <Image source={userAdd} style={styles.userAddImg} /> */}
+                <Image source={require('./../../../android/app/src/main/assets/images/plus.png')}style={styles.userAddImg} />
                 <View>
                   <Text
                     style={{

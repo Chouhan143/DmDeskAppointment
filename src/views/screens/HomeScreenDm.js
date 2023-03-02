@@ -55,6 +55,13 @@ const HomeScreenDm = ({ navigation }) => {
         setloaderInfo(false)
     }, [count]);
 
+    // useEffect(() => {
+    //     const timer = setInterval(() => {
+    //       AddUserInfo();
+    //     }, 3000);
+    //     return () => clearInterval(timer);
+    //   }, []);
+
     useEffect(() => {
         const unsubscribe = navigation.addListener('beforeRemove', () => {
             AddUserInfo();

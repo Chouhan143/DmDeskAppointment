@@ -12,7 +12,7 @@ import { ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
-import userAdd from '../../../Asets/plus.png'
+import userAdd from '../../../android/app/src/main/assets/images/plus.png'
 import React from 'react'
 import Menu from '../components/Menu';
 import BookAppointment from './BookAppointment'
@@ -76,7 +76,13 @@ const HomeScreenAdmin = ({ navigation }) => {
     // getDataFunc();
     setloaderInfo(false)
   }, [count]);
-// console.log(getDataFunc())
+
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     AddUserInfo();
+  //   }, 3000);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
