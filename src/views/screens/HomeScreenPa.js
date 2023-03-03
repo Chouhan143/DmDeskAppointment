@@ -36,8 +36,8 @@ const HomeScreenPa = ({ navigation }) => {
   const [rejected, setRejected] = useState([]);
   const [myData, setMyData] = useState([]);
   // const [loader, setloader] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [loaderInfo, setloaderInfo] = useState(false);
+  // const [refreshing, setRefreshing] = useState(false);
+  // const [loaderInfo, setloaderInfo] = useState(false);
 
   const OpenAppointment = () => {
     navigation.navigate('Appointment');
@@ -56,33 +56,44 @@ const HomeScreenPa = ({ navigation }) => {
     navigation.navigate('cancel');
   };
 
-  const onRefresh = () => {
-    setloaderInfo(true)
-    setRefreshing (true);
-    AddUserInfo();
-    getDataFunc();
-    setloaderInfo(false)
+  // const onRefresh = () => {
+  //   setloaderInfo(true)
+  //   setRefreshing (true);
+  //   AddUserInfo();
+  //   getDataFunc();
+  //   setloaderInfo(false)
+  //   setTimeout(() => setRefreshing(false), 1000);
+  // };
 
-    setTimeout(() => setRefreshing(false), 1000);
-  };
-
-  useEffect(() => {
-    setloaderInfo(true)
-    AddUserInfo();
-    getDataFunc();
-    setloaderInfo(false)
-  }, [count]);
-
+  // useEffect(() => {
+  //   setloaderInfo(true)
+  //   AddUserInfo();
+  //   getDataFunc();
+  //   setloaderInfo(false)
+  // }, [count]);
 
 
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', () => {
-      AddUserInfo();
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('beforeRemove', () => {
+  //     AddUserInfo();
+  //   });
   
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
+
+// ------------------------------working
+  useEffect(() => {
+    AddUserInfo();
+    getDataFunc();
+  },[]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      AddUserInfo();
+    }, 3000);
+    return () => clearInterval(interval);
+  });
+// ------------------------------working
 
   const AddUserInfo = () => {
 
@@ -110,9 +121,9 @@ const HomeScreenPa = ({ navigation }) => {
       <ScrollView
         scrollEnabled={false}
         nestedScrollEnabled={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
         >
         <View style={styles.header}>
           <Icon
@@ -179,11 +190,11 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
 
                   <View style={styles.textWrapDiv}>
-                    {loaderInfo == true ? (
+                    {/* {loaderInfo == true ? (
                       <ActivityIndicator size="small" color="white" />
-                    ) : (
+                    ) : ( */}
                       <Text style={styles.text}>{pending}</Text>
-                    )}
+                    {/* )} */}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
                       लंबित
@@ -215,11 +226,11 @@ const HomeScreenPa = ({ navigation }) => {
 
                   <View style={styles.textWrapDiv}>
 
-                    {loaderInfo == true ? (
+                    {/* {loaderInfo == true ? (
                       <ActivityIndicator size="small" color="white" />
-                    ) : (
+                    ) : ( */}
                       <Text style={styles.text}>{completed}</Text>
-                    )}
+                    {/* )} */}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
 
@@ -260,14 +271,14 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
 
                   <View style={styles.textWrapDiv}>
-                    {loaderInfo == true ? (
+                    {/* {loaderInfo == true ? (
                       <View>
                         <ActivityIndicator size="small" color="white" />
                       </View>
 
-                    ) : (
+                    ) : ( */}
                       <Text style={styles.text}>{rejected}</Text>
-                    )}
+                    {/* )} */}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
 

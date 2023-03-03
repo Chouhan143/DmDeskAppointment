@@ -461,6 +461,13 @@ const Pending = ({ navigation }) => {
       const filteredData = completedData.filter(appointment => appointment.status === 'pending' && appointment.date === currentDate);
       setMyData(filteredData);
       setloader(false);
+      // if (filteredData.length === 0) {
+      //   return(
+      //   <View style={{flex:1, display:flex, justifyContent:'center',alignItems:'center'}}> 
+      //   <Text>Today's appointments are not scheduled</Text>
+      //   </View>
+      //   )
+      // }
     }
 
   };

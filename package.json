@@ -25,6 +25,7 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.71.0",
+    "react-native-autoscroll-flatlist": "^1.11.2",
     "react-native-drawer": "^2.5.1",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-fade-loading": "^1.0.1",
