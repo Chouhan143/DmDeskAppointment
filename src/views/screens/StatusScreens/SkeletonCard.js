@@ -1,6 +1,11 @@
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import { FadeLoading } from "react-native-fade-loading";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 export const SkeletonCard = ({ width, height }) => {
     return (
@@ -29,9 +34,12 @@ export const SkeletonCard = ({ width, height }) => {
       backgroundColor: "#fff"
     },
     card: {
-      margin: 10,
-      padding: 20,
-      borderRadius: 10,
+      marginVertical: responsiveHeight(2), // 1.25% of screen height
+      marginHorizontal: responsiveWidth(4), // 2.5% of screen width
+      paddingVertical: responsiveHeight(4), // 2.5% of screen height
+      paddingHorizontal: responsiveWidth(7), // 5% of screen width
+      borderRadius: responsiveHeight(3), // 1.25% of screen height
+      height:responsiveHeight(20),
       backgroundColor: "#fff",
       elevation: 5
     },

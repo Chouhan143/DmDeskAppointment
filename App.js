@@ -33,11 +33,14 @@ import { ToastProvider } from 'react-native-fast-toast'
 import { Touchable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import HomeScreenPa from './src/views/screens/HomeScreenPa';
-import { AuthContext } from './src/LoginCredencial/context/AuthContext';
+// import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Uselogout } from './src/Hooks/LogoutHook';
+
+
 import EditBookAppointment from './src/views/screens/EditBookAppointment';
 import { DataContextApiProvider } from './src/LoginCredencial/context/DataContextApi';
+import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -46,8 +49,6 @@ import { DataContextApiProvider } from './src/LoginCredencial/context/DataContex
 
 
 // ---------------------------------
-
-
 
 
 
@@ -74,19 +75,17 @@ const App = ({ navigation,navigator }) => {
   const logout = () => {
     Uselogout(navigation)
   };
+
+  const { userInformation } = useContext(AuthContext);
   return (
     <DataContextApiProvider>
     <ToastProvider>
 
       <NavigationContainer>
+
         <Stack.Navigator initialRouteName={Home}>
-
-          {/* <Stack.Screen name='Drawer' component={DrawerContent} options={{headerShown:false}} /> */}
-          {/* <Stack.Screen name='Home' component={Home} options={{headerShown:false}} /> */}
-
-          <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='Forgotpassword' component={ForgotPass} options={{ headerShown: false }} />
-          <Stack.Screen name='NewPassword' component={NewPassword} options={{headerShown:false}} /> 
+        {userInformation && userInformation.access_token ? (
+          <>
           <Stack.Screen name='HomeScreenDm' component={HomeScreenDm} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenPa' component={HomeScreenPa} options={{ headerShown: false }} />
           <Stack.Screen name='Appointment' component={BookAppointment} options={{ headerShown: false }} />
@@ -96,7 +95,22 @@ const App = ({ navigation,navigator }) => {
           <Stack.Screen name='complete' component={Completed} options={{headerShown: false }} />
           <Stack.Screen name='cancel' component={Cancel} options={{ headerShown: false }} />
           <Stack.Screen name='edit-appointment' component={EditBookAppointment} options={{ headerShown: false }} />
+          </>
+        ):(
+          <>
+          <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='Forgotpassword' component={ForgotPass} options={{ headerShown: false }} />
+          <Stack.Screen name='NewPassword' component={NewPassword} options={{headerShown:false}} /> 
+          </>
+        )
+        }
+          {/* <Stack.Screen name='Drawer' component={DrawerContent} options={{headerShown:false}} /> */}
+          {/* <Stack.Screen name='Home' component={Home} options={{headerShown:false}} /> */}
+
+        
+         
         </Stack.Navigator>
+     
       </NavigationContainer>
     </ToastProvider>
     </DataContextApiProvider>

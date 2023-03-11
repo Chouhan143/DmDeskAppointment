@@ -140,15 +140,49 @@ const ForgotPass = ({navigation, route}, props) => {
             <Text style={{color:'gray',fontSize:responsiveFontSize(1.5)}}>
                 Please Enter Otp Here !
               </Text>
-              <OTPInputView
+              {/* <OTPInputView
                placeholderCharacter="_"
                 pinCount={6}
                 autoFocusOnLoad
-                style={{width: responsiveWidth(90), height: responsiveHeight(10)}}
+                style={{
+                 width: responsiveWidth(90),
+                 height: responsiveHeight(20),
+                 }}
                 codeInputFieldStyle={{color: '#000'}}
                 onCodeFilled={code => setotpNumber(code)}
-              />
+              /> */}
          
+              <OTPInputView
+  placeholderCharacter="_"
+  pinCount={6}
+  autoFocusOnLoad
+  style={{
+    width: responsiveWidth(100)-40,
+    height: responsiveHeight(6),
+    marginBottom:responsiveHeight(3),
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
+  }}
+  codeInputFieldStyle={{
+    color: "#000",
+    fontSize: responsiveFontSize(1.2),
+    fontWeight: "bold",
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    borderRadius: 0,
+  }}
+  onCodeFilled={(code) => setotpNumber(code)}
+/>
               <Input
                 onChangeText={text => handleOnchange(text, 'newPassword')}
                 onFocus={() => handleError(null, 'newPassword')}
@@ -252,7 +286,7 @@ const styles = StyleSheet.create({
 
   forgotDes: {
     position: 'relative',
-    bottom: 35,
+    bottom: 30,
   },
   forgotDesLbl: {
     color: '#000',

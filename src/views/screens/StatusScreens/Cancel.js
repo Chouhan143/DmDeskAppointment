@@ -208,7 +208,7 @@ const Completed = ({navigation}) => {
                     style={{
                       display: 'flex',
                       flexDirection: 'row',
-                      justifyContent: 'space-between',
+                      justifyContent: 'space-around',
                       alignItems: 'center',
                     }}>
                     <Image
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   },
   warning_title: {
     position: 'relative',
-    height: 50,
+    height:responsiveHeight(6),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#36648B',
@@ -484,15 +484,14 @@ const styles = StyleSheet.create({
   },
   ViewMore: {
     backgroundColor: '#36648B',
-    // padding: 5,
     paddingHorizontal: responsiveWidth(1.5),
     paddingVertical: responsiveHeight(1.2),
-    width: 70,
+    width: responsiveWidth(20),
     borderWidth: 0.2,
-    borderRadius: 20,
+    borderRadius: responsiveFontSize(5),
     alignItems: 'center',
     marginTop: 5,
     marginBottom: 5,
-    marginLeft: 150,
+    marginLeft: responsiveWidth(3)
   },
 });

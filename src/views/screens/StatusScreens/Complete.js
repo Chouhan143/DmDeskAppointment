@@ -16,20 +16,20 @@ import {
 } from "react-native-responsive-dimensions";
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Avtar from '../../../assets/images/avtar.png';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import {RefreshControl} from 'react-native';
-import {SkeletonCard} from './SkeletonCard';
-import {Modal} from 'react-native';
+import { RefreshControl } from 'react-native';
+import { SkeletonCard } from './SkeletonCard';
+import { Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import {useToast} from 'react-native-fast-toast';
-import {getData} from '../../../Hooks/ApiHelper';
-import {Get_Appointment_Data} from '../../../Constants/UrlConstants';
-import {FlatList} from 'react-native';
+import { useToast } from 'react-native-fast-toast';
+import { getData } from '../../../Hooks/ApiHelper';
+import { Get_Appointment_Data } from '../../../Constants/UrlConstants';
+import { FlatList } from 'react-native';
 
-const {height} = Dimensions.get('window');
-const {width} = Dimensions.get('screen');
-const Completed = ({navigation}) => {
+const { height } = Dimensions.get('window');
+const { width } = Dimensions.get('screen');
+const Completed = ({ navigation }) => {
   const toast = useToast();
 
   const [myData, setMyData] = useState([]);
@@ -62,7 +62,7 @@ const Completed = ({navigation}) => {
 
     setTimeout(() => setRefreshing(false), 1000);
   };
-    const logout = () => {
+  const logout = () => {
     navigation.replace('login');
     AsyncStorage.clear();
   };
@@ -93,14 +93,14 @@ const Completed = ({navigation}) => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{backgroundColor: '#C0D9D9'}}>
+      style={{ backgroundColor: '#C0D9D9' }}>
       <View style={styles.header}>
         <Icon2
           name="arrow-left-thin-circle-outline"
           color="#3e2465"
           size={responsiveFontSize(4)}
           onPress={() => navigation.goBack()}
-          // onPress={navigation.goBack()}
+        // onPress={navigation.goBack()}
         />
         <Text
           style={{
@@ -126,7 +126,7 @@ const Completed = ({navigation}) => {
 
         {loader && (
           <View>
-            {Array.from({length: 5}, (_, index) => (
+            {Array.from({ length: 5 }, (_, index) => (
               <SkeletonCard width={width - 20} height={120} />
             ))}
           </View>
@@ -135,11 +135,11 @@ const Completed = ({navigation}) => {
           data={myData}
           initialNumToRender={4}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <View style={styles.MainWraper}>
-              <View style={[styles.UserName, {backgroundColor: '#36648B'}]}>
-                <Text style={{color: '#fff',  fontSize: responsiveFontSize(2), fontWeight: 'bold'}}>
-                {item.user_name} ({item.noofpeople})
+              <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
+                <Text style={{ color: '#fff', fontSize: responsiveFontSize(2), fontWeight: 'bold' }}>
+                  {item.user_name} ({item.noofpeople})
                 </Text>
               </View>
               <View style={styles.OuterWraper}>
@@ -148,12 +148,12 @@ const Completed = ({navigation}) => {
                     source={
                       item.img
                         ? {
-                            uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
-                          }
+                          uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                        }
                         : Avtar
                     }
                     style={{
-                    width: responsiveWidth(20),
+                      width: responsiveWidth(20),
                       height: responsiveWidth(20),
                       borderWidth: 0.2,
                       borderRadius: 10,
@@ -185,7 +185,7 @@ const Completed = ({navigation}) => {
 
                   <View style={styles.ViewMore}>
                     <TouchableOpacity onPress={() => onPressHandler(item)}>
-                      <Text style={{color: '#fff', fontSize: responsiveFontSize(1.5)}}>
+                      <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>
                         View
                       </Text>
                     </TouchableOpacity>
@@ -214,9 +214,9 @@ const Completed = ({navigation}) => {
                       justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                     <View style={{textAlign:'center' , display:'flex', flexDirection:'row',justifyContent:'center'}}>
-                    <Image source={AppointmentIcon} style={styles.AppointmentIconStyle} />
-                      <Text style={[styles.text, { color: '#fff', fontSize: responsiveFontSize(2.4),marginLeft:10 }]}>
+                    <View style={{ textAlign: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                      <Image source={AppointmentIcon} style={styles.AppointmentIconStyle} />
+                      <Text style={[styles.text, { color: '#fff', fontSize: responsiveFontSize(2.4), marginLeft: 10 }]}>
                         Appointment
                       </Text>
                     </View>
@@ -244,25 +244,25 @@ const Completed = ({navigation}) => {
                           justifyContent: 'space-between',
                           gap: 10,
                         }}>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           नाम :- {obj.user_name}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           पता/विभाग :- {obj.depat}{' '}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           मोबाइल नंबर :- {obj.phone}{' '}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           मिलने का कारण :- {obj.purpose}{' '}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           व्यक्तियो की संख्या :- {obj.noofpeople}{' '}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           तारीख:- {obj.date}{' '}
                         </Text>
-                        <Text style={[styles.text, {color: '#fff'}]}>
+                        <Text style={[styles.text, { color: '#fff' }]}>
                           समय :- {obj.time}
                         </Text>
                       </View>
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   //     backgroundColor: '#C0D9D9',
   //     paddingVertical: 40,
   // },
-   header: {
+  header: {
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -308,9 +308,9 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     textAlign: 'center',
   },
-  text:{
-    fontSize:responsiveFontSize(1.7)
-      },
+  text: {
+    fontSize: responsiveFontSize(1.7)
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -335,8 +335,8 @@ const styles = StyleSheet.create({
     width: responsiveWidth(100) - 60,
     borderRadius: 10,
     textAlign: 'center',
-    flexWrap:'wrap',
-    overflow:'hidden'
+    flexWrap: 'wrap',
+    overflow: 'hidden'
   },
   cancelIcon: {
     marginLeft: 125,
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
   },
   warning_title: {
     position: 'relative',
-    height: 50,
+    height:responsiveHeight(6),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#36648B',
@@ -398,11 +398,11 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 10,
     width: '100%',
   },
-  AppointmentIconStyle:{
-    width:responsiveWidth(6),
-    height:responsiveWidth(6),
-    color:'#ffff'
-    
+  AppointmentIconStyle: {
+    width: responsiveWidth(6),
+    height: responsiveWidth(6),
+    color: '#ffff'
+
 
   },
 
@@ -483,16 +483,17 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.3),
   },
   ViewMore: {
+
     backgroundColor: '#36648B',
-    // padding: 5,
     paddingHorizontal: responsiveWidth(1.5),
     paddingVertical: responsiveHeight(1.2),
-    width: 70,
+    width: responsiveWidth(20),
     borderWidth: 0.2,
-    borderRadius: 20,
+    borderRadius: responsiveFontSize(5),
     alignItems: 'center',
     marginTop: 5,
     marginBottom: 5,
-    marginLeft: 150,
-  },
-});
+    marginLeft: responsiveWidth(3)
+
+  }
+  });

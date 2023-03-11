@@ -1,106 +1,79 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import React, {createContext, useEffect, useState} from 'react';
-import {BASE_URL} from '../config';
+import React, { createContext, useEffect, useState } from 'react';
+import { NewLoginUrl, NewLogoutUrl } from '../../Constants/UrlConstants';
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
-  const [userInfo, setUserInfo] = useState({});
+export const AuthProvider = ({ children }) => {
+  const [userInformation, setUserInformation] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
 
-  const register = (name, email, password) => {
-    setIsLoading(true);
 
-    axios
-      .post(`${BASE_URL}/register`, {
-        name,
+
+  const login = async (email, password) => {
+    setIsLoading(true);
+    await axios
+      .post(NewLoginUrl, {
         email,
         password,
       })
-      .then(res => {
-        let userInfo = res.data;
-        setUserInfo(userInfo);
-        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+      .then(async(res)  => {
+        let userInformation = res.data;
+        console.log(userInformation);
+        setUserInformation(userInformation);
+        await AsyncStorage.setItem('userInfo', JSON.stringify(userInformation));
         setIsLoading(false);
       })
       .catch(e => {
+        console.log(`login error ${e}`);
         setIsLoading(false);
       });
   };
 
-  const login = (email, password) => {
+
+  const logout = async () => {
     setIsLoading(true);
 
-  //  fetch("https://srninfotech.com/projects/dmdesk/login", {
-  //       email,
-  //       password,
-  //     })
-  //     .then(res => {
-  //       let userInfo = res.JSON();
-  //       console.log(userInfo);
-  //       setUserInfo(userInfo);
-  //       AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-  //       setIsLoading(false);
-  //     })
-  //     .catch(e => {
-  //       console.log(`login error ${e}`);
-  //       setIsLoading(false);
-  //     });
-
-
-  fetch('https://srninfotech.com/projects/dmdesk/login',{
-    method: 'POST',
-    email,
-        password,
-  })
-  .then(response => response.json())
-  .then(data => {
-  })
-  .catch(error => {
-    console.error(error);
-  });
-  }
-;
-
-  const logout = () => {
-    setIsLoading(true);
-    axios
-      .post(
-        `${BASE_URL}/logout`,
-        {},
+    try {
+      await axios.post(
+        NewLogoutUrl,
+        { id: userInformation.id }, // include id in the request body
         {
-          headers: {Authorization: `Bearer ${userInfo.access_token}`},
-        },
-      )
-      .then(res => {
-        AsyncStorage.removeItem('userInfo');
-        AsyncStorage.clear('userInfo');
+          headers: { Authorization: `Bearer ${userInformation.access_token}` },
+        }
+      );
 
-        setUserInfo({});
-        setIsLoading(false);
-        AsyncStorage.clear()
-      })
-      .catch(e => {
-        setIsLoading(false);
-      });
+      console.log("Logout successful");
+
+      await AsyncStorage.removeItem("userInformation");
+
+      setUserInformation({});
+    } catch (error) {
+      console.log(`logout error ${error}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+
 
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
 
       let userInfo = await AsyncStorage.getItem('userInfo');
-      userInfo = JSON.parse(userInfo);
+      userInfo = JSON.parse(userInformation);
 
       if (userInfo) {
-        setUserInfo(userInfo);
+        setUserInformation(userInformation);
       }
 
       setSplashLoading(false);
     } catch (e) {
       setSplashLoading(false);
+      console.log(`is logged in error ${e}`);
     }
   };
 
@@ -112,11 +85,10 @@ export const AuthProvider = ({children}) => {
     <AuthContext.Provider
       value={{
         isLoading,
-        userInfo,
+        userInformation,
         splashLoading,
-        register,
         login,
-        logout,
+        logout
       }}>
       {children}
     </AuthContext.Provider>

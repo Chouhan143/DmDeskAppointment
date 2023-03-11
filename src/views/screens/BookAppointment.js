@@ -93,7 +93,7 @@ const BookAppointment = () => {
           title: 'Select Image',
           mediaType: 'photo',
           noData: true,
-          quality: 1.0,
+          quality: 0.5,
           allowsEditing: true,
         }, (response) => {
           // console.log(JSON.stringify(response.assets[0].uri))

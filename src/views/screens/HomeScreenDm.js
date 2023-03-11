@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, Image,ScrollView, TouchableOpacity, Dimensions, FlatList } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions, FlatList } from 'react-native'
+import Icon from 'react-native-vector-icons/AntDesign';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import React from 'react'
-import { RefreshControl } from 'react-native';
+// import { RefreshControl } from 'react-native';
 import Menu from '../components/Menu';
 import { useContext } from 'react';
 import {
@@ -11,22 +11,27 @@ import {
     responsiveWidth,
     responsiveFontSize
 } from "react-native-responsive-dimensions";
-import axios from 'axios';
+
+import { AuthContext } from '../../LoginCredencial/context/AuthContext';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { getData } from '../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../Constants/UrlConstants';
 import DataContext from '../../LoginCredencial/context/DataContextApi'
 const { height } = Dimensions.get('window');
+
 const HomeScreenDm = ({ navigation }) => {
-    const {data, count}  = useContext(DataContext)
+    // const {logout} = useContext(AuthContext)
+    const { data, count,getDataFunc } = useContext(DataContext)
+    const {logout,userInformation} =useContext(AuthContext)
     const [pending, setPending] = useState([]);
     const [completed, setCompleted] = useState([]);
     const [rejected, setRejected] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [loaderInfo, setloaderInfo] = useState(false);
 
-    const logout = () => {
+    const handleLogout  = () => {
+        logout();
         navigation.replace('login');
 
     };
@@ -41,38 +46,43 @@ const HomeScreenDm = ({ navigation }) => {
         navigation.navigate('cancel');
     }
 
-    const onRefresh = () => {
-        setloaderInfo(true)
-        setRefreshing(true);
-        AddUserInfo();
-        setloaderInfo(false)
-        setTimeout(() => setRefreshing(false), 1000);
-    };
 
-    useEffect(() => {
-        setloaderInfo(true)
-        AddUserInfo();
-        setloaderInfo(false)
-    }, [count]);
 
-    // useEffect(() => {
-    //     const timer = setInterval(() => {
-    //       AddUserInfo();
-    //     }, 3000);
-    //     return () => clearInterval(timer);
-    //   }, []);
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('beforeRemove', () => {
-            AddUserInfo();
-        });
-
-        return unsubscribe;
-    }, []);
-
-    // useEffect(() => {
+    // const onRefresh = () => {
+    //     setloaderInfo(true)
+    //     setRefreshing(true);
     //     AddUserInfo();
+    //     setloaderInfo(false)
+    //     setTimeout(() => setRefreshing(false), 1000);
+    // };
+
+    // useEffect(() => {
+    //     setloaderInfo(true)
+    //     AddUserInfo();
+    //     setloaderInfo(false)
+    // }, [count]);
+
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener('beforeRemove', () => {
+    //         AddUserInfo();
+    //     });
+
+    //     return unsubscribe;
     // }, []);
+
+   
+    useEffect(() => {
+        AddUserInfo();
+        getDataFunc();
+      }, []);
+    
+      useEffect(() => {
+        const interval = setInterval(() => {
+          AddUserInfo();
+        }, 3000);
+        return () => clearInterval(interval);
+      });
+
 
     const AddUserInfo = async () => {
 
@@ -81,8 +91,15 @@ const HomeScreenDm = ({ navigation }) => {
         const completedData = response.result.filter(appointment => appointment.status == 'complete')
 
         const pendingData = response.result.filter(appointment => appointment.status == 'pending')
-        const currentDate = new Date().toISOString().slice(0, 10);
-        const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === currentDate);
+        // const currentDate = new Date().toISOString().slice(0, 10);
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        }).split('/').join('-');
+      
+        const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === formattedDate);
 
         const rejectData = response.result.filter(appointment => appointment.status == 'reject')
         setPending(filteredData.length)
@@ -95,15 +112,18 @@ const HomeScreenDm = ({ navigation }) => {
             <ScrollView
                 scrollEnabled={false}
                 nestedScrollEnabled={false}
-                refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                }>
+                // refreshControl={
+                //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                // }
+                >
+
+
                 <View style={styles.header}>
-                    <Icon name="sort-variant" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer} />
+                    <Icon name="user" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer} />
                     <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
                         District Magistrate
                     </Text>
-                    <Icon name="logout" color='#3e2465' size={responsiveFontSize(4)} onPress={logout} />
+                    <Icon name="logout" color='#3e2465' size={responsiveFontSize(4)} onPress={handleLogout } />
                 </View>
 
                 <View style={styles.container}>
@@ -128,7 +148,7 @@ const HomeScreenDm = ({ navigation }) => {
                                 <View style={styles.content_iconWraper} >
                                     <View style={styles.innerView}>
 
-                                        <Icon2 name="progress-clock" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
+                                        <Icon2 name="progress-clock" color='white' size={responsiveFontSize(3)} onPress={navigation.toggleDrawer} />
                                     </View>
 
                                     <View style={styles.textWrapDiv}>
@@ -138,7 +158,7 @@ const HomeScreenDm = ({ navigation }) => {
                                             <Text style={styles.text}>{pending}</Text>
                                         )}
 
-                                        <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>लंबित </Text>
+                                        <Text style={{ fontSize: responsiveFontSize(2.1), color: '#fff', fontWeight: 'bold' }}>लंबित </Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -151,7 +171,7 @@ const HomeScreenDm = ({ navigation }) => {
                                 <View style={styles.content_iconWraper} >
                                     <View style={styles.innerView}>
 
-                                        <Icon3 name="checkmark-done" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
+                                        <Icon3 name="checkmark-done" color='white' size={responsiveFontSize(3)} onPress={navigation.toggleDrawer} />
                                     </View>
 
                                     <View style={styles.textWrapDiv}>
@@ -161,7 +181,7 @@ const HomeScreenDm = ({ navigation }) => {
                                             <Text style={styles.text}>{completed}</Text>
                                         )}
 
-                                        <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}> पूर्ण </Text>
+                                        <Text style={{ fontSize: responsiveFontSize(2.1), color: '#fff', fontWeight: 'bold' }}> पूर्ण </Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -171,7 +191,7 @@ const HomeScreenDm = ({ navigation }) => {
                         </View>
                         <View style={{
                             display: 'flex',
-                            flexDirection:'row',
+                            flexDirection: 'row',
                             marginTop: responsiveHeight(4),
                             marginLeft: responsiveWidth(10)
                         }}>
@@ -184,7 +204,7 @@ const HomeScreenDm = ({ navigation }) => {
                                 <View style={styles.content_iconWraper} >
                                     <View style={styles.innerView}>
 
-                                        <Icon2 name="cancel" color='white' size={responsiveFontSize(5)} onPress={navigation.toggleDrawer} />
+                                        <Icon2 name="cancel" color='white' size={responsiveFontSize(3)} onPress={navigation.toggleDrawer} />
                                     </View>
 
                                     <View style={styles.textWrapDiv}>
@@ -197,7 +217,7 @@ const HomeScreenDm = ({ navigation }) => {
                                             <Text style={styles.text}>{rejected}</Text>
                                         )}
 
-                                        <Text style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}> अस्वीकृत </Text>
+                                        <Text style={{ fontSize: responsiveFontSize(2.1), color: '#fff', fontWeight: 'bold' }}> अस्वीकृत </Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -207,13 +227,14 @@ const HomeScreenDm = ({ navigation }) => {
 
                     </View>
 
-
-                </View>
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: responsiveHeight(3.5) }}>
-                    <View style={styles.menuStyle}>
-                        <Menu />
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: responsiveHeight(3.5) }}>
+                        <View style={styles.menuStyle}>
+                            <Menu />
+                        </View>
                     </View>
                 </View>
+
+
 
             </ScrollView>
         </>
@@ -226,6 +247,7 @@ export default HomeScreenDm
 const styles = StyleSheet.create({
 
     header: {
+        flex: 1,
         padding: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -235,12 +257,13 @@ const styles = StyleSheet.create({
 
     },
     container: {
+        // flex: 3,
         backgroundColor: '#C0D9D9',
         borderTopLeftRadius: responsiveWidth(15),
         borderTopRightRadius: responsiveWidth(15),
         marginTop: responsiveHeight(3),
         paddingVertical: responsiveHeight(5),
-        height: responsiveHeight(75),
+        height: responsiveHeight(100),
         borderBottomLeftRadius: responsiveWidth(15),
         borderBottomRightRadius: responsiveWidth(15),
     },
@@ -256,9 +279,10 @@ const styles = StyleSheet.create({
 
     text: {
         color: '#ffff',
-        fontSize: 24,
+        fontSize: responsiveFontSize(2.5),
         fontWeight: 'bold',
         alignItems: "center",
+        paddingVertical:responsiveHeight(1)
 
 
     },
@@ -276,12 +300,12 @@ const styles = StyleSheet.create({
         marginTop: responsiveHeight(1),
     },
     innerView: {
-        width: responsiveWidth(14),
-        height: responsiveWidth(14),
+        width: responsiveWidth(10),
+        height: responsiveWidth(10),
         borderColor: '#fff',
         // borderStyle:'dashed',
         borderWidth: 1,
-        borderRadius: 15,
+        borderRadius: responsiveFontSize(1),
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'

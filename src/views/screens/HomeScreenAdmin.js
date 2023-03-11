@@ -7,9 +7,9 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import { RefreshControl } from 'react-native';
+// import { RefreshControl } from 'react-native';
 import { ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/AntDesign';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import userAdd from '../../../android/app/src/main/assets/images/plus.png'
@@ -27,11 +27,13 @@ import { useContext } from 'react';
 import axios from 'axios';
 import { getData } from '../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../Constants/UrlConstants';
+import { AuthContext } from '../../LoginCredencial/context/AuthContext';
 import { ActivityIndicator } from 'react-native';
 import DataContext from '../../LoginCredencial/context/DataContextApi'
 const { height } = Dimensions.get('window');
 const HomeScreenAdmin = ({ navigation }) => {
   const {data, count,getDataFunc}  = useContext(DataContext)
+  const {logout} =useContext(AuthContext)
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -42,9 +44,11 @@ const HomeScreenAdmin = ({ navigation }) => {
   const AddUser = () => {
     navigation.navigate('userInfo');
   };
-  const logout = () => {
-    navigation.replace('login');
-  };
+   const handleLogout  = () => {
+        logout();
+        navigation.replace('login');
+
+    };
 
   const PendingHendle = () => {
     navigation.navigate('pending');
@@ -61,36 +65,44 @@ const HomeScreenAdmin = ({ navigation }) => {
   //   setloaderInfo(false);
   // }, []);
 
-  const onRefresh = () => {
-    setloaderInfo(true)
-    setRefreshing (true);
-    AddUserInfo();
-    // getDataFunc();
-    setloaderInfo(false)
-    setTimeout(() => setRefreshing(false), 1000);
-  };
+//   const onRefresh = () => {
+//     setloaderInfo(true)
+//     setRefreshing (true);
+//     AddUserInfo();
+//     getDataFunc();
+//     setloaderInfo(false)
+//     setTimeout(() => setRefreshing(false), 1000);
+//   };
 
-  useEffect(() => {
-    setloaderInfo(true)
-    AddUserInfo();
-    // getDataFunc();
-    setloaderInfo(false)
-  }, [count]);
+//   useEffect(() => {
+//     setloaderInfo(true)
+//     AddUserInfo();
+//     getDataFunc();
+//     setloaderInfo(false)
+//   }, [count]);
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     AddUserInfo();
-  //   }, 3000);
-  //   return () => clearInterval(timer);
-  // }, []);
+//   useEffect(() => {
+//     const unsubscribe = navigation.addListener('beforeRemove', () => {
+//         AddUserInfo();
+//     });
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', () => {
-        AddUserInfo();
-    });
+//     return unsubscribe;
+// }, []);
 
-    return unsubscribe;
+useEffect(() => {
+  AddUserInfo();
+  getDataFunc();
 }, []);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    AddUserInfo();
+    getDataFunc();
+  }, 3000);
+  return () => clearInterval(interval);
+});
+
+
 
 
   const AddUserInfo =  () => {
@@ -117,12 +129,13 @@ const HomeScreenAdmin = ({ navigation }) => {
      <ScrollView
         scrollEnabled={false}
         nestedScrollEnabled={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
+        >
       <View style={styles.header}>
         <Icon
-          name="sort-variant"
+          name="user"
           color="#3e2465"
           size={responsiveFontSize(4)}
           onPress={navigation.toggleDrawer}
@@ -135,7 +148,7 @@ const HomeScreenAdmin = ({ navigation }) => {
           }}>
           Admin
         </Text>
-        <Icon name="logout" color="#3e2465" size={responsiveFontSize(4)} onPress={logout} />
+        <Icon name="logout" color="#3e2465" size={responsiveFontSize(4)} onPress={handleLogout} />
       </View>
 
       <View style={styles.container}>
@@ -188,7 +201,7 @@ const HomeScreenAdmin = ({ navigation }) => {
                   <Icon2
                     name="progress-clock"
                     color="white"
-                    size={responsiveFontSize(5)}
+                    size={responsiveFontSize(3)}
                     onPress={navigation.toggleDrawer}
                   />
                 </View>
@@ -201,7 +214,7 @@ const HomeScreenAdmin = ({ navigation }) => {
                   )}
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
+                      fontSize: responsiveFontSize(2.1),
                       color: '#fff',
                       fontWeight: 'bold',
                     }}>
@@ -227,7 +240,7 @@ const HomeScreenAdmin = ({ navigation }) => {
                   <Icon3
                     name="checkmark-done"
                     color="white"
-                    size={responsiveFontSize(5)}
+                    size={responsiveFontSize(3)}
                     onPress={navigation.toggleDrawer}
                   />
                 </View>
@@ -240,7 +253,7 @@ const HomeScreenAdmin = ({ navigation }) => {
                   )}
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
+                      fontSize: responsiveFontSize(2.1),
                       color: '#fff',
                       fontWeight: 'bold',
                     }}>
@@ -275,7 +288,7 @@ const HomeScreenAdmin = ({ navigation }) => {
                   <Icon2
                     name="cancel"
                     color="white"
-                    size={responsiveFontSize(5)}
+                    size={responsiveFontSize(3)}
                     onPress={navigation.toggleDrawer}
                   />
                 </View>
@@ -288,7 +301,7 @@ const HomeScreenAdmin = ({ navigation }) => {
                   )}
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
+                      fontSize: responsiveFontSize(2.1),
                       color: '#fff',
                       fontWeight: 'bold',
                     }}>
@@ -328,22 +341,16 @@ const HomeScreenAdmin = ({ navigation }) => {
           </View>
 
         </View>
-        {/* Bottom Menu start */}
-        {/* <View style={{marginTop:80}}>
-        <View style={{marginBottom:10, borderWidth:0.5,borderColor:'#306060'}}/> 
-        <Menu/>
-        <View style={{marginTop:10, borderWidth:0.5,borderColor:'#306060'}}/> 
-        </View> */}
-        {/* Bottom Menu End */}
-
-
-      </View>
-      
-       <View style={{justifyContent:'center',alignItems:'center',marginTop:responsiveHeight(3.5)}}>
+   
+        <View style={{flex: 1,justifyContent:'center',alignItems:'center',marginTop:responsiveHeight(3.5)}}>
         <View style={styles.menuStyle}>
             <Menu />
           </View>
           </View>
+
+      </View>
+      
+     
 </ScrollView>
     </>
   );
@@ -367,9 +374,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: responsiveWidth(15),
     marginTop: responsiveHeight(3),
     paddingVertical: responsiveHeight(5),
-     height: responsiveHeight(75), 
-    borderBottomLeftRadius: responsiveWidth(15),
-    borderBottomRightRadius: responsiveWidth(15),
+     height: responsiveHeight(100),
   },
   userBox: {
     display: 'flex',
@@ -383,9 +388,10 @@ const styles = StyleSheet.create({
 
   text: {
     color: '#ffff',
-    fontSize: 24,
+    fontSize: responsiveFontSize(2.5),
     fontWeight: 'bold',
     alignItems: 'center',
+    paddingVertical:responsiveHeight(1)
   },
   content_iconWraper: {
     height: responsiveHeight(20),
@@ -401,12 +407,12 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(1),
   },
   innerView: {
-    width: responsiveWidth(14),
-    height: responsiveWidth(14),
+    width: responsiveWidth(10),
+    height: responsiveWidth(10),
     borderColor: '#fff',
     // borderStyle:'dashed',
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: responsiveFontSize(1),
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

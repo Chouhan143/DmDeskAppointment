@@ -4,8 +4,6 @@ import {getData} from '../../Hooks/ApiHelper';
 
 const DataContext = createContext();
 
-
-
 export function DataContextApiProvider({children}) {
   const [data, setData] = useState([]);
   const [count, setcount] = useState(0)

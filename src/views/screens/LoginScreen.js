@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Logo from './../../../src/assets/images/GovtLogo.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -6,64 +6,150 @@ import {
   responsiveWidth,
   responsiveFontSize
 } from "react-native-responsive-dimensions";
+import { useContext } from 'react';
 
-import { View, Text, SafeAreaView, Keyboard, Alert, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, Keyboard, Alert, Image, StyleSheet, TextInput, TouchableOpacity,AppState } from 'react-native';
 import COLORS from '../../conts/colors';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { useToast } from 'react-native-fast-toast';
 import { postData } from '../../Hooks/ApiHelper';
-import { Login } from '../../Constants/UrlConstants';
+// import { Login } from '../../Constants/UrlConstants';
+import { NewLoginUrl } from '../../Constants/UrlConstants';
+import React, { useState, useEffect } from 'react';
+import { AuthContext } from '../../LoginCredencial/context/AuthContext';
 
 const LoginScreen = ({ navigation }) => {
-  const toast = useToast();
-
-
+  const toast = useToast(); 
   const [inputs, setInputs] = React.useState({ email: '', password: '' });
-
-  // const [inputs, setInputs] = React.useState({ email: 'test@gmail.com', password: 'test@123' });
-
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
+const {login,userInformation} =useContext(AuthContext)
+
+  // const handleLogin = async () => {
+  //   validateSchema()
+  //   if (validateSchema()) {
+  //     let payload = {
+  //       email: inputs.email,
+  //       pass: inputs.password
+  //     };
+  //     setLoading(true)
+  //     const response = await postData(Login,payload)
+  //     console.log(response)
+  //     if(response.l_status == "false") {
+  //       toast.show('Wrong email or password', {
+  //         type: 'danger',
+  //         position: 'top',
+  //       });
+  //     }
+  //     if (response.user_type == "dm") 
+  //     {
+  //       await AsyncStorage.setItem("userType", response.user_type)
+  //       navigation.replace('HomeScreenDm');
+     
+  //     }
+  //      else if (response.user_type == "pa") {
+  //       await AsyncStorage.setItem("userType", response.user_type)
+  //       await AsyncStorage.setItem("city", response.city)
+  //       navigation.replace('HomeScreenPa');
+   
+  //     }
+  //     else if (response.user_type == "ad") {
+  //       await AsyncStorage.setItem("userType", response.user_type)
+  //       navigation.replace('HomeScreenAdmin');  
+  //     }
+  //     setLoading(false)
+  //   }
+  // }
+
+
+  // const handleLogin = async () => {
+  //   validateSchema()
+  //   if (validateSchema()) {
+  //     let payload = {
+  //       email: inputs.email,
+  //       password: inputs.password
+  //     };
+  //     setLoading(true)
+  //     const response = await postData(NewLoginUrl,payload)
+  //     console.log(response)
+    //   if(response.status == "false") {
+    //     toast.show('Wrong email or password', {
+    //       type: 'danger',
+    //       position: 'top',
+    //     });
+    //   }
+     
+    //   if (response.user_type == "dm") 
+    //   {
+    //     await AsyncStorage.setItem("userType", response.user_type)
+    //     navigation.replace('HomeScreenDm');
+     
+    //   }
+    //    else if (response.user_type == "pa") {
+    //     await AsyncStorage.setItem("userType", response.user_type)
+    //     await AsyncStorage.setItem("city", response.city)
+    //     navigation.replace('HomeScreenPa');
+   
+    //   }
+    //   else if (response.user_type == "ad") {
+    //     await AsyncStorage.setItem("userType", response.user_type)
+    //     navigation.replace('HomeScreenAdmin');
+    //   }
+    //   setLoading(false)
+    // }
+
+  // }
+
 
   const handleLogin = async () => {
-    validateSchema()
+    validateSchema();
     if (validateSchema()) {
-      let payload = {
-        email: inputs.email,
-        pass: inputs.password
-      };
-      setLoading(true)
-      const response = await postData(Login,payload)
-      console.log(response)
+      // login(inputs.email, inputs.password);
+      let userInformation = res.data;
+      console.log(userInformation);
+      setUserInformation(userInformation);
+      await AsyncStorage.setItem('userInfo', JSON.stringify(userInformation));
+      setIsLoading(false);
+    }
 
-      if(response.l_status == "false") {
+      if (!userInformation) {
         toast.show('Wrong email or password', {
           type: 'danger',
           position: 'top',
         });
       }
-      if (response.user_type == "dm") {
-        await AsyncStorage.setItem("userType", response.user_type)
+       else {
+        if (userInformation?.user_type == "dm") 
+      {
+        await AsyncStorage.setItem("userType", userInformation.user_type)
         navigation.replace('HomeScreenDm');
-        // await AsyncStorage.set('var', 'HomeScreenDm');
-      } else if (response.user_type == "pa") {
-        await AsyncStorage.setItem("userType", response.user_type)
-        await AsyncStorage.setItem("city", response.city)
+     
+      }
+       else if (userInformation?.user_type == "pa") {
+        await AsyncStorage.setItem("userType", userInformation.user_type)
+        await AsyncStorage.setItem("city", userInformation.city)
         navigation.replace('HomeScreenPa');
-        // await AsyncStorage.set('var', 'HomeScreenPa');
+   
       }
-      else if (response.user_type == "ad") {
-        await AsyncStorage.setItem("userType", response.user_type)
+      else if (userInformation?.user_type == "ad") {
+        await AsyncStorage.setItem("userType", userInformation.user_type)
         navigation.replace('HomeScreenAdmin');
-        // await AsyncStorage.set('var', 'HomeScreenAdmin');
       }
-      setLoading(false)
+      // setLoading(false)
+      
 
-    }
-  }
+        }
+      
+    
+  };
+ 
 
-  // ----------------------------------------new credential -----------------
+
+
+
+  
+  // ----------------------------------------new credential --------------------------
 
 
   function validateSchema() {
@@ -122,6 +208,9 @@ const LoginScreen = ({ navigation }) => {
             password
           />
           <Button loader={loading} title="Log In" onPress={handleLogin} />
+          {/* <Button loader={loading} title="Log In"  onPress={() => {
+            login(inputs.email, inputs.password);
+          }} /> */}
           <Text 
             // onPress={() => navigation.navigate('Forgotpassword')}
             onPress={() => navigation.navigate('NewPassword')}

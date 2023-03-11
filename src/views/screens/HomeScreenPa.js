@@ -14,7 +14,7 @@ import {
   responsiveWidth,
   responsiveFontSize
 } from "react-native-responsive-dimensions";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/AntDesign';
 import Menu from '../components/Menu';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
@@ -26,11 +26,12 @@ import axios from 'axios';
 import { ScrollView } from 'react-native';
 import { RefreshControl } from 'react-native';
 import DataContext from '../../LoginCredencial/context/DataContextApi';
-
+import { AuthContext } from '../../LoginCredencial/context/AuthContext';
 const { height } = Dimensions.get('window');
 
 const HomeScreenPa = ({ navigation }) => {
-  const {data, count,getDataFunc}  = useContext(DataContext)
+  const { data, count, getDataFunc } = useContext(DataContext)
+  const {logout} =useContext(AuthContext)
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -42,19 +43,16 @@ const HomeScreenPa = ({ navigation }) => {
   const OpenAppointment = () => {
     navigation.navigate('Appointment');
   };
-  const logout = () => {
-    navigation.replace('login');
-  };
+   const handleLogout  = () => {
+        logout();
+        navigation.replace('login');
+
+    };
 
   const PendingHendle = () => {
     navigation.navigate('pending');
   };
-  const CompletegHendle = () => {
-    navigation.navigate('complete');
-  };
-  const CancelgHendle = () => {
-    navigation.navigate('cancel');
-  };
+ 
 
   // const onRefresh = () => {
   //   setloaderInfo(true)
@@ -77,43 +75,54 @@ const HomeScreenPa = ({ navigation }) => {
   //   const unsubscribe = navigation.addListener('beforeRemove', () => {
   //     AddUserInfo();
   //   });
-  
+
   //   return unsubscribe;
   // }, []);
 
-// ------------------------------working
+  // ------------------------------working
   useEffect(() => {
     AddUserInfo();
     getDataFunc();
-  },[]);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       AddUserInfo();
+      getDataFunc();
     }, 3000);
     return () => clearInterval(interval);
   });
-// ------------------------------working
+  // ------------------------------working
 
   const AddUserInfo = () => {
 
-        const completedData = data.filter(
-          appointment => appointment.status == 'complete',
-        );
+    const completedData = data.filter(
+      appointment => appointment.status == 'complete',
+    );
 
-        const pendingData = data.filter(
-          appointment => appointment.status == 'pending',
-        );
-        const currentDate = new Date().toISOString().slice(0, 10);
-        const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === currentDate);
-        
-        const rejectData = data.filter(
-          appointment => appointment.status == 'reject',
-        );
-        setPending(filteredData.length);
-        setCompleted(completedData.length);
-        setRejected(rejectData.length);
-        setMyData(completedData);
+    const pendingData = data.filter(
+      appointment => appointment.status == 'pending',
+    );
+    // const currentDate = new Date().toISOString().slice(0, 10);
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).split('/').join('-');
+  
+
+
+
+    const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === formattedDate);
+
+    const rejectData = data.filter(
+      appointment => appointment.status == 'reject',
+    );
+    setPending(filteredData.length);
+    setCompleted(completedData.length);
+    setRejected(rejectData.length);
+    setMyData(completedData);
   };
 
   return (
@@ -121,13 +130,13 @@ const HomeScreenPa = ({ navigation }) => {
       <ScrollView
         scrollEnabled={false}
         nestedScrollEnabled={false}
-        // refreshControl={
-        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        // }
-        >
+      // refreshControl={
+      //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      // }
+      >
         <View style={styles.header}>
           <Icon
-            name="sort-variant"
+            name="user"
             color="#3e2465"
             size={responsiveFontSize(4)}
             onPress={navigation.toggleDrawer}
@@ -135,7 +144,7 @@ const HomeScreenPa = ({ navigation }) => {
           <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
             Personal Assistent
           </Text>
-          <Icon name="logout" color="#3e2465" size={responsiveFontSize(4)} onPress={logout} />
+          <Icon name="logout" color="#3e2465" size={responsiveFontSize(4)} onPress={handleLogout} />
         </View>
 
         <View style={styles.container}>
@@ -145,26 +154,36 @@ const HomeScreenPa = ({ navigation }) => {
               justifyContent: 'center',
               alignItems: 'center',
               gap: 5,
+          
+              backgroundColor: '#fff',
+              // borderTopLeftRadius: responsiveWidth(1),
+              // borderTopRightRadius: responsiveWidth(1),
+              borderRadius:responsiveFontSize(5),
+              paddingVertical: responsiveHeight(3),
+              marginHorizontal:responsiveWidth(10),
+             marginTop:responsiveHeight(11)
+
             }}>
             <Text
               style={{
                 alignItems: 'center',
-                fontSize: responsiveFontSize(2.6),
+                fontSize: responsiveFontSize(3.6),
                 fontWeight: 'bold',
                 color: '#306060',
               }}>
               DM Desk
             </Text>
-            <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.5), }}>
+            <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(3.5), }}>
               अपॉइंटमेंट स्टेटस
             </Text>
           </View>
-          <View style={{ marginTop: responsiveHeight(6) }}>
+
+          <View style={{ paddingTop: responsiveHeight(7) }}>
             <View
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'space-evenly',
+                justifyContent: 'space-around',
                 // margin: 30,
               }}>
               <TouchableOpacity
@@ -174,9 +193,9 @@ const HomeScreenPa = ({ navigation }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   backgroundColor: '#F99417',
-                  paddingVertical: responsiveHeight(1),
-                  paddingHorizontal: responsiveWidth(10),
-                  borderRadius: responsiveWidth(10),
+                  paddingVertical: responsiveHeight(2),
+                  paddingHorizontal: responsiveWidth(8),
+                  borderRadius: responsiveWidth(5),
                 }}>
                 <View
                   style={styles.content_iconWraper}>
@@ -184,7 +203,7 @@ const HomeScreenPa = ({ navigation }) => {
                     <Icon2
                       name="progress-clock"
                       color="white"
-                      size={responsiveFontSize(5)}
+                      size={responsiveFontSize(4)}
                       onPress={navigation.toggleDrawer}
                     />
                   </View>
@@ -193,7 +212,7 @@ const HomeScreenPa = ({ navigation }) => {
                     {/* {loaderInfo == true ? (
                       <ActivityIndicator size="small" color="white" />
                     ) : ( */}
-                      <Text style={styles.text}>{pending}</Text>
+                    <Text style={styles.text}>{pending}</Text>
                     {/* )} */}
                     <Text
                       style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
@@ -202,91 +221,7 @@ const HomeScreenPa = ({ navigation }) => {
                   </View>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={CompletegHendle}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#54B435',
-                  paddingVertical: responsiveHeight(1),
-                  paddingHorizontal: responsiveWidth(10),
-                  borderRadius: responsiveWidth(10),
-                }}>
-                <View
-                  style={styles.content_iconWraper}>
-                  <View style={styles.innerView}>
-                    <Icon3
-                      name="checkmark-done"
-                      color="white"
-                      size={responsiveFontSize(5)}
-                      onPress={navigation.toggleDrawer}
-                    />
-                  </View>
 
-                  <View style={styles.textWrapDiv}>
-
-                    {/* {loaderInfo == true ? (
-                      <ActivityIndicator size="small" color="white" />
-                    ) : ( */}
-                      <Text style={styles.text}>{completed}</Text>
-                    {/* )} */}
-                    <Text
-                      style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
-
-                      पूर्ण
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                marginTop: responsiveHeight(4),
-                // margin: 25,
-              }}>
-              <TouchableOpacity
-                onPress={CancelgHendle}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#DC0000',
-                  paddingVertical: responsiveHeight(1),
-                  paddingHorizontal: responsiveWidth(10),
-                  borderRadius: responsiveWidth(10),
-                }}>
-                <View
-                  style={styles.content_iconWraper}>
-                  <View style={styles.innerView}>
-                    <Icon2
-                      name="cancel"
-                      color="white"
-                      size={responsiveFontSize(5)}
-                      onPress={navigation.toggleDrawer}
-                    />
-                  </View>
-
-                  <View style={styles.textWrapDiv}>
-                    {/* {loaderInfo == true ? (
-                      <View>
-                        <ActivityIndicator size="small" color="white" />
-                      </View>
-
-                    ) : ( */}
-                      <Text style={styles.text}>{rejected}</Text>
-                    {/* )} */}
-                    <Text
-                      style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
-
-                      अस्वीकृत
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
               <TouchableOpacity
                 style={{
                   display: 'flex',
@@ -298,14 +233,14 @@ const HomeScreenPa = ({ navigation }) => {
                 }}
                 onPress={OpenAppointment}>
                 {/* <Image source={userAdd} style={styles.userAddImg} /> */}
-                <Image source={require('./../../../android/app/src/main/assets/images/plus.png')}style={styles.userAddImg} />
+                <Image source={require('./../../../android/app/src/main/assets/images/plus.png')} style={styles.userAddImg} />
                 <View>
                   <Text
                     style={{
                       color: '#306060',
                       paddingTop: responsiveHeight(3),
                       fontWeight: 'bold',
-                      fontSize: responsiveFontSize(2)
+                      fontSize: responsiveFontSize(2.5)
                     }}>
                     बुक अपॉइंटमेंट
                   </Text>
@@ -313,16 +248,7 @@ const HomeScreenPa = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/* <View style={{ marginTop: responsiveHeight(10) }}> */}
-
         </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: responsiveHeight(3.5) }}>
-          <View style={styles.menuStyle}>
-            <Menu />
-          </View>
-        </View>
-
-        {/* </View> */}
       </ScrollView>
     </>
   );
@@ -332,7 +258,9 @@ export default HomeScreenPa;
 
 const styles = StyleSheet.create({
   header: {
-    padding: 20,
+    // padding: 20,
+    paddingVertical: responsiveHeight(5),
+    paddingHorizontal: responsiveWidth(5),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -340,15 +268,14 @@ const styles = StyleSheet.create({
     // backgroundColor: '#528B8B',
   },
   container: {
-
+    flex: 1,
     backgroundColor: '#C0D9D9',
     borderTopLeftRadius: responsiveWidth(15),
     borderTopRightRadius: responsiveWidth(15),
-    marginTop: responsiveHeight(3),
-    paddingVertical: responsiveHeight(5),
-    height: responsiveHeight(75),
-    borderBottomLeftRadius: responsiveWidth(15),
-    borderBottomRightRadius: responsiveWidth(15),
+    marginTop: responsiveHeight(2),
+    paddingVertical: responsiveHeight(3),
+    height: responsiveHeight(100),
+
   },
   userBox: {
     display: 'flex',
@@ -443,5 +370,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: responsiveWidth(15),
     borderTopLeftRadius: responsiveWidth(15),
     borderTopRightRadius: responsiveWidth(15),
+  },
+
+  PendigCicle: {
+    justifyContent: 'center', alignItems: 'center',
+    width: responsiveWidth(8),
+    height: responsiveWidth(8),
+    backgroundColor: 'blue',
+    borderRadius: responsiveFontSize(4),
+    marginLeft: responsiveWidth(1),
   }
 });
