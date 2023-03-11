@@ -78,7 +78,7 @@ const HomeScreenDm = ({ navigation }) => {
     
       useEffect(() => {
         const interval = setInterval(() => {
-          AddUserInfo();
+        //   AddUserInfo();
         }, 3000);
         return () => clearInterval(interval);
       });

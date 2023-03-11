@@ -1,17 +1,25 @@
 import axios from 'axios';
 
 // Make a GET request
-export const getData = async (url) => {
+export const getData = async url => {
+  const token = await AsyncStorage.getItem('Token');
+
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url,{
+      headers: {Authorization: `Bearer ${token}`},
+    });
+    // const response = await axios.get(url);
     return response.data;
   } catch (error) {
     console.error(error);
   }
 };
-export const getData2 = async (url) => {
+export const getData2 = async url => {
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url,{
+      headers: {Authorization: `Bearer ${token}`},
+    });
+    // const response = await axios.get(url);
     return response;
   } catch (error) {
     console.error(error);
@@ -21,14 +29,12 @@ export const getData2 = async (url) => {
 // Make a POST request
 export const postData = async (url, data) => {
   try {
-    const response = await axios.post(url, data);
+    const response = await axios.post(url, data,{
+      headers: {Authorization: `Bearer ${token}`},
+    });
+    // const response = await axios.post(url, data);
     return response.data;
   } catch (error) {
     console.error(error);
   }
 };
-
-
-
-
-

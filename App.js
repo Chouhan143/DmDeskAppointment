@@ -41,6 +41,7 @@ import { Uselogout } from './src/Hooks/LogoutHook';
 import EditBookAppointment from './src/views/screens/EditBookAppointment';
 import { DataContextApiProvider } from './src/LoginCredencial/context/DataContextApi';
 import { AuthContext } from './src/LoginCredencial/context/AuthContext';
+import { useEffect } from 'react';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -71,12 +72,29 @@ import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 
 const App = ({ navigation,navigator }) => {
   const Stack = createNativeStackNavigator();
+  const { userInformation ,setisLogged, isLogged} = useContext(AuthContext);
+
 
   const logout = () => {
     Uselogout(navigation)
   };
 
-  const { userInformation } = useContext(AuthContext);
+
+
+  useEffect(() => {
+    checkStatus()
+  }, [])
+
+  const checkStatus = async () => {
+  const token = await AsyncStorage.getItem("Token")
+    if (token.length > 0 ) {
+     await setisLogged(true)
+    } else {
+     await setisLogged(false)
+
+    }
+  }
+  
   return (
     <DataContextApiProvider>
     <ToastProvider>
@@ -84,10 +102,9 @@ const App = ({ navigation,navigator }) => {
       <NavigationContainer>
 
         <Stack.Navigator initialRouteName={Home}>
-        {userInformation && userInformation.access_token ? (
           <>
           <Stack.Screen name='HomeScreenDm' component={HomeScreenDm} options={{ headerShown: false }} />
-          <Stack.Screen name='HomeScreenPa' component={HomeScreenPa} options={{ headerShown: false }} />
+          <Stack.Screen name='HomeScreenPa' component={ HomeScreenPa} options={{ headerShown: false }} />
           <Stack.Screen name='Appointment' component={BookAppointment} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenAdmin' component={HomeScreenAdmin} options={{ headerShown: false }} />
           <Stack.Screen name='userInfo' component={AddUserInfo} options={{ headerShown: false }} />
@@ -96,14 +113,11 @@ const App = ({ navigation,navigator }) => {
           <Stack.Screen name='cancel' component={Cancel} options={{ headerShown: false }} />
           <Stack.Screen name='edit-appointment' component={EditBookAppointment} options={{ headerShown: false }} />
           </>
-        ):(
           <>
           <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Forgotpassword' component={ForgotPass} options={{ headerShown: false }} />
           <Stack.Screen name='NewPassword' component={NewPassword} options={{headerShown:false}} /> 
           </>
-        )
-        }
           {/* <Stack.Screen name='Drawer' component={DrawerContent} options={{headerShown:false}} /> */}
           {/* <Stack.Screen name='Home' component={Home} options={{headerShown:false}} /> */}
 

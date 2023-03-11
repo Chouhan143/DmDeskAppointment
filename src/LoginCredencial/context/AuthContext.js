@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [userInformation, setUserInformation] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
+  const [isLogged, setisLogged] = useState(false)
 
 
 
@@ -78,7 +79,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    isLoggedIn();
+    // isLoggedIn();
   }, []);
 
   return (
@@ -88,7 +89,8 @@ export const AuthProvider = ({ children }) => {
         userInformation,
         splashLoading,
         login,
-        logout
+        logout,
+        isLogged, setisLogged
       }}>
       {children}
     </AuthContext.Provider>

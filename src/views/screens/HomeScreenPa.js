@@ -7,31 +7,34 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import { ActivityIndicator } from 'react-native';
+import {ActivityIndicator} from 'react-native';
 
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize
-} from "react-native-responsive-dimensions";
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Menu from '../components/Menu';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 // import userAdd from '../../../src/assets/images/plus.png';
-import React, { useContext } from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import React, {useContext} from 'react';
+import {useState} from 'react';
+import {useEffect} from 'react';
 import axios from 'axios';
-import { ScrollView } from 'react-native';
-import { RefreshControl } from 'react-native';
+import {ScrollView} from 'react-native';
+import {RefreshControl} from 'react-native';
 import DataContext from '../../LoginCredencial/context/DataContextApi';
-import { AuthContext } from '../../LoginCredencial/context/AuthContext';
-const { height } = Dimensions.get('window');
+import {AuthContext} from '../../LoginCredencial/context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Uselogout} from '../../Hooks/LogoutHook';
+import { Pressable } from 'react-native';
+const {height} = Dimensions.get('window');
 
-const HomeScreenPa = ({ navigation }) => {
-  const { data, count, getDataFunc } = useContext(DataContext)
-  const {logout} =useContext(AuthContext)
+const HomeScreenPa = ({navigation}) => {
+  const {data, count, getDataFunc} = useContext(DataContext);
+  const {logout} = useContext(AuthContext);
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -43,16 +46,22 @@ const HomeScreenPa = ({ navigation }) => {
   const OpenAppointment = () => {
     navigation.navigate('Appointment');
   };
-   const handleLogout  = () => {
-        logout();
-        navigation.replace('login');
-
-    };
+  const handleLogout = async () => {
+    console.log("pressed")
+    const id = await AsyncStorage.getItem('id');
+    // logout();
+    // navigation.replace('login');
+    const logoutResponse = await Uselogout(id);
+    if (logoutResponse.logout == "success") {
+      AsyncStorage.clear()
+  navigation.replace('login');
+    }
+    console.log(JSON.stringify(logoutResponse));
+  };
 
   const PendingHendle = () => {
     navigation.navigate('pending');
   };
- 
 
   // const onRefresh = () => {
   //   setloaderInfo(true)
@@ -70,7 +79,6 @@ const HomeScreenPa = ({ navigation }) => {
   //   setloaderInfo(false)
   // }, [count]);
 
-
   // useEffect(() => {
   //   const unsubscribe = navigation.addListener('beforeRemove', () => {
   //     AddUserInfo();
@@ -81,21 +89,26 @@ const HomeScreenPa = ({ navigation }) => {
 
   // ------------------------------working
   useEffect(() => {
-    AddUserInfo();
-    getDataFunc();
+    // AddUserInfo();
+    // getDataFunc();
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       AddUserInfo();
       getDataFunc();
+      cchekToken();
     }, 3000);
     return () => clearInterval(interval);
   });
   // ------------------------------working
 
-  const AddUserInfo = () => {
+  const cchekToken = async () => {
+    const token = await AsyncStorage.getItem('Token');
+    console.log('token>>' + JSON.stringify(token));
+  };
 
+  const AddUserInfo = () => {
     const completedData = data.filter(
       appointment => appointment.status == 'complete',
     );
@@ -105,16 +118,19 @@ const HomeScreenPa = ({ navigation }) => {
     );
     // const currentDate = new Date().toISOString().slice(0, 10);
     const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).split('/').join('-');
-  
+    const formattedDate = currentDate
+      .toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+      .split('/')
+      .join('-');
 
-
-
-    const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === formattedDate);
+    const filteredData = pendingData.filter(
+      appointment =>
+        appointment.status === 'pending' && appointment.date === formattedDate,
+    );
 
     const rejectData = data.filter(
       appointment => appointment.status == 'reject',
@@ -130,9 +146,9 @@ const HomeScreenPa = ({ navigation }) => {
       <ScrollView
         scrollEnabled={false}
         nestedScrollEnabled={false}
-      // refreshControl={
-      //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      // }
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
       >
         <View style={styles.header}>
           <Icon
@@ -141,10 +157,24 @@ const HomeScreenPa = ({ navigation }) => {
             size={responsiveFontSize(4)}
             onPress={navigation.toggleDrawer}
           />
-          <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
+          <Text
+            style={{
+              color: '#306060',
+              fontWeight: 'bold',
+              fontSize: responsiveFontSize(2.2),
+            }}>
             Personal Assistent
           </Text>
-          <Icon name="logout" color="#3e2465" size={responsiveFontSize(4)} onPress={handleLogout} />
+          <Pressable
+            onPress={() => handleLogout()}
+          >
+
+          <Icon
+            name="logout"
+            color="#3e2465"
+            size={responsiveFontSize(4)}
+            />
+            </Pressable>
         </View>
 
         <View style={styles.container}>
@@ -154,15 +184,14 @@ const HomeScreenPa = ({ navigation }) => {
               justifyContent: 'center',
               alignItems: 'center',
               gap: 5,
-          
+
               backgroundColor: '#fff',
               // borderTopLeftRadius: responsiveWidth(1),
               // borderTopRightRadius: responsiveWidth(1),
-              borderRadius:responsiveFontSize(5),
+              borderRadius: responsiveFontSize(5),
               paddingVertical: responsiveHeight(3),
-              marginHorizontal:responsiveWidth(10),
-             marginTop:responsiveHeight(11)
-
+              marginHorizontal: responsiveWidth(10),
+              marginTop: responsiveHeight(11),
             }}>
             <Text
               style={{
@@ -173,12 +202,17 @@ const HomeScreenPa = ({ navigation }) => {
               }}>
               DM Desk
             </Text>
-            <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(3.5), }}>
+            <Text
+              style={{
+                color: '#306060',
+                fontWeight: 'bold',
+                fontSize: responsiveFontSize(3.5),
+              }}>
               अपॉइंटमेंट स्टेटस
             </Text>
           </View>
 
-          <View style={{ paddingTop: responsiveHeight(7) }}>
+          <View style={{paddingTop: responsiveHeight(7)}}>
             <View
               style={{
                 display: 'flex',
@@ -197,8 +231,7 @@ const HomeScreenPa = ({ navigation }) => {
                   paddingHorizontal: responsiveWidth(8),
                   borderRadius: responsiveWidth(5),
                 }}>
-                <View
-                  style={styles.content_iconWraper}>
+                <View style={styles.content_iconWraper}>
                   <View style={styles.innerView}>
                     <Icon2
                       name="progress-clock"
@@ -215,7 +248,11 @@ const HomeScreenPa = ({ navigation }) => {
                     <Text style={styles.text}>{pending}</Text>
                     {/* )} */}
                     <Text
-                      style={{ fontSize: responsiveFontSize(2), color: '#fff', fontWeight: 'bold' }}>
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#fff',
+                        fontWeight: 'bold',
+                      }}>
                       लंबित
                     </Text>
                   </View>
@@ -233,14 +270,17 @@ const HomeScreenPa = ({ navigation }) => {
                 }}
                 onPress={OpenAppointment}>
                 {/* <Image source={userAdd} style={styles.userAddImg} /> */}
-                <Image source={require('./../../../android/app/src/main/assets/images/plus.png')} style={styles.userAddImg} />
+                <Image
+                  source={require('./../../../android/app/src/main/assets/images/plus.png')}
+                  style={styles.userAddImg}
+                />
                 <View>
                   <Text
                     style={{
                       color: '#306060',
                       paddingTop: responsiveHeight(3),
                       fontWeight: 'bold',
-                      fontSize: responsiveFontSize(2.5)
+                      fontSize: responsiveFontSize(2.5),
                     }}>
                     बुक अपॉइंटमेंट
                   </Text>
@@ -275,7 +315,6 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(2),
     paddingVertical: responsiveHeight(3),
     height: responsiveHeight(100),
-
   },
   userBox: {
     display: 'flex',
@@ -373,11 +412,12 @@ const styles = StyleSheet.create({
   },
 
   PendigCicle: {
-    justifyContent: 'center', alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: responsiveWidth(8),
     height: responsiveWidth(8),
     backgroundColor: 'blue',
     borderRadius: responsiveFontSize(4),
     marginLeft: responsiveWidth(1),
-  }
+  },
 });
