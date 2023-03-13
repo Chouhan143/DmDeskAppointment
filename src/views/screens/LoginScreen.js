@@ -25,7 +25,7 @@ import Input from '../components/Input';
 import {useToast} from 'react-native-fast-toast';
 import {postData} from '../../Hooks/ApiHelper';
 // import { Login } from '../../Constants/UrlConstants';
-import {NewLoginUrl} from '../../Constants/UrlConstants';
+import {Login, NewLoginUrl} from '../../Constants/UrlConstants';
 import React, {useState, useEffect} from 'react';
 import {AuthContext} from '../../LoginCredencial/context/AuthContext';
 
@@ -89,14 +89,12 @@ const LoginScreen = ({navigation}) => {
     if (validateSchema()) {
       let payload = {
         email: inputs.email,
-        password: inputs.password,
+        pass: inputs.password,
       };
       setLoading(true);
-      const response = await postData(NewLoginUrl, payload);
+      const response = await postData(Login, payload);
       console.log('>>>' + JSON.stringify(response));
-      if (response.status == 'true') {
-        await AsyncStorage.setItem('Token', response.access_token);
-        await AsyncStorage.setItem('id', response.id);
+      if (response.l_status == 'true') {
         if (response.user_type == 'dm') {
           await AsyncStorage.setItem('userType', response.user_type);
           navigation.replace('HomeScreenDm');

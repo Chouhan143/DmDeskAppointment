@@ -42,6 +42,7 @@ import EditBookAppointment from './src/views/screens/EditBookAppointment';
 import { DataContextApiProvider } from './src/LoginCredencial/context/DataContextApi';
 import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 import { useEffect } from 'react';
+import { useState } from 'react';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -73,6 +74,7 @@ import { useEffect } from 'react';
 const App = ({ navigation,navigator }) => {
   const Stack = createNativeStackNavigator();
   const { userInformation ,setisLogged, isLogged} = useContext(AuthContext);
+  const [loggedIn, setloggedIn] = useState(false)
 
 
   const logout = () => {
@@ -86,23 +88,25 @@ const App = ({ navigation,navigator }) => {
   }, [])
 
   const checkStatus = async () => {
-  const token = await AsyncStorage.getItem("Token")
+  const token = await AsyncStorage.getItem("userType")
     if (token.length > 0 ) {
-     await setisLogged(true)
+     await setloggedIn(true)
     } else {
-     await setisLogged(false)
+     await setloggedIn(false)
 
     }
   }
   
   return (
     <DataContextApiProvider>
+      {console.log(loggedIn)}
     <ToastProvider>
 
       <NavigationContainer>
 
-        <Stack.Navigator initialRouteName={Home}>
+        <Stack.Navigator initialRouteName={loggedIn ? Home : LoginScreen}>
           <>
+          <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenDm' component={HomeScreenDm} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenPa' component={ HomeScreenPa} options={{ headerShown: false }} />
           <Stack.Screen name='Appointment' component={BookAppointment} options={{ headerShown: false }} />
@@ -114,7 +118,6 @@ const App = ({ navigation,navigator }) => {
           <Stack.Screen name='edit-appointment' component={EditBookAppointment} options={{ headerShown: false }} />
           </>
           <>
-          <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Forgotpassword' component={ForgotPass} options={{ headerShown: false }} />
           <Stack.Screen name='NewPassword' component={NewPassword} options={{headerShown:false}} /> 
           </>

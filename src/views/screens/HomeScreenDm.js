@@ -18,6 +18,7 @@ import { useEffect } from 'react';
 import { getData } from '../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../Constants/UrlConstants';
 import DataContext from '../../LoginCredencial/context/DataContextApi'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height } = Dimensions.get('window');
 
 const HomeScreenDm = ({ navigation }) => {
@@ -31,7 +32,7 @@ const HomeScreenDm = ({ navigation }) => {
     const [loaderInfo, setloaderInfo] = useState(false);
 
     const handleLogout  = () => {
-        logout();
+        AsyncStorage.clear()
         navigation.replace('login');
 
     };

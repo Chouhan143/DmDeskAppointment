@@ -47,16 +47,8 @@ const HomeScreenPa = ({navigation}) => {
     navigation.navigate('Appointment');
   };
   const handleLogout = async () => {
-    console.log("pressed")
-    const id = await AsyncStorage.getItem('id');
-    // logout();
-    // navigation.replace('login');
-    const logoutResponse = await Uselogout(id);
-    if (logoutResponse.logout == "success") {
       AsyncStorage.clear()
   navigation.replace('login');
-    }
-    console.log(JSON.stringify(logoutResponse));
   };
 
   const PendingHendle = () => {
@@ -97,16 +89,12 @@ const HomeScreenPa = ({navigation}) => {
     const interval = setInterval(() => {
       AddUserInfo();
       getDataFunc();
-      cchekToken();
     }, 3000);
     return () => clearInterval(interval);
   });
   // ------------------------------working
 
-  const cchekToken = async () => {
-    const token = await AsyncStorage.getItem('Token');
-    console.log('token>>' + JSON.stringify(token));
-  };
+ 
 
   const AddUserInfo = () => {
     const completedData = data.filter(

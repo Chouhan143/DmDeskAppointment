@@ -30,6 +30,7 @@ import { Get_Appointment_Data } from '../../Constants/UrlConstants';
 import { AuthContext } from '../../LoginCredencial/context/AuthContext';
 import { ActivityIndicator } from 'react-native';
 import DataContext from '../../LoginCredencial/context/DataContextApi'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height } = Dimensions.get('window');
 const HomeScreenAdmin = ({ navigation }) => {
   const {data, count,getDataFunc}  = useContext(DataContext)
@@ -45,8 +46,8 @@ const HomeScreenAdmin = ({ navigation }) => {
     navigation.navigate('userInfo');
   };
    const handleLogout  = () => {
-        logout();
-        navigation.replace('login');
+    AsyncStorage.clear()
+    navigation.replace('login');
 
     };
 
