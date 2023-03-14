@@ -26,6 +26,8 @@ import { useToast } from 'react-native-fast-toast';
 import { getData } from '../../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const { height } = Dimensions.get('window');
 const { width } = Dimensions.get('screen');
@@ -62,9 +64,9 @@ const Completed = ({ navigation }) => {
 
     setTimeout(() => setRefreshing(false), 1000);
   };
-  const logout = () => {
+  const logout = async () => {
     navigation.replace('login');
-    AsyncStorage.clear();
+   await AsyncStorage.clear();
   };
 
   useEffect(() => {

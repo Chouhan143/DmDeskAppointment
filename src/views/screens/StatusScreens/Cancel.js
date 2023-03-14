@@ -25,6 +25,9 @@ import {SkeletonCard} from './SkeletonCard';
 import {getData} from '../../../Hooks/ApiHelper';
 import {Get_Appointment_Data} from '../../../Constants/UrlConstants';
 import {FlatList} from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const {height} = Dimensions.get('window');
 const {width} = Dimensions.get('screen');
 const Completed = ({navigation}) => {
@@ -57,9 +60,9 @@ const Completed = ({navigation}) => {
     setUserData(item);
     SetshowWarning(true);
   };
-  const logout = () => {
+  const logout = async () => {
     navigation.replace('login');
-    AsyncStorage.clear();
+   await AsyncStorage.clear();
   };
 
   const AddUserInfo = async () => {

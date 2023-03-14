@@ -2,7 +2,6 @@ import axios from 'axios';
 
 // Make a GET request
 export const getData = async url => {
-  const token = await AsyncStorage.getItem('Token');
 
   try {
     const response = await axios.get(url);

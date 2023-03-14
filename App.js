@@ -43,6 +43,8 @@ import { DataContextApiProvider } from './src/LoginCredencial/context/DataContex
 import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { checkToken } from './src/Hooks/TokenHooks';
+import { TokenConstant } from './src/Constants/TokenConstant';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -88,14 +90,15 @@ const App = ({ navigation,navigator }) => {
   }, [])
 
   const checkStatus = async () => {
-  const token = await AsyncStorage.getItem("userType")
-    if (token.length > 0 ) {
-     await setloggedIn(true)
+  const token = await checkToken(TokenConstant.IS_LOGGED)
+    if (token) {
+      setloggedIn(true)
     } else {
-     await setloggedIn(false)
+      setloggedIn(false)
 
     }
   }
+  
   
   return (
     <DataContextApiProvider>
@@ -104,7 +107,7 @@ const App = ({ navigation,navigator }) => {
 
       <NavigationContainer>
 
-        <Stack.Navigator initialRouteName={loggedIn ? Home : LoginScreen}>
+        <Stack.Navigator initialRouteName={Home}>
           <>
           <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenDm' component={HomeScreenDm} options={{ headerShown: false }} />

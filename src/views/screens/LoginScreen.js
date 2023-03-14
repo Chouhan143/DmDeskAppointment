@@ -28,6 +28,9 @@ import {postData} from '../../Hooks/ApiHelper';
 import {Login, NewLoginUrl} from '../../Constants/UrlConstants';
 import React, {useState, useEffect} from 'react';
 import {AuthContext} from '../../LoginCredencial/context/AuthContext';
+import {checkToken, getToken, setToken} from '../../Hooks/TokenHooks';
+import {TokenConstant} from '../../Constants/TokenConstant';
+import FullScreenLoader from '../components/CustomLoader';
 
 const LoginScreen = ({navigation}) => {
   const toast = useToast();
@@ -35,7 +38,7 @@ const LoginScreen = ({navigation}) => {
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const {login, userInformation} = useContext(AuthContext);
-
+const [loader, setloader] = useState(false)
   useEffect(() => {
     fetch();
   }, []);
@@ -95,6 +98,7 @@ const LoginScreen = ({navigation}) => {
       const response = await postData(Login, payload);
       console.log('>>>' + JSON.stringify(response));
       if (response.l_status == 'true') {
+        await setToken(TokenConstant.IS_LOGGED, 'True');
         if (response.user_type == 'dm') {
           await AsyncStorage.setItem('userType', response.user_type);
           navigation.replace('HomeScreenDm');
@@ -186,8 +190,36 @@ const LoginScreen = ({navigation}) => {
   const handleError = (error, input) => {
     setErrors(prevState => ({...prevState, [input]: error}));
   };
+
+  useEffect(() => {
+    checkStatus();
+  }, []);
+
+  const checkStatus = async () => {
+   await setloader(true)
+   const token = await checkToken(TokenConstant.IS_LOGGED);
+   const type = await AsyncStorage.getItem('userType');
+    if (token) {
+      if (type == "dm") {
+        navigation.replace('HomeScreenDm');
+      }
+      if (type == "pa") {
+        navigation.replace('HomeScreenPa');
+      }
+      if (type == "ad") {
+        navigation.replace('HomeScreenAdmin');
+      }
+    } else {
+    }
+    await setloader(false)
+  };
+
   return (
     <SafeAreaView style={{backgroundColor: COLORS.white, flex: 1}}>
+
+      {
+      loader &&  <FullScreenLoader/>
+      }
       <View style={{paddingHorizontal: 20, paddingTop: 60}}>
         <View
           style={{
