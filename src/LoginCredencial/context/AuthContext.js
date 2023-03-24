@@ -22,13 +22,13 @@ export const AuthProvider = ({ children }) => {
       })
       .then(async(res)  => {
         let userInformation = res.data;
-        console.log(userInformation);
+        // console.log(userInformation);
         setUserInformation(userInformation);
         await AsyncStorage.setItem('userInfo', JSON.stringify(userInformation));
         setIsLoading(false);
       })
       .catch(e => {
-        console.log(`login error ${e}`);
+        // console.log(`login error ${e}`);
         setIsLoading(false);
       });
   };

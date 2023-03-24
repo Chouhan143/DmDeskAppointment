@@ -7,7 +7,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-import {ActivityIndicator} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 import {
   responsiveHeight,
@@ -19,26 +19,26 @@ import Menu from '../components/Menu';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 // import userAdd from '../../../src/assets/images/plus.png';
-import React, {useContext} from 'react';
-import {useState} from 'react';
-import {useEffect} from 'react';
+import React, { useContext } from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
-import {ScrollView} from 'react-native';
-import {RefreshControl} from 'react-native';
+import { ScrollView } from 'react-native';
+import { RefreshControl } from 'react-native';
 import DataContext from '../../LoginCredencial/context/DataContextApi';
-import {AuthContext} from '../../LoginCredencial/context/AuthContext';
+import { AuthContext } from '../../LoginCredencial/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Uselogout} from '../../Hooks/LogoutHook';
+import { Uselogout } from '../../Hooks/LogoutHook';
 import { Pressable } from 'react-native';
-const {height} = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
-const HomeScreenPa = ({navigation}) => {
-  const {data, count, getDataFunc} = useContext(DataContext);
-  const {logout} = useContext(AuthContext);
+const HomeScreenPa = ({ navigation }) => {
+  const { data, count, getDataFunc } = useContext(DataContext);
+  const { logout } = useContext(AuthContext);
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [rejected, setRejected] = useState([]);
-  const [myData, setMyData] = useState([]);
+  // const [myData, setMyData] = useState([]);
   // const [loader, setloader] = useState(false);
   // const [refreshing, setRefreshing] = useState(false);
   // const [loaderInfo, setloaderInfo] = useState(false);
@@ -46,77 +46,61 @@ const HomeScreenPa = ({navigation}) => {
   const OpenAppointment = () => {
     navigation.navigate('Appointment');
   };
-  const handleLogout = async () => {
-    console.log("pressed")
-    const id = await AsyncStorage.getItem('id');
-    // logout();
-    // navigation.replace('login');
-    const logoutResponse = await Uselogout(id);
-    if (logoutResponse.logout == "success") {
-      AsyncStorage.clear()
-  navigation.replace('login');
-    }
-    console.log(JSON.stringify(logoutResponse));
+  // const handleLogout = async () => {
+  //   console.log("pressed")
+  //   const id = await AsyncStorage.getItem('id');
+  //   // logout();
+  //   // navigation.replace('login');
+  //   const logoutResponse = await Uselogout(id);
+  //   if (logoutResponse.logout == "success") {
+  //     AsyncStorage.clear()
+  //     navigation.replace('login');
+  //   }
+  //   console.log(JSON.stringify(logoutResponse));
+  // };
+
+
+  const handleLogout = () => {
+    console.log("as")
+    AsyncStorage.clear()
+    navigation.navigate("login");
   };
 
   const PendingHendle = () => {
     navigation.navigate('pending');
   };
 
-  // const onRefresh = () => {
-  //   setloaderInfo(true)
-  //   setRefreshing (true);
-  //   AddUserInfo();
-  //   getDataFunc();
-  //   setloaderInfo(false)
-  //   setTimeout(() => setRefreshing(false), 1000);
-  // };
-
-  // useEffect(() => {
-  //   setloaderInfo(true)
-  //   AddUserInfo();
-  //   getDataFunc();
-  //   setloaderInfo(false)
-  // }, [count]);
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('beforeRemove', () => {
-  //     AddUserInfo();
-  //   });
-
-  //   return unsubscribe;
-  // }, []);
+  const ConfirmHendle = () => {
+    navigation.navigate('complete');
+  };
 
   // ------------------------------working
   useEffect(() => {
-    // AddUserInfo();
-    // getDataFunc();
+    AddUserInfo();
+    getDataFunc();
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       AddUserInfo();
       getDataFunc();
-      cchekToken();
+      // cchekToken();
     }, 3000);
     return () => clearInterval(interval);
   });
   // ------------------------------working
 
-  const cchekToken = async () => {
-    const token = await AsyncStorage.getItem('Token');
-    console.log('token>>' + JSON.stringify(token));
-  };
+
 
   const AddUserInfo = () => {
     const completedData = data.filter(
       appointment => appointment.status == 'complete',
     );
-
+    // console.log(completedData)
     const pendingData = data.filter(
       appointment => appointment.status == 'pending',
     );
-    // const currentDate = new Date().toISOString().slice(0, 10);
+
     const currentDate = new Date();
     const formattedDate = currentDate
       .toLocaleDateString('en-GB', {
@@ -138,7 +122,7 @@ const HomeScreenPa = ({navigation}) => {
     setPending(filteredData.length);
     setCompleted(completedData.length);
     setRejected(rejectData.length);
-    setMyData(completedData);
+
   };
 
   return (
@@ -146,9 +130,6 @@ const HomeScreenPa = ({navigation}) => {
       <ScrollView
         scrollEnabled={false}
         nestedScrollEnabled={false}
-        // refreshControl={
-        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        // }
       >
         <View style={styles.header}>
           <Icon
@@ -165,16 +146,8 @@ const HomeScreenPa = ({navigation}) => {
             }}>
             Personal Assistent
           </Text>
-          <Pressable
-            onPress={() => handleLogout()}
-          >
 
-          <Icon
-            name="logout"
-            color="#3e2465"
-            size={responsiveFontSize(4)}
-            />
-            </Pressable>
+          <Icon name="logout" color="#3e2465" size={responsiveFontSize(4)} onPress={handleLogout} />
         </View>
 
         <View style={styles.container}>
@@ -186,12 +159,10 @@ const HomeScreenPa = ({navigation}) => {
               gap: 5,
 
               backgroundColor: '#fff',
-              // borderTopLeftRadius: responsiveWidth(1),
-              // borderTopRightRadius: responsiveWidth(1),
               borderRadius: responsiveFontSize(5),
               paddingVertical: responsiveHeight(3),
               marginHorizontal: responsiveWidth(10),
-              marginTop: responsiveHeight(11),
+              marginTop: responsiveHeight(3),
             }}>
             <Text
               style={{
@@ -212,7 +183,7 @@ const HomeScreenPa = ({navigation}) => {
             </Text>
           </View>
 
-          <View style={{paddingTop: responsiveHeight(7)}}>
+          <View style={{ paddingTop: responsiveHeight(7) }}>
             <View
               style={{
                 display: 'flex',
@@ -260,33 +231,75 @@ const HomeScreenPa = ({navigation}) => {
               </TouchableOpacity>
 
               <TouchableOpacity
+                onPress={ConfirmHendle}
                 style={{
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  paddingVertical: responsiveHeight(1),
-                  paddingHorizontal: responsiveWidth(7),
-                  borderRadius: responsiveWidth(10),
-                }}
-                onPress={OpenAppointment}>
-                {/* <Image source={userAdd} style={styles.userAddImg} /> */}
-                <Image
-                  source={require('./../../../android/app/src/main/assets/images/plus.png')}
-                  style={styles.userAddImg}
-                />
-                <View>
-                  <Text
-                    style={{
-                      color: '#306060',
-                      paddingTop: responsiveHeight(3),
-                      fontWeight: 'bold',
-                      fontSize: responsiveFontSize(2.5),
-                    }}>
-                    बुक अपॉइंटमेंट
-                  </Text>
+                  backgroundColor: '#54B435',
+                  paddingVertical: responsiveHeight(2),
+                  paddingHorizontal: responsiveWidth(8),
+                  borderRadius: responsiveWidth(5),
+                }}>
+                <View style={styles.content_iconWraper}>
+                  <View style={styles.innerView}>
+                    <Icon3 name="checkmark-done" color='white' size={responsiveFontSize(3)} onPress={navigation.toggleDrawer} />
+                  </View>
+
+                  <View style={styles.textWrapDiv}>
+                    {/* {loaderInfo == true ? (
+                      <ActivityIndicator size="small" color="white" />
+                    ) : ( */}
+                    <Text style={styles.text}>{completed}</Text>
+                    {/* )} */}
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#fff',
+                        fontWeight: 'bold',
+                      }}>
+                      पुष्टि करें
+                    </Text>
+                  </View>
                 </View>
               </TouchableOpacity>
+
+
+          
             </View>
+            <View style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginTop: responsiveHeight(6),
+                marginLeft: responsiveWidth(4)
+              }}>
+                <TouchableOpacity
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingVertical: responsiveHeight(1),
+                    paddingHorizontal: responsiveWidth(7),
+                    borderRadius: responsiveWidth(10),
+                  }}
+                  onPress={OpenAppointment}>
+                  <Image
+                    source={require('./../../../android/app/src/main/assets/images/plus.png')}
+                    style={styles.userAddImg}
+                  />
+                  <View>
+                    <Text
+                      style={{
+                        color: '#306060',
+                        paddingTop: responsiveHeight(1.2),
+                        fontWeight: 'bold',
+                        fontSize: responsiveFontSize(2.2),
+                      }}>
+                      बुक अपॉइंटमेंट
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
           </View>
         </View>
       </ScrollView>
@@ -366,8 +379,8 @@ const styles = StyleSheet.create({
     height: 30,
   },
   userAddImg: {
-    width: responsiveWidth(15),
-    height: responsiveWidth(15),
+    width: responsiveWidth(12),
+    height: responsiveWidth(12),
   },
 
   userGreeting: {

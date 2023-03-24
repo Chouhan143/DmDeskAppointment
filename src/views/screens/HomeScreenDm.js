@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Dimensions, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Image, Pressable, ScrollView, TouchableOpacity, Dimensions, FlatList } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { RefreshControl } from 'react-native';
 import Menu from '../components/Menu';
 import { useContext } from 'react';
@@ -18,23 +19,32 @@ import { useEffect } from 'react';
 import { getData } from '../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../Constants/UrlConstants';
 import DataContext from '../../LoginCredencial/context/DataContextApi'
+// import { Uselogout } from '../../Hooks/LogoutHook';
 const { height } = Dimensions.get('window');
 
 const HomeScreenDm = ({ navigation }) => {
     // const {logout} = useContext(AuthContext)
-    const { data, count,getDataFunc } = useContext(DataContext)
-    const {logout,userInformation} =useContext(AuthContext)
+    const { data, count, getDataFunc } = useContext(DataContext)
     const [pending, setPending] = useState([]);
     const [completed, setCompleted] = useState([]);
     const [rejected, setRejected] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [loaderInfo, setloaderInfo] = useState(false);
 
-    const handleLogout  = () => {
-        logout();
+    // const handleLogout  = () => {
+    //     console.log("as")
+    //     AsyncStorage.clear()
+    //     navigation.replace('login');
+    // };
+
+    const handleLogout = () => {
+        AsyncStorage.clear()
         navigation.replace('login');
 
     };
+
+
+
 
     const PendingHendle = () => {
         navigation.navigate('pending');
@@ -70,60 +80,69 @@ const HomeScreenDm = ({ navigation }) => {
     //     return unsubscribe;
     // }, []);
 
-   
+
     useEffect(() => {
         AddUserInfo();
         getDataFunc();
-      }, []);
-    
-      useEffect(() => {
+    }, []);
+
+    useEffect(() => {
         const interval = setInterval(() => {
-        //   AddUserInfo();
+            AddUserInfo();
         }, 3000);
         return () => clearInterval(interval);
-      });
+    });
 
 
     const AddUserInfo = async () => {
 
         const response = await getData(Get_Appointment_Data)
-        console.log(response)
+        // console.log(response)
         const completedData = response.result.filter(appointment => appointment.status == 'complete')
 
         const pendingData = response.result.filter(appointment => appointment.status == 'pending')
         // const currentDate = new Date().toISOString().slice(0, 10);
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
         }).split('/').join('-');
-      
+
         const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === formattedDate);
 
         const rejectData = response.result.filter(appointment => appointment.status == 'reject')
         setPending(filteredData.length)
         setCompleted(completedData.length)
         setRejected(rejectData.length)
-        setMyData(completedData)
+        // setMyData(completedData)
     }
     return (
         <>
             <ScrollView
                 scrollEnabled={false}
                 nestedScrollEnabled={false}
-                // refreshControl={
-                //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                // }
-                >
-
-
+            // refreshControl={
+            //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            // }
+            >
                 <View style={styles.header}>
-                    <Icon name="user" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer} />
+                    {/* <Icon3 name="notifications" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer} /> */}
+                    <Icon3 name="notifications" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer}>
+                        {pending > 0 && (
+                            <View style={{display:"flex",justifyContent:"center", alignItems:'center', position: 'absolute', top: 0,  left:-135, backgroundColor: 'orange', borderRadius: 10 , width:responsiveWidth(4),height:responsiveWidth(4)}}>
+                                <Text style={{ fontSize: 10, color: '#3e2465' }}>{pending}</Text>
+                            </View>
+                        )}
+                    </Icon3>
                     <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
                         District Magistrate
                     </Text>
-                    <Icon name="logout" color='#3e2465' size={responsiveFontSize(4)} onPress={handleLogout } />
+                    <Pressable
+                        onPress={() => handleLogout()}
+                    >
+                        <Icon name="logout" color='#3e2465' size={responsiveFontSize(4)} />
+                    </Pressable>
                 </View>
 
                 <View style={styles.container}>
@@ -282,7 +301,7 @@ const styles = StyleSheet.create({
         fontSize: responsiveFontSize(2.5),
         fontWeight: 'bold',
         alignItems: "center",
-        paddingVertical:responsiveHeight(1)
+        paddingVertical: responsiveHeight(1)
 
 
     },

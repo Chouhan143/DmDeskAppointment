@@ -36,12 +36,15 @@ import HomeScreenPa from './src/views/screens/HomeScreenPa';
 // import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Uselogout } from './src/Hooks/LogoutHook';
-
+import PushNotification from "react-native-push-notification";
 
 import EditBookAppointment from './src/views/screens/EditBookAppointment';
 import { DataContextApiProvider } from './src/LoginCredencial/context/DataContextApi';
 import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 import { useEffect } from 'react';
+import { useState } from 'react';
+import { checkToken } from './src/Hooks/TokenHooks';
+import { TokenConstant } from './src/Constants/TokenConstant';
 // ------------------------------------------
 
 // import {StatusBar, Text, View} from 'react-native';
@@ -73,12 +76,14 @@ import { useEffect } from 'react';
 const App = ({ navigation,navigator }) => {
   const Stack = createNativeStackNavigator();
   const { userInformation ,setisLogged, isLogged} = useContext(AuthContext);
+  const [loggedIn, setloggedIn] = useState(false)
 
 
   const logout = () => {
     Uselogout(navigation)
   };
 
+  
 
 
   useEffect(() => {
@@ -86,23 +91,81 @@ const App = ({ navigation,navigator }) => {
   }, [])
 
   const checkStatus = async () => {
-  const token = await AsyncStorage.getItem("Token")
-    if (token.length > 0 ) {
-     await setisLogged(true)
+  const token = await checkToken(TokenConstant.IS_LOGGED)
+    if (token) {
+      setloggedIn(true)
     } else {
-     await setisLogged(false)
+      setloggedIn(false)
 
     }
   }
   
+  useEffect(() => {
+    PushNotification.configure({
+      onRegister: function (token) {
+        console.log("TOKEN:", token);
+      },
+      onNotification: function (notification) {
+        console.log("NOTIFICATION:", notification);
+
+        // notification.finish(PushNotificationIOS.FetchResult.NoData);
+      },
+      onAction: function (notification) {
+        console.log("ACTION:", notification.action);
+        console.log("NOTIFICATION:", notification);
+
+        // process the action
+      },
+      onRegistrationError: function(err) {
+        console.error(err.message, err);
+      },
+
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true,
+      },
+      popInitialNotification: true,
+      requestPermissions: true,
+    });
+  }, []);
+
+
+ testPush = ()=>{
+  PushNotification.localNotification({
+    title: "My Notification Title", // (optional)
+    message: "My Notification Message", // (required)
+    playSound: true, // (optional) default: true
+    soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+   
+  });
+ }
+testCancel =()=>{
+  PushNotification.cancelAllLocalNotifications();
+}
+  
+testSchedule =()=>{
+  PushNotification.localNotificationSchedule({
+    //... You can use all the options from localNotifications
+    message: "My Notification Message", // (required)
+    date: new Date(Date.now() + 15 * 1000), // in 60 secs
+    allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
+  
+    /* Android Only Properties */
+    repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
+  });
+}
+
   return (
     <DataContextApiProvider>
+      {/* {console.log(loggedIn)} */}
     <ToastProvider>
 
       <NavigationContainer>
 
         <Stack.Navigator initialRouteName={Home}>
           <>
+          <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenDm' component={HomeScreenDm} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenPa' component={ HomeScreenPa} options={{ headerShown: false }} />
           <Stack.Screen name='Appointment' component={BookAppointment} options={{ headerShown: false }} />
@@ -114,7 +177,6 @@ const App = ({ navigation,navigator }) => {
           <Stack.Screen name='edit-appointment' component={EditBookAppointment} options={{ headerShown: false }} />
           </>
           <>
-          <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Forgotpassword' component={ForgotPass} options={{ headerShown: false }} />
           <Stack.Screen name='NewPassword' component={NewPassword} options={{headerShown:false}} /> 
           </>
@@ -129,8 +191,8 @@ const App = ({ navigation,navigator }) => {
     </ToastProvider>
     </DataContextApiProvider>
   )
-}
-
+  
+  }
 export default App
 
 

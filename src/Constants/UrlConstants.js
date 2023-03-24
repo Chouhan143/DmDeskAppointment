@@ -13,3 +13,4 @@ export const Insert_Data = UrlConstants.Base_Url + `/insertData`;
 export const Update_Status = UrlConstants.Base_Url + `/updateStatus`;
 export const Post_Email_Otp = UrlConstants.Base_Url + `/emailForOtp`;
 export const Get_Appointment_Data_by_id = UrlConstants.Base_Url + `/getBookedAppointmentData?id=`;
+export const Confirm_Status = UrlConstants.Base_Url+`/paConfirm`;

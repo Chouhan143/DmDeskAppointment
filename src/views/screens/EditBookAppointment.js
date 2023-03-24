@@ -114,7 +114,7 @@ const EditBookAppointment = ({ navigation, route }) => {
           title: 'Select Image',
           mediaType: 'photo',
           noData: true,
-          quality: 0.5,
+          quality: 0.3,
           allowsEditing: true,
         }, (response) => {
           // console.log(JSON.stringify(response.assets[0].uri))
@@ -161,7 +161,7 @@ const EditBookAppointment = ({ navigation, route }) => {
         },
       }).then((response) => {
         if (response) {
-          console.log(response.data)
+          // console.log(response.data)
           toast.show("Appointment updated", { type: "success", position: 'top' });
           navigation.navigate('HomeScreenPa');
         }

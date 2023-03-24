@@ -176,7 +176,7 @@ const Pending = ({ navigation }) => {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View
+                {/* <View
                   style={{
                     backgroundColor: '#36648B',
                     paddingHorizontal: responsiveWidth(1.5),
@@ -198,7 +198,7 @@ const Pending = ({ navigation }) => {
                       Edit
                     </Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
               </View>
               <View></View>
             </View>
@@ -775,7 +775,7 @@ const Pending = ({ navigation }) => {
         <TouchableOpacity onPress={toggleModal}>
           <Text style={styles.closeText}>Close</Text>
         </TouchableOpacity>
-        {console.log(selectedImage)}
+        {/* {console.log(selectedImage)} */}
         <Image style={styles.modalImage} source={{ uri: selectedImage }} />
       </View>
     </Modal>

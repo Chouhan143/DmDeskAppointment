@@ -11,10 +11,10 @@ export function DataContextApiProvider({children}) {
   useEffect(() => {
     getDataFunc();
   }, [count]);
-console.log(count)
+// console.log(count)
 
   const getDataFunc = async () => {
-    console.log("run")
+    // console.log("run")
     const dataResides = await getData(Get_Appointment_Data);
     await setData(dataResides.result)
   //  console.log(dataResides.result)

@@ -14,6 +14,8 @@ import {
   responsiveWidth,
   responsiveFontSize
 } from "react-native-responsive-dimensions";
+import Swipeout from 'react-native-swipeout';
+import { Confirm_Status } from '../../../Constants/UrlConstants';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Avtar from '../../../assets/images/avtar.png';
 import { useState, useEffect } from 'react';
@@ -23,30 +25,372 @@ import { SkeletonCard } from './SkeletonCard';
 import { Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useToast } from 'react-native-fast-toast';
-import { getData } from '../../../Hooks/ApiHelper';
+import { getData, postData } from '../../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height } = Dimensions.get('window');
 const { width } = Dimensions.get('screen');
 const Completed = ({ navigation }) => {
   const toast = useToast();
-
+  const [confirmed, setConfirmed] = useState(null);
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
   const [userData, setUserData] = useState({});
   const [loadingMore, setLoadingMore] = useState(false);
+  const [openItemIndex, setOpenItemIndex] = useState(-1);
   const [dataKey, setDataKey] = useState('');
   const [loader, setloader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [obj, setobj] = useState({});
-
+  const [userType, setuserType] = useState('');
   const onPressHandler = (item, index) => {
     setobj(item);
     setDataKey(index);
     setUserData(item);
     SetshowWarning(true);
   };
+
+
+
+
+
+
+  const renderItemPa = ({ item }) => {
+
+    const swipeBtns = [
+      {
+        text: 'complete',
+        color: '#fff',
+        backgroundColor: 'green',
+        onPress: () => onPressChangeStatus(item.id, 'complete')
+      }
+
+    ];
+    const LeftBtns = [
+      {
+        text: 'Complete',
+        backgroundColor: 'green',
+        onPress: () => onPressChangeStatus(item.id, 'complete')
+      },
+    ];
+
+    return (
+      <Swipeout
+        left={LeftBtns}
+        right={swipeBtns}
+        // autoClose={true}
+        close={openItemIndex !== -1 && openItemIndex !== item.id}
+        onOpen={() => setOpenItemIndex(item.id)}
+        onClose={() => setOpenItemIndex(-1)}
+      >
+        <View style={styles.MainWraper}>
+          <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: responsiveFontSize(2),
+                fontWeight: 'bold',
+              }}>
+              {item.user_name} ({item.noofpeople})
+            </Text>
+          </View>
+
+          <View style={styles.OuterWraper}>
+            <View style={styles.ImageWraper}>
+              <TouchableOpacity
+                onPress={() =>
+                  watchFullImage(
+                    `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                  )
+                }>
+                <Image
+                  source={
+                    item.img
+                      ? {
+                        uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                      }
+                      : Avtar
+                  }
+                  style={{
+                    width: responsiveWidth(20),
+                    height: responsiveWidth(20),
+                    borderWidth: 0.2,
+                    borderRadius: 10,
+                    resizeMode: 'contain',
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.ContentWraper}>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>मिलने का कारण :- </Text>
+                <Text numberOfLines={6} style={styles.textSubHeading}>
+                  {item.purpose}
+                </Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>व्यक्तियो की संख्या :-</Text>
+                <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>तारीख :- </Text>
+                <Text style={styles.textSubHeading}>{item.date}</Text>
+              </View>
+              <View style={styles.ListRow}>
+                <Text style={styles.textHeading}>समय :- </Text>
+                <Text style={styles.textSubHeading}>{item.time}</Text>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+
+                <View style={{ display: 'flex', justifyContent: 'flex-start', alignSelf: 'flex-start', marginTop: responsiveHeight(1.5) }}>
+
+                  {item.pa_status === 'complete' ? (
+                    <Text style={{ color: 'green', fontSize: responsiveFontSize(2.1) }}>
+                      Confirmation successful!
+                    </Text>
+                  ) : (
+                    <Text style={{ color: 'red', fontSize: responsiveFontSize(2.1) }}>
+                      Confirmation not confirmed!
+                    </Text>
+                  )}
+
+                </View>
+              </View>
+              <View></View>
+            </View>
+          </View>
+        </View>
+      </Swipeout>
+    );
+  };
+
+  const renderItemDm = ({ item }) => {
+
+
+    return (
+
+      <View style={styles.MainWraper}>
+        <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: responsiveFontSize(2),
+              fontWeight: 'bold',
+            }}>
+            {item.user_name} ({item.noofpeople})
+          </Text>
+        </View>
+
+        <View style={styles.OuterWraper}>
+          <View style={styles.ImageWraper}>
+            <TouchableOpacity
+              onPress={() =>
+                watchFullImage(
+                  `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                )
+              }>
+              <Image
+                source={
+                  item.img
+                    ? {
+                      uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                    }
+                    : Avtar
+                }
+                style={{
+                  width: responsiveWidth(20),
+                  height: responsiveWidth(20),
+                  borderWidth: 0.2,
+                  borderRadius: 10,
+                  resizeMode: 'contain',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.ContentWraper}>
+            <View style={styles.ListRow}>
+              <Text style={styles.textHeading}>मिलने का कारण :- </Text>
+              <Text numberOfLines={6} style={styles.textSubHeading}>
+                {item.purpose}
+              </Text>
+            </View>
+            <View style={styles.ListRow}>
+              <Text style={styles.textHeading}>व्यक्तियो की संख्या :-</Text>
+              <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
+            </View>
+            <View style={styles.ListRow}>
+              <Text style={styles.textHeading}>तारीख :- </Text>
+              <Text style={styles.textSubHeading}>{item.date}</Text>
+            </View>
+            <View style={styles.ListRow}>
+              <Text style={styles.textHeading}>समय :- </Text>
+              <Text style={styles.textSubHeading}>{item.time}</Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{
+                backgroundColor: '#36648B',
+                paddingHorizontal: responsiveWidth(1.5),
+                paddingVertical: responsiveHeight(1.2),
+                width: responsiveWidth(20),
+                borderWidth: 0.2,
+                borderRadius: responsiveFontSize(5),
+                alignItems: 'center',
+                marginTop: 5,
+                marginBottom: 5,
+                marginLeft: responsiveWidth(3)
+              }}>
+                <TouchableOpacity onPress={() => onPressHandler(item)}>
+                  <Text
+                    style={{
+                      color: '#fff',
+                      fontSize: responsiveFontSize(1.5),
+                    }}>
+                    View
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {/* <View
+                style={{
+                  backgroundColor: '#36648B',
+                  paddingHorizontal: responsiveWidth(1.5),
+                  paddingVertical: responsiveHeight(1.2),
+                  width: responsiveWidth(20),
+                  borderWidth: 0.2,
+                  borderRadius: responsiveFontSize(5),
+                  alignItems: 'center',
+                  marginTop: 5,
+                  marginBottom: 5,
+                  marginLeft: responsiveWidth(3)
+                }}>
+                <TouchableOpacity onPress={() => navigateToEdit(item.id)}>
+                  <Text
+                    style={{
+                      color: '#fff',
+                      fontSize: responsiveFontSize(1.5),
+                    }}>
+                    Edit
+                  </Text>
+                </TouchableOpacity>
+              </View> */}
+            </View>
+            <View></View>
+          </View>
+        </View>
+      </View>
+
+    );
+  };
+
+  const renderItemAdmin = ({ item }) => {
+
+
+    return (
+
+      <View style={styles.MainWraper}>
+        <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: responsiveFontSize(2),
+              fontWeight: 'bold',
+            }}>
+            {item.user_name} ({item.noofpeople})
+          </Text>
+        </View>
+
+        <View style={styles.OuterWraper}>
+          <View style={styles.ImageWraper}>
+            <TouchableOpacity
+              onPress={() =>
+                watchFullImage(
+                  `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                )
+              }>
+              <Image
+                source={
+                  item.img
+                    ? {
+                      uri: `https://srninfotech.com/projects/dmdesk/public/uploads/${item.img}`,
+                    }
+                    : Avtar
+                }
+                style={{
+                  width: responsiveWidth(20),
+                  height: responsiveWidth(20),
+                  borderWidth: 0.2,
+                  borderRadius: 10,
+                  resizeMode: 'contain',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.ContentWraper}>
+            <View style={styles.ListRow}>
+              <Text style={styles.textHeading}>मिलने का कारण :- </Text>
+              <Text numberOfLines={6} style={styles.textSubHeading}>
+                {item.purpose}
+              </Text>
+            </View>
+            <View style={styles.ListRow}>
+              <Text style={styles.textHeading}>व्यक्तियो की संख्या :-</Text>
+              <Text style={styles.textSubHeading}>{item.noofpeople}</Text>
+            </View>
+            <View style={styles.ListRow}>
+              <Text style={styles.textHeading}>तारीख :- </Text>
+              <Text style={styles.textSubHeading}>{item.date}</Text>
+            </View>
+            <View style={styles.ListRow}>
+              <Text style={styles.textHeading}>समय :- </Text>
+              <Text style={styles.textSubHeading}>{item.time}</Text>
+            </View>
+            <TouchableOpacity onPress={() => onPressHandler(item)}
+              style={{
+                backgroundColor: '#36648B',
+                paddingHorizontal: responsiveWidth(1.5),
+                paddingVertical: responsiveHeight(1.2),
+                width: responsiveWidth(20),
+                borderWidth: 0.2,
+                borderRadius: responsiveFontSize(5),
+                alignItems: 'center',
+                marginTop: 5,
+                marginBottom: 5,
+                marginLeft: responsiveWidth(3)
+              }}>
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: responsiveFontSize(1.5),
+                }}>
+                View
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+    );
+  };
+
+  console.log(myData)
+
+  const onPressChangeStatus = async (id, status) => {
+    let payload = {
+      id: id,
+      status: status,
+    };
+    const responce = await postData(Confirm_Status, payload);
+    console.log(responce);
+    if (responce.result) {
+      SetshowWarning(false);
+      await toast.show('Updated', { type: 'success', position: 'top' });
+      await AddUserInfo();
+      await getDataFunc();
+      await setcount(count + 1);
+    }
+  };
+
+
   const onPressReject = (item, index) => {
     setDataKey(index);
     setUserData(item);
@@ -62,9 +406,9 @@ const Completed = ({ navigation }) => {
 
     setTimeout(() => setRefreshing(false), 1000);
   };
-  const logout = () => {
+  const logout = async () => {
     navigation.replace('login');
-    AsyncStorage.clear();
+    await AsyncStorage.clear();
   };
 
   useEffect(() => {
@@ -72,6 +416,8 @@ const Completed = ({ navigation }) => {
   }, []);
 
   const AddUserInfo = async () => {
+    const userType = await AsyncStorage.getItem('userType');
+    setuserType(userType);
     setloader(true);
     const response = await getData(Get_Appointment_Data);
     const newData = response.result.sort(function (a, b) {
@@ -87,6 +433,10 @@ const Completed = ({ navigation }) => {
     setMyData(completedData);
     setloader(false);
   };
+
+
+
+
 
   return (
     <ScrollView
@@ -131,10 +481,10 @@ const Completed = ({ navigation }) => {
             ))}
           </View>
         )}
-        <FlatList
+        {/* <FlatList
           data={myData}
           initialNumToRender={4}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={item => item.id}
           renderItem={({ item, index }) => (
             <View style={styles.MainWraper}>
               <View style={[styles.UserName, { backgroundColor: '#36648B' }]}>
@@ -194,7 +544,22 @@ const Completed = ({ navigation }) => {
               </View>
             </View>
           )}
+        /> */}
+
+        <FlatList
+          data={myData}
+          keyExtractor={item => item.id}
+          initialNumToRender={4}
+          renderItem={
+            userType === 'dm' ? renderItemDm :
+              userType === 'pa' ? renderItemPa :
+                userType === 'ad' ? renderItemAdmin :
+                  null
+          }
         />
+
+
+
 
         {/* modal  */}
         <View style={styles.centered_view}>
@@ -362,7 +727,7 @@ const styles = StyleSheet.create({
   },
   warning_title: {
     position: 'relative',
-    height:responsiveHeight(6),
+    height: responsiveHeight(6),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#36648B',
@@ -496,4 +861,4 @@ const styles = StyleSheet.create({
     marginLeft: responsiveWidth(3)
 
   }
-  });
+});
