@@ -29,11 +29,10 @@ import { getData, postData } from '../../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 674a213c5bf0613c1c7f1ddfc210f871ccfc3786
+
+
 const { height } = Dimensions.get('window');
 const { width } = Dimensions.get('screen');
 const Completed = ({ navigation }) => {
@@ -413,11 +412,8 @@ const Completed = ({ navigation }) => {
   };
   const logout = async () => {
     navigation.replace('login');
-<<<<<<< HEAD
-    await AsyncStorage.clear();
-=======
    await AsyncStorage.clear();
->>>>>>> 674a213c5bf0613c1c7f1ddfc210f871ccfc3786
+
   };
 
   useEffect(() => {

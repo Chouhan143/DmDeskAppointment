@@ -22,7 +22,7 @@ import DataContext from '../../LoginCredencial/context/DataContextApi'
 
 // import { Uselogout } from '../../Hooks/LogoutHook';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { height } = Dimensions.get('window');
 
