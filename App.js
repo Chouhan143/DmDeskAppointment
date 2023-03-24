@@ -100,6 +100,7 @@ const App = ({ navigation,navigator }) => {
     }
   }
   
+
   useEffect(() => {
     PushNotification.configure({
       onRegister: function (token) {
@@ -156,9 +157,13 @@ testSchedule =()=>{
   });
 }
 
+  
+
+  
   return (
     <DataContextApiProvider>
-      {/* {console.log(loggedIn)} */}
+      {console.log(loggedIn)}
+
     <ToastProvider>
 
       <NavigationContainer>

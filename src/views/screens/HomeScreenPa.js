@@ -46,6 +46,7 @@ const HomeScreenPa = ({ navigation }) => {
   const OpenAppointment = () => {
     navigation.navigate('Appointment');
   };
+
   // const handleLogout = async () => {
   //   console.log("pressed")
   //   const id = await AsyncStorage.getItem('id');
@@ -60,10 +61,12 @@ const HomeScreenPa = ({ navigation }) => {
   // };
 
 
-  const handleLogout = () => {
-    console.log("as")
+
+
+  const handleLogout = async () => {
     AsyncStorage.clear()
-    navigation.navigate("login");
+    navigation.replace('login');
+
   };
 
   const PendingHendle = () => {
@@ -84,11 +87,17 @@ const HomeScreenPa = ({ navigation }) => {
     const interval = setInterval(() => {
       AddUserInfo();
       getDataFunc();
+
       // cchekToken();
+
+
     }, 3000);
     return () => clearInterval(interval);
   });
   // ------------------------------working
+
+
+
 
 
 
@@ -265,41 +274,41 @@ const HomeScreenPa = ({ navigation }) => {
               </TouchableOpacity>
 
 
-          
+
             </View>
             <View style={{
-                display: 'flex',
-                flexDirection: 'row',
-                marginTop: responsiveHeight(6),
-                marginLeft: responsiveWidth(4)
-              }}>
-                <TouchableOpacity
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    paddingVertical: responsiveHeight(1),
-                    paddingHorizontal: responsiveWidth(7),
-                    borderRadius: responsiveWidth(10),
-                  }}
-                  onPress={OpenAppointment}>
-                  <Image
-                    source={require('./../../../android/app/src/main/assets/images/plus.png')}
-                    style={styles.userAddImg}
-                  />
-                  <View>
-                    <Text
-                      style={{
-                        color: '#306060',
-                        paddingTop: responsiveHeight(1.2),
-                        fontWeight: 'bold',
-                        fontSize: responsiveFontSize(2.2),
-                      }}>
-                      बुक अपॉइंटमेंट
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
+              display: 'flex',
+              flexDirection: 'row',
+              marginTop: responsiveHeight(6),
+              marginLeft: responsiveWidth(4)
+            }}>
+              <TouchableOpacity
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingVertical: responsiveHeight(1),
+                  paddingHorizontal: responsiveWidth(7),
+                  borderRadius: responsiveWidth(10),
+                }}
+                onPress={OpenAppointment}>
+                <Image
+                  source={require('./../../../android/app/src/main/assets/images/plus.png')}
+                  style={styles.userAddImg}
+                />
+                <View>
+                  <Text
+                    style={{
+                      color: '#306060',
+                      paddingTop: responsiveHeight(1.2),
+                      fontWeight: 'bold',
+                      fontSize: responsiveFontSize(2.2),
+                    }}>
+                    बुक अपॉइंटमेंट
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>
