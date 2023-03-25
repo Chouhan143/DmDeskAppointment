@@ -4,6 +4,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PushNotification from "react-native-push-notification";
 // import { RefreshControl } from 'react-native';
 import Menu from '../components/Menu';
 import { useContext } from 'react';
@@ -14,7 +15,7 @@ import {
 } from "react-native-responsive-dimensions";
 
 import { AuthContext } from '../../LoginCredencial/context/AuthContext';
-import { useState } from 'react';
+import { useState,useRef  } from 'react';
 import { useEffect } from 'react';
 import { getData } from '../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../Constants/UrlConstants';
@@ -55,6 +56,7 @@ const HomeScreenDm = ({ navigation }) => {
 
 
         const PendingHendle = () => {
+            cancelNotification();
             navigation.navigate('pending');
         }
         const CompletegHendle = () => {
@@ -64,29 +66,35 @@ const HomeScreenDm = ({ navigation }) => {
             navigation.navigate('cancel');
         }
 
+        const handleeNotofication = () => {
+            PushNotification.cancelAllLocalNotifications()
+            PushNotification.localNotification({
+              channelId: 'test',
+              tittle: 'appointment Booked',
+              message: 'New Appointment Booked'
+            })
+            // PushNotification.localNotificationSchedule({
+            //   channelId: 'test',
+            //   tittle: ' Alarm ',
+            //   message: 'You have booked appointment 20 sec ago',
+            //   date:new Date(Date.now()+20*1000),
+            //   allowWhileIdle:true,
+            // })
+          }
+
+const cancelNotification =()=>{
+    PushNotification.cancelAllLocalNotifications()
+}
+
+          const prevPendingRef = useRef(pending);
+          useEffect(() => {
+            if (pending > prevPendingRef.current) {
+                handleeNotofication();
+            }
+            prevPendingRef.current = pending;
+          }, [pending]);
 
 
-        // const onRefresh = () => {
-        //     setloaderInfo(true)
-        //     setRefreshing(true);
-        //     AddUserInfo();
-        //     setloaderInfo(false)
-        //     setTimeout(() => setRefreshing(false), 1000);
-        // };
-
-        // useEffect(() => {
-        //     setloaderInfo(true)
-        //     AddUserInfo();
-        //     setloaderInfo(false)
-        // }, [count]);
-
-        // useEffect(() => {
-        //     const unsubscribe = navigation.addListener('beforeRemove', () => {
-        //         AddUserInfo();
-        //     });
-
-        //     return unsubscribe;
-        // }, []);
 
 
         useEffect(() => {

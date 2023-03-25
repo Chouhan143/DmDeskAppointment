@@ -15,7 +15,7 @@ import { useToast } from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Post_Appointment_Data } from '../../Constants/UrlConstants';
 import DataContext from '../../LoginCredencial/context/DataContextApi';
-
+import PushNotification from "react-native-push-notification";
 
 
 const BookAppointment = () => {
@@ -35,6 +35,21 @@ const BookAppointment = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
 
+  const handleeNotofication = () => {
+    PushNotification.cancelAllLocalNotifications()
+    PushNotification.localNotification({
+      channelId: 'test',
+      tittle: 'appointment Booked',
+      message: 'New Appointment Booked'
+    })
+    // PushNotification.localNotificationSchedule({
+    //   channelId: 'test',
+    //   tittle: ' Alarm ',
+    //   message: 'You have booked appointment 20 sec ago',
+    //   date:new Date(Date.now()+20*1000),
+    //   allowWhileIdle:true,
+    // })
+  }
   // ----------------------------------------Validation section start------------------------------------------
 
 
@@ -116,7 +131,7 @@ const BookAppointment = () => {
   };
 
   const uploadImage = async () => {
-
+    // handleeNotofication();
     if (!buttonDisabled && valdiate()) {
       setButtonDisabled(true);
       const formData = new FormData();

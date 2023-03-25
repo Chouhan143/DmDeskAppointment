@@ -31,16 +31,18 @@ import {AuthContext} from '../../LoginCredencial/context/AuthContext';
 import {checkToken, getToken, setToken} from '../../Hooks/TokenHooks';
 import {TokenConstant} from '../../Constants/TokenConstant';
 import FullScreenLoader from '../components/CustomLoader';
-
+import PushNotification from "react-native-push-notification";
 const LoginScreen = ({navigation}) => {
   const toast = useToast();
   const [inputs, setInputs] = React.useState({email: '', password: ''});
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const {login, userInformation} = useContext(AuthContext);
+  
 const [loader, setloader] = useState(false)
   useEffect(() => {
     fetch();
+    createChannels();
   }, []);
 
   const fetch = async () => {
@@ -50,6 +52,17 @@ const [loader, setloader] = useState(false)
       navigation.replace('login');
     }
   };
+
+
+  const createChannels =()=>{
+    PushNotification.createChannel(
+      {
+        channelId:'test',
+        channelName:'test-channel'
+      }
+    )
+  }
+
 
   // const handleLogin = async () => {
   //   validateSchema()
