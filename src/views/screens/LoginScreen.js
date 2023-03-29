@@ -32,6 +32,7 @@ import {checkToken, getToken, setToken} from '../../Hooks/TokenHooks';
 import {TokenConstant} from '../../Constants/TokenConstant';
 import FullScreenLoader from '../components/CustomLoader';
 import PushNotification from "react-native-push-notification";
+import messaging from '@react-native-firebase/messaging';
 const LoginScreen = ({navigation}) => {
   const toast = useToast();
   const [inputs, setInputs] = React.useState({email: '', password: ''});
@@ -43,6 +44,7 @@ const [loader, setloader] = useState(false)
   useEffect(() => {
     fetch();
     createChannels();
+    getFCMToken();
   }, []);
 
   const fetch = async () => {
@@ -62,6 +64,28 @@ const [loader, setloader] = useState(false)
       }
     )
   }
+
+  
+  const getFCMToken = async () => {
+    let fcmToken = await AsyncStorage.getItem('fcmToken')
+    console.log('old fcm ', fcmToken)
+    if (!fcmToken) {
+        try {
+            let fcmToken = await messaging().getToken();
+            if (fcmToken) {
+                console.log('new gen fcm', fcmToken)
+                await AsyncStorage.setItem('fcmToken', fcmToken)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+}
+
+
+
+
 
 
   // const handleLogin = async () => {
@@ -108,6 +132,17 @@ const [loader, setloader] = useState(false)
         pass: inputs.password,
       };
       setLoading(true);
+
+ // Get the FCM token
+//  const fcmToken = await getFCMToken();
+ const tokenFcm = await messaging().getToken();
+
+ // Add the FCM token to the payload
+ if (tokenFcm) {
+   payload.tokenFcm = tokenFcm;
+ }
+
+console.log(payload);
       const response = await postData(Login, payload);
       console.log('>>>' + JSON.stringify(response));
       if (response.l_status == 'true') {

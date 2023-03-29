@@ -103,7 +103,7 @@ const HomeScreenPa = ({ navigation }) => {
       const interval = setInterval(() => {
         AddUserInfo();
         getDataFunc();
-
+       
         // cchekToken();
 
 

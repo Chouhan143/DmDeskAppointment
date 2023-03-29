@@ -101,63 +101,6 @@ const App = ({ navigation,navigator }) => {
   }
   
 
-  useEffect(() => {
-    PushNotification.configure({
-      onRegister: function (token) {
-        console.log("TOKEN:", token);
-      },
-      onNotification: function (notification) {
-        console.log("NOTIFICATION:", notification);
-
-        // notification.finish(PushNotificationIOS.FetchResult.NoData);
-      },
-      onAction: function (notification) {
-        console.log("ACTION:", notification.action);
-        console.log("NOTIFICATION:", notification);
-
-        // process the action
-      },
-      onRegistrationError: function(err) {
-        console.error(err.message, err);
-      },
-
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true,
-      },
-      popInitialNotification: true,
-      requestPermissions: true,
-    });
-  }, []);
-
-
- testPush = ()=>{
-  PushNotification.localNotification({
-    title: "My Notification Title", // (optional)
-    message: "My Notification Message", // (required)
-    playSound: true, // (optional) default: true
-    soundName: "default", // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
-   
-  });
- }
-testCancel =()=>{
-  PushNotification.cancelAllLocalNotifications();
-}
-  
-testSchedule =()=>{
-  PushNotification.localNotificationSchedule({
-    //... You can use all the options from localNotifications
-    message: "My Notification Message", // (required)
-    date: new Date(Date.now() + 15 * 1000), // in 60 secs
-    allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
-  
-    /* Android Only Properties */
-    repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
-  });
-}
-
-  
 
   
   return (
@@ -214,4 +157,3 @@ export default App
 // };
 
 // export default App;
-
