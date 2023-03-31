@@ -142,16 +142,25 @@ const HomeScreenDm = ({ navigation }) => {
             // }
             >
                 <View style={styles.header}>
-                    {/* <Icon3 name="notifications" color='#3e2465' size={responsiveFontSize(4)} onPress={navigation.toggleDrawer} /> */}
-                    <Icon3 name="notifications" color="#3e2465" size={responsiveFontSize(4)} onPress={navigation.toggleDrawer}>
+
+
+                    {/* <Icon3 name="notifications" color='#3e2465' size={responsiveFontSize(4)} onPress={PendingHendle} /> */}
+
+              
+
+                    <View style={{ position: "relative" }}>
+                        <Icon3 name="notifications" color="#3e2465" size={responsiveFontSize(4)} onPress={PendingHendle} />
                         {pending > 0 && (
-                            <View style={{ position: "absolute", top: -5, right: -10 }}>
-                                <View style={{ backgroundColor: "red", borderRadius: 999, width: 20, height: 20, alignItems: "center", justifyContent: "center" }}>
+                            <View style={{ position: "absolute", top: -5, right: -2}}>
+                                <View style={{ backgroundColor: "red", borderRadius: 999, width: responsiveWidth(5), height:responsiveWidth(5), alignItems: "center", justifyContent: "center" }}>
                                     <Text style={{ fontSize: 12, color: "white" }}>{pending}</Text>
                                 </View>
                             </View>
                         )}
-                    </Icon3>
+
+                    </View>
+
+
                     <Text style={{ color: '#306060', fontWeight: 'bold', fontSize: responsiveFontSize(2.2) }}>
                         District Magistrate
                     </Text>

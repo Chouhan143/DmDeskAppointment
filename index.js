@@ -25,10 +25,7 @@ PushNotification.configure({
   requestPermissions: Platform.OS === 'ios',
 });
 
-
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   console.log('Message handled in the background!', remoteMessage);
 });
-
-
 AppRegistry.registerComponent(appName, () => AppWrapper);
