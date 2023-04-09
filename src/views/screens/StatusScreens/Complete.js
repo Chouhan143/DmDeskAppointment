@@ -29,7 +29,7 @@ import { getData, postData } from '../../../Hooks/ApiHelper';
 import { Get_Appointment_Data } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import FullScreenModal from '../../../Hooks/FullScreenModal';
 
 
 
@@ -44,9 +44,14 @@ const Completed = ({ navigation }) => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [openItemIndex, setOpenItemIndex] = useState(-1);
   const [dataKey, setDataKey] = useState('');
+   const [isFullScreen, setIsFullScreen] = useState(false);
+   const [selectedModalImage, setselectedModalImage] = useState([]);
   const [loader, setloader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [obj, setobj] = useState({});
+  const [selectedImage, setselectedImage] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false);
+
   const [userType, setuserType] = useState('');
   const onPressHandler = (item, index) => {
     setobj(item);
@@ -55,7 +60,18 @@ const Completed = ({ navigation }) => {
     SetshowWarning(true);
   };
 
+   const handleCloseModal = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+  const watchFullImage = item => {
+    setIsFullScreen(!isFullScreen);
+    setselectedModalImage(item);
+  };
 
+  const toggleModal = item => {
+    setModalVisible(!isModalVisible);
+    setselectedImage(item);
+  };
 
 
 
@@ -644,6 +660,30 @@ const Completed = ({ navigation }) => {
           </Modal>
         </View>
         {/* modal ends here */}
+
+
+<Modal
+      animationType="slide"
+      transparent={false}
+      visible={isModalVisible}>
+      <View style={styles.modalContainer}>
+        <TouchableOpacity onPress={toggleModal}>
+          <Text style={styles.closeText}>Close</Text>
+        </TouchableOpacity>
+        {/* {console.log(selectedImage)} */}
+        <Image style={styles.modalImage} source={{ uri: selectedImage }} />
+      </View>
+    </Modal>
+    <FullScreenModal
+      uri={selectedModalImage}
+      visible={isFullScreen}
+      onClose={handleCloseModal}
+    />
+
+
+
+
+
       </View>
     </ScrollView>
   );
