@@ -38,6 +38,8 @@ const { width } = Dimensions.get('screen');
 const Completed = ({ navigation }) => {
   const toast = useToast();
   const [confirmed, setConfirmed] = useState(null);
+  const [pending, setPending] = useState([]);
+  const [pendingAdmin, setPendingAdmin] = useState([]);
   const [myData, setMyData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
   const [userData, setUserData] = useState({});
@@ -392,7 +394,7 @@ const Completed = ({ navigation }) => {
     );
   };
 
-  console.log(myData)
+
 
   const onPressChangeStatus = async (id, status) => {
     let payload = {
@@ -423,7 +425,6 @@ const Completed = ({ navigation }) => {
   const onRefresh = () => {
     setRefreshing(true);
     AddUserInfo();
-
     setTimeout(() => setRefreshing(false), 1000);
   };
   const logout = async () => {
@@ -436,7 +437,26 @@ const Completed = ({ navigation }) => {
     AddUserInfo();
   }, []);
 
-  const AddUserInfo = async () => {
+  // const AddUserInfo = async () => {
+  //   const userType = await AsyncStorage.getItem('userType');
+  //   setuserType(userType);
+  //   setloader(true);
+  //   const response = await getData(Get_Appointment_Data);
+  //   const newData = response.result.sort(function (a, b) {
+  //     return a.created_date > b.created_date
+  //       ? -1
+  //       : a.created_date < b.created_date
+  //         ? 1
+  //         : 0;
+  //   });
+  //   const completedData = newData.filter(
+  //     appointment => appointment.status == 'complete',
+  //   );
+  //   setMyData(completedData);
+  //   setloader(false);
+  // };
+
+ const AddUserInfo = async () => {
     const userType = await AsyncStorage.getItem('userType');
     setuserType(userType);
     setloader(true);
@@ -448,12 +468,33 @@ const Completed = ({ navigation }) => {
           ? 1
           : 0;
     });
+    // console.log(response.result)
     const completedData = newData.filter(
       appointment => appointment.status == 'complete',
     );
-    setMyData(completedData);
-    setloader(false);
+    // const currentDate = new Date().toLocaleString().slice(0, 10);
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).split('/').join('-');
+
+
+    if (userType === 'pa' || userType === 'dm') {
+      const completedData = newData.filter(
+        appointment => appointment.status == 'complete',
+      );
+      const filteredDataComplete = completedData.filter(appointment => appointment.status === 'complete' && appointment.date === formattedDate);
+      setMyData(filteredDataComplete);
+      setPending(filteredDataComplete.length)
+      setloader(false);
+    } 
+
   };
+
+
+
 
 
 

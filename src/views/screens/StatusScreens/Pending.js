@@ -68,7 +68,8 @@ const Pending = ({ navigation }) => {
 
 
 
-  const renderItem = ({ item }) => {
+  const 
+  renderItem = ({ item }) => {
 
     const swipeBtns = [
       {

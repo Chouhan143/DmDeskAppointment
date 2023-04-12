@@ -125,10 +125,16 @@ const HomeScreenDm = ({ navigation }) => {
         }).split('/').join('-');
 
         const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === formattedDate);
+        const filteredDataComplete = completedData.filter(
+            appointment =>
+              appointment.status === 'complete' && appointment.date === formattedDate,
+          );
+
+
 
         const rejectData = response.result.filter(appointment => appointment.status == 'reject')
         setPending(filteredData.length)
-        setCompleted(completedData.length)
+        setCompleted(filteredDataComplete.length)
         setRejected(rejectData.length)
         // setMyData(completedData)
     }
