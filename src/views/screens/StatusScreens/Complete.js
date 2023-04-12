@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AppointmentIcon from '../../../assets/images/AppointmentIcon.png';
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -30,12 +30,16 @@ import { Get_Appointment_Data } from '../../../Constants/UrlConstants';
 import { FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FullScreenModal from '../../../Hooks/FullScreenModal';
+import DataContext from '../../../LoginCredencial/context/DataContextApi';
 
 
 
 const { height } = Dimensions.get('window');
 const { width } = Dimensions.get('screen');
 const Completed = ({ navigation }) => {
+
+    const { getDataFunc } = useContext(DataContext)
+
   const toast = useToast();
   const [confirmed, setConfirmed] = useState(null);
   const [pending, setPending] = useState([]);
@@ -402,13 +406,13 @@ const Completed = ({ navigation }) => {
       status: status,
     };
     const responce = await postData(Confirm_Status, payload);
-    console.log(responce);
+    alert(JSON.stringify(responce.result));
     if (responce.result) {
       SetshowWarning(false);
       await toast.show('Updated', { type: 'success', position: 'top' });
       await AddUserInfo();
       await getDataFunc();
-      await setcount(count + 1);
+      // await setcount(count + 1);
     }
   };
 
@@ -461,6 +465,7 @@ const Completed = ({ navigation }) => {
     setuserType(userType);
     setloader(true);
     const response = await getData(Get_Appointment_Data);
+    console.log(JSON.stringify(response))
     const newData = response.result.sort(function (a, b) {
       return a.created_date > b.created_date
         ? -1
@@ -486,7 +491,8 @@ const Completed = ({ navigation }) => {
         appointment => appointment.status == 'complete',
       );
       const filteredDataComplete = completedData.filter(appointment => appointment.status === 'complete' && appointment.date === formattedDate);
-      setMyData(filteredDataComplete);
+      const confirmedDataComplete = completedData.filter(appointment => appointment.pa_status !== 'complete' && appointment.date === formattedDate);
+      setMyData(confirmedDataComplete);
       setPending(filteredDataComplete.length)
       setloader(false);
     } 

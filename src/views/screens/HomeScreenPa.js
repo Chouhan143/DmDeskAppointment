@@ -145,6 +145,10 @@ const HomeScreenPa = ({ navigation }) => {
         appointment =>
           appointment.status === 'complete' && appointment.date === formattedDate,
       );
+      const ConfirmedDataComplete = completedData.filter(
+        appointment =>
+          appointment.status !== 'complete' && appointment.date === formattedDate,
+      );
 
       
       const rejectData = data.filter(
@@ -152,7 +156,7 @@ const HomeScreenPa = ({ navigation }) => {
       );
       setPending(filteredData.length);
       // setCompleted(completedData.length);
-      setCompleted(filteredDataComplete.length);
+      setCompleted(ConfirmedDataComplete.length);
       setRejected(rejectData.length);
 
     };

@@ -15,6 +15,7 @@ export function DataContextApiProvider({children}) {
 
   const getDataFunc = async () => {
     // console.log("run")
+    console.warn("chala");
     const dataResides = await getData(Get_Appointment_Data);
     await setData(dataResides.result)
   //  console.log(dataResides.result)
