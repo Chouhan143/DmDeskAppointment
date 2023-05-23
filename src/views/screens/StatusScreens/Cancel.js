@@ -39,7 +39,8 @@ const Completed = ({navigation}) => {
   const [rejected, setRejected] = useState([]);
   const [loader, setloader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [reject,setReject]=useState([])
+  const [userType, setuserType] = useState('');
   const onRefresh = () => {
     setRefreshing(true);
     AddUserInfo();
@@ -65,23 +66,81 @@ const Completed = ({navigation}) => {
    await AsyncStorage.clear();
   };
 
-  const AddUserInfo = async () => {
-    setloader(true);
+  // const AddUserInfo = async () => {
+  //   setloader(true);
 
+  //   const response = await getData(Get_Appointment_Data);
+  //   const newData = response.result.sort(function (a, b) {
+  //     return a.created_date > b.created_date
+  //       ? -1
+  //       : a.created_date < b.created_date
+  //       ? 1
+  //       : 0;
+  //   });
+  //   const currentDate = new Date();
+  //   const formattedDate = currentDate.toLocaleDateString('en-GB', {
+  //     day: '2-digit',
+  //     month: '2-digit',
+  //     year: 'numeric'
+  //   }).split('/').join('-');
+
+  //   if (userType === 'pa' || userType === 'dm') {
+  //     const rejectData = newData.filter(
+  //       appointment => appointment.status == 'reject',
+  //     );
+
+  //   const rejectedDataStatus = rejectData.filter(appointment => appointment.status === 'reject' && appointment.date === formattedDate);
+
+  //   setloader(false);
+  //   setMyData(rejectedDataStatus);
+  //   setReject(rejectedDataStatus.length)
+  // };
+
+
+
+  const AddUserInfo = async () => {
+    const userType = await AsyncStorage.getItem('userType');
+    setuserType(userType);
+    setloader(true);
     const response = await getData(Get_Appointment_Data);
+    console.log(JSON.stringify(response))
     const newData = response.result.sort(function (a, b) {
       return a.created_date > b.created_date
         ? -1
         : a.created_date < b.created_date
-        ? 1
-        : 0;
+          ? 1
+          : 0;
     });
-    const rejectData = newData.filter(
-      appointment => appointment.status == 'reject',
-    );
-    setloader(false);
-    setMyData(rejectData);
+    // const currentDate = new Date().toLocaleString().slice(0, 10);
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).split('/').join('-');
+
+
+    if (userType === 'pa' || userType === 'dm') {
+      const rejectData = newData.filter(
+        appointment => appointment.status == 'reject',
+      );
+      const filteredDataReject = rejectData.filter(appointment => appointment.status === 'reject' && appointment.date === formattedDate);
+      // const confirmedDataComplete = completedData.filter(appointment => appointment.pa_status !== 'complete' && appointment.date === formattedDate);
+      setMyData(filteredDataReject);
+      setRejected(filteredDataReject.length)
+      setloader(false);
+    } 
+
   };
+
+
+
+
+
+
+
+
+
   return (
     <ScrollView
       refreshControl={

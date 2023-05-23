@@ -116,6 +116,8 @@ const HomeScreenDm = ({ navigation }) => {
         const completedData = response.result.filter(appointment => appointment.status == 'complete')
 
         const pendingData = response.result.filter(appointment => appointment.status == 'pending')
+
+        const rejectData = response.result.filter(appointment => appointment.status == 'reject')
         // const currentDate = new Date().toISOString().slice(0, 10);
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString('en-GB', {
@@ -124,18 +126,19 @@ const HomeScreenDm = ({ navigation }) => {
             year: 'numeric'
         }).split('/').join('-');
 
-        const filteredData = pendingData.filter(appointment => appointment.status === 'pending' && appointment.date === formattedDate);
-        const filteredDataComplete = completedData.filter(
+        const filteredData = pendingData.filter(
+            appointment => appointment.status === 'pending' && appointment.date === formattedDate);
+        const filteredDataReject = rejectData.filter(
             appointment =>
-              appointment.status === 'complete' && appointment.date === formattedDate,
+              appointment.status === 'reject' && appointment.date === formattedDate,
           );
 
+          const confirmedDataComplete = completedData.filter(appointment => appointment.pa_status !== 'complete' && appointment.date === formattedDate);
 
-
-        const rejectData = response.result.filter(appointment => appointment.status == 'reject')
+        
         setPending(filteredData.length)
-        setCompleted(filteredDataComplete.length)
-        setRejected(rejectData.length)
+        setCompleted(confirmedDataComplete.length)
+        setRejected(filteredDataReject.length)
         // setMyData(completedData)
     }
     return (

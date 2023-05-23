@@ -406,7 +406,7 @@ const Completed = ({ navigation }) => {
       status: status,
     };
     const responce = await postData(Confirm_Status, payload);
-    alert(JSON.stringify(responce.result));
+    alert(JSON.stringify("Confirmation successful! "));
     if (responce.result) {
       SetshowWarning(false);
       await toast.show('Updated', { type: 'success', position: 'top' });
@@ -493,7 +493,7 @@ const Completed = ({ navigation }) => {
       const filteredDataComplete = completedData.filter(appointment => appointment.status === 'complete' && appointment.date === formattedDate);
       const confirmedDataComplete = completedData.filter(appointment => appointment.pa_status !== 'complete' && appointment.date === formattedDate);
       setMyData(confirmedDataComplete);
-      setPending(filteredDataComplete.length)
+      setPending(confirmedDataComplete.length)
       setloader(false);
     } 
 
