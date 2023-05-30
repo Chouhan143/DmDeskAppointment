@@ -4,6 +4,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import PushNotification from "react-native-push-notification";
 // import { RefreshControl } from 'react-native';
 import Menu from '../components/Menu';
@@ -29,10 +30,12 @@ const { height } = Dimensions.get('window');
 
 const HomeScreenDm = ({ navigation }) => {
     // const {logout} = useContext(AuthContext)
-    const { data, count, getDataFunc } = useContext(DataContext)
+    const {stnData, data, count, getDataFunc,StnApiData } = useContext(DataContext)
     const [pending, setPending] = useState([]);
     const [completed, setCompleted] = useState([]);
     const [rejected, setRejected] = useState([]);
+    const [stnPending, setStnPending] = useState([]);
+    const[stenoData,setStenoData]= useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [loaderInfo, setloaderInfo] = useState(false);
 
@@ -61,9 +64,14 @@ const HomeScreenDm = ({ navigation }) => {
         navigation.navigate('complete');
     }
     const CancelgHendle = () => {
-        navigation.navigate('cancel');
+        navigation.navigate('cancle');
     }
 
+
+    const StenoPandingHendle = () => {
+        navigation.navigate('StenoPending');
+    }
+    
 
 
 
@@ -99,22 +107,60 @@ const HomeScreenDm = ({ navigation }) => {
     useEffect(() => {
         AddUserInfo();
         getDataFunc();
+        // StenoAppointmentData();
     }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
             AddUserInfo();
-        }, 3000);
+            StenoAppointmentData();
+                }, 3000);
         return () => clearInterval(interval);
     });
 
 
-    const AddUserInfo = async () => {
+
+
+    const StenoAppointmentData = async () => {
+        axios
+          .get('https://srninfotech.com/projects/dmdesk_steno/getAppointmentBySteno')
+          .then(response => {
+            const data = response.data.result;
+            setStenoData(data);
+            // console.log("dadaddadadad",data)
+            const pendingData1 = data.filter(appointment => appointment.steno_status === 'pending');
+           
+        
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString('en-US', {
+              weekday: 'short',
+              month: 'short',
+              day: '2-digit',
+              year: 'numeric'
+            });
+    
+            const filteredData = pendingData1.filter(
+              appointment => appointment.steno_status === 'pending' && appointment.date === formattedDate
+            );
+            setStnPending(pendingData1.length);
+            // console.log("sdfdsfsdfsdfsd",pendingData1.length)
+          })
+          .catch(error => {
+            // Handle error
+            console.error(error);
+          });
+      };
+
+    
+
+
+
+        const AddUserInfo = async () => {
 
         const response = await getData(Get_Appointment_Data)
         // console.log(response)
         const completedData = response.result.filter(appointment => appointment.status == 'complete')
-
+        
         const pendingData = response.result.filter(appointment => appointment.status == 'pending')
 
         const rejectData = response.result.filter(appointment => appointment.status == 'reject')
@@ -128,18 +174,20 @@ const HomeScreenDm = ({ navigation }) => {
 
         const filteredData = pendingData.filter(
             appointment => appointment.status === 'pending' && appointment.date === formattedDate);
+
+
         const filteredDataReject = rejectData.filter(
             appointment =>
-              appointment.status === 'reject' && appointment.date === formattedDate,
-          );
+                appointment.status === 'reject' && appointment.date === formattedDate,
+        );
 
-          const confirmedDataComplete = completedData.filter(appointment => appointment.pa_status !== 'complete' && appointment.date === formattedDate);
+        const confirmedDataComplete = completedData.filter(appointment => appointment.pa_status !== 'complete' && appointment.date === formattedDate);
 
-        
+
         setPending(filteredData.length)
         setCompleted(confirmedDataComplete.length)
         setRejected(filteredDataReject.length)
-        // setMyData(completedData)
+        
     }
     return (
         <>
@@ -155,13 +203,13 @@ const HomeScreenDm = ({ navigation }) => {
 
                     {/* <Icon3 name="notifications" color='#3e2465' size={responsiveFontSize(4)} onPress={PendingHendle} /> */}
 
-              
+
 
                     <View style={{ position: "relative" }}>
                         <Icon3 name="notifications" color="#3e2465" size={responsiveFontSize(4)} onPress={PendingHendle} />
                         {pending > 0 && (
-                            <View style={{ position: "absolute", top: -5, right: -2}}>
-                                <View style={{ backgroundColor: "red", borderRadius: 999, width: responsiveWidth(5), height:responsiveWidth(5), alignItems: "center", justifyContent: "center" }}>
+                            <View style={{ position: "absolute", top: -5, right: -2 }}>
+                                <View style={{ backgroundColor: "red", borderRadius: 999, width: responsiveWidth(5), height: responsiveWidth(5), alignItems: "center", justifyContent: "center" }}>
                                     <Text style={{ fontSize: 12, color: "white" }}>{pending}</Text>
                                 </View>
                             </View>
@@ -239,15 +287,20 @@ const HomeScreenDm = ({ navigation }) => {
                                     </View>
                                 </View>
                             </TouchableOpacity>
+
+
                             {/*  */}
 
 
                         </View>
+                    
+
                         <View style={{
                             display: 'flex',
                             flexDirection: 'row',
+                            justifyContent: 'space-evenly',
                             marginTop: responsiveHeight(4),
-                            marginLeft: responsiveWidth(10)
+                           
                         }}>
 
                             <TouchableOpacity onPress={CancelgHendle} style={{
@@ -276,8 +329,37 @@ const HomeScreenDm = ({ navigation }) => {
                                 </View>
                             </TouchableOpacity>
 
+                            {/* steno */}
+
+                            <TouchableOpacity onPress={StenoPandingHendle} style={{
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#236B8E', paddingVertical: responsiveHeight(1),
+                                paddingHorizontal: responsiveWidth(10),
+                                borderRadius: responsiveWidth(10),
+                            }}>
+                                <View style={styles.content_iconWraper} >
+                                    <View style={styles.innerView}>
+
+                                        <Icon2 name="progress-clock" color='white' size={responsiveFontSize(3)} onPress={navigation.toggleDrawer} />
+                                    </View>
+
+                                    <View style={styles.textWrapDiv}>
+                                        {loaderInfo == true ? (
+                                            <View>
+                                                <ActivityIndicator size="small" color="white" />
+                                            </View>
+
+                                        ) : (
+                                            <Text style={styles.text}>{stnPending}</Text>
+                                        )}
+
+                                        <Text style={{ fontSize: responsiveFontSize(1.8), color: '#fff', fontWeight: 'bold' }}>स्टेनो लंबित</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+
 
                         </View>
+                   
 
                     </View>
 

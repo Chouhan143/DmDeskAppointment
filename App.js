@@ -8,9 +8,6 @@ import {
 
   Pressable,
   View,
-
-
-
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,6 +26,8 @@ import Cancel from './src/views/screens/StatusScreens/Cancel'
 import DrawerNavigation from './src/views/Navigators/DrawerNavigation';
 import ForgotPass from './src/views/screens/UserScreen/ForgotPass';
 import NewPassword from './src/views/screens/UserScreen/NewPassword';
+import HomeScreenSteno from './src/views/screens/HomeScreenSteno'
+import EditBookAppointmentSteno from './src/views/screens/EditBookAppointmentSteno'
 import { ToastProvider } from 'react-native-fast-toast'
 import { Touchable } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -37,8 +36,9 @@ import HomeScreenPa from './src/views/screens/HomeScreenPa';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Uselogout } from './src/Hooks/LogoutHook';
 import PushNotification from "react-native-push-notification";
-
+import StenoPending from './src/views/screens/StatusScreens/StenoPending'
 import EditBookAppointment from './src/views/screens/EditBookAppointment';
+import BookAppointmentSteno from './src/views/screens/BookAppointmentSteno';
 import { DataContextApiProvider } from './src/LoginCredencial/context/DataContextApi';
 import { AuthContext } from './src/LoginCredencial/context/AuthContext';
 import { useEffect } from 'react';
@@ -118,11 +118,17 @@ const App = ({ navigation,navigator }) => {
           <Stack.Screen name='HomeScreenPa' component={ HomeScreenPa} options={{ headerShown: false }} />
           <Stack.Screen name='Appointment' component={BookAppointment} options={{ headerShown: false }} />
           <Stack.Screen name='HomeScreenAdmin' component={HomeScreenAdmin} options={{ headerShown: false }} />
+          <Stack.Screen name='HomeScreenSteno' component={HomeScreenSteno} options={{ headerShown: false }} />
           <Stack.Screen name='userInfo' component={AddUserInfo} options={{ headerShown: false }} />
           <Stack.Screen name='pending' component={Pending} options={{headerShown: false}} />
+          
+          <Stack.Screen name='StenoPending' component={StenoPending} options={{headerShown: false}} />
           <Stack.Screen name='complete' component={Completed} options={{headerShown: false }} />
           <Stack.Screen name='cancel' component={Cancel} options={{ headerShown: false }} />
           <Stack.Screen name='edit-appointment' component={EditBookAppointment} options={{ headerShown: false }} />
+          <Stack.Screen name='editBookAppointmentSteno' component={EditBookAppointmentSteno} options={{ headerShown: false }} />
+          
+          <Stack.Screen name='BookAppointmentSteno' component={BookAppointmentSteno} options={{ headerShown: false }} />
           </>
           <>
           <Stack.Screen name='Forgotpassword' component={ForgotPass} options={{ headerShown: false }} />

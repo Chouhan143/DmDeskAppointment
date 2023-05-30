@@ -157,6 +157,10 @@ console.log(payload);
         } else if (response.user_type == 'ad') {
           await AsyncStorage.setItem('userType', response.user_type);
           navigation.replace('HomeScreenAdmin');
+        } else if (response.user_type == 'stn') {
+          await AsyncStorage.setItem('userType', response.user_type);
+          await AsyncStorage.setItem('city', response.city);
+          navigation.replace('HomeScreenSteno');
         }
       } else {
         toast.show('Wrong email or password', {
@@ -256,6 +260,9 @@ console.log(payload);
       }
       if (type == "ad") {
         navigation.replace('HomeScreenAdmin');
+      }
+      if (type == "stn") {
+        navigation.replace('HomeScreenSteno');
       }
     } else {
     }

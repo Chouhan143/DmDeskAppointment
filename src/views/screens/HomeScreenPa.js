@@ -34,7 +34,7 @@ import { Pressable } from 'react-native';
 const { height } = Dimensions.get('window');
 
 const HomeScreenPa = ({ navigation }) => {
-  const { data, count, getDataFunc } = useContext(DataContext);
+  const { data, count,getDataSteno, getDataFunc } = useContext(DataContext);
   const { logout } = useContext(AuthContext);
   const [pending, setPending] = useState([]);
   const [completed, setCompleted] = useState([]);
@@ -103,6 +103,7 @@ const HomeScreenPa = ({ navigation }) => {
       const interval = setInterval(() => {
         AddUserInfo();
         getDataFunc();
+        // getDataSteno();
        
         // cchekToken();
 

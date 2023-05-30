@@ -1,10 +1,11 @@
 import { launchCamera } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, Keyboard, ScrollView, StyleSheet, Image, Dimensions, TouchableOpacity, PermissionsAndroid } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, SafeAreaView, DatePickerAndroid, Platform, Pressable, Keyboard, ScrollView, Alert, StyleSheet, StatusBar, TextInput, Image, Dimensions, TouchableOpacity, PermissionsAndroid } from 'react-native';
 import COLORS from '../../conts/colors';
 import Button from '../components/Button';
 import Input from '../components/Input';
+
 import {
   responsiveHeight,
   responsiveWidth,
@@ -13,12 +14,88 @@ import {
 import axios from 'axios';
 import { useToast } from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Get_Appointment_Data_by_id, Post_Appointment_Data, Update_Appointment_Data,Update_Appointment_Data_By_Steno } from '../../Constants/UrlConstants';
-import { useEffect } from 'react';
-import { getData } from '../../Hooks/ApiHelper';
-import Loader from '../components/Loader';
+import { Post_Appointment_Data_Steno } from '../../Constants/UrlConstants';
+import DataContext from '../../LoginCredencial/context/DataContextApi';
+import PushNotification from "react-native-push-notification";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTime from '../components/DateTime';
+const BookAppointment = () => {
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
+  const [showPicker, setShowPicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [appointmentDate, setAppointmentDate] = useState("");
+  const [appointmentTime, setAppointmentTime] = useState("");
+  
+  const toggleDatepicker = () => {
+    setShowPicker(!showPicker);
+  }
+  const toggleTimepicker = () => {
+    setShowTimePicker(!showTimePicker);
+  }
 
-const EditBookAppointment = ({ navigation, route }) => {
+  // const onchange2 = ({ type }, selectedDate) => {
+  //   if (type == "set") {
+  //     const currentDate = selectedDate;
+  //     setDate(currentDate);
+  //     if (Platform.OS === "android") {
+  //       toggleDatepicker();
+  //       setAppointmentDate(currentDate.toDateString('en-GB'));
+  //     }
+  //   } else {
+  //     toggleDatepicker();
+  //   }
+  // }
+
+
+  const onchange2 = (event, selectedDate) => {
+    if (event.type === "set") {
+      const currentDate = selectedDate || date;
+      setShowPicker(false);
+      setDate(currentDate);
+      const formattedDate = currentDate.toDateString('en-GB');
+      setAppointmentDate(formattedDate);
+      setInputs(prevState => ({
+        ...prevState,
+        appointmentDate: formattedDate, // Update the state variable
+      }));
+    } else {
+      setShowPicker(false);
+    }
+  };
+
+
+
+  // const onTimeChange = (event, selectedTime) => {
+  //   const currentTime = selectedTime || time;
+  //   setTime(currentTime);
+  //   if (Platform.OS === "android") {
+  //     toggleTimepicker();
+  //     setAppointmentTime(currentTime.toLocaleTimeString());
+  //   }
+  // };
+
+  const onTimeChange = (event, selectedTime) => {
+    if (event.type === "set") {
+      setShowTimePicker(false);
+      setTime(selectedTime);
+      const formattedTime = selectedTime.toLocaleTimeString('en-US');
+      setAppointmentTime(formattedTime);
+      setInputs(prevState => ({
+        ...prevState,
+        appointmentTime: formattedTime, // Update the state variable
+      }));
+    } else {
+      setShowTimePicker(false);
+    }
+  };
+
+
+
+
+
+  const { setcount, count } = useContext(DataContext)
+  const [image, setImage] = useState(null);
   const toast = useToast()
   const [inputs, setInputs] = useState({
     user_name: '',
@@ -27,77 +104,89 @@ const EditBookAppointment = ({ navigation, route }) => {
     noofpeople: '',
     phone: '',
     img: '',
+    city:'',
+    appointmentDate: '',
+    appointmentTime: '',
   });
   const [errors, setErrors] = useState({});
-  const [image, setImage] = useState(null);
-  const [laoder, setlaoder] = useState(false)
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
+
+  const handleeNotofication = () => {
+    PushNotification.cancelAllLocalNotifications()
+    PushNotification.localNotification({
+      channelId: 'test',
+      tittle: 'appointment Booked',
+      message: 'New Appointment Booked'
+    })
+    // PushNotification.localNotificationSchedule({
+    //   channelId: 'test',
+    //   tittle: ' Alarm ',
+    //   message: 'You have booked appointment 20 sec ago',
+    //   date:new Date(Date.now()+20*1000),
+    //   allowWhileIdle:true,
+    // })
+  }
   // ----------------------------------------Validation section start------------------------------------------
 
 
   function valdiate() {
     Keyboard.dismiss();
     let isValid = true;
-    if (inputs?.user_name.length == 0) {
+    if (!inputs?.user_name?.length > 0) {
       handleError('Please input username', 'user_name');
-      isValid = !isValid;
+      isValid = false;
     }
-    if (inputs?.depat.length == 0) {
+
+    if (!inputs?.depat?.length > 0) {
       handleError('Please input Department', 'depat');
-      isValid = !isValid;
+      isValid = false;
     }
-    if (inputs?.phone.length == 0) {
+
+
+    if (!inputs?.phone?.length > 0) {
       handleError('Please input phone number', 'phone');
-      isValid = !isValid;
-    } else if (inputs?.phone.length !== 10) {
+      isValid = false;
+    } else if (inputs?.phone?.length !== 10) {
       handleError('Mobile Number must be 10 digit', 'phone');
-      isValid = !isValid;
+      isValid = false;
     }
-    if (inputs?.purpose.length == 0) {
+    if (!inputs?.purpose?.length > 0) {
       handleError('Please input Purpose', 'purpose');
-      isValid = !isValid;
+      isValid = false;
     }
-    if (inputs?.noofpeople.length == 0) {
+    if (!inputs?.noofpeople?.length > 0) {
       handleError('Please input No. Of Peoples', 'noofpeople');
-      isValid = !isValid;
-    } else if (inputs?.noofpeople.length > 2) {
+      isValid = false;
+    } else if (inputs?.noofpeople?.length > 2) {
       handleError('No. Of People Length Should be Maximum 2 digit', 'noofpeople')
+      isValid = false;
     }
-    if (isValid) {
-      return true
-    } else {
-      return false
+
+
+    // Validate Appointment Date
+    if (!appointmentDate > 0) {
+      handleError('Please select Appointment Date', 'appointmentDate');
+      isValid = false;
     }
+
+    // Validate Appointment Time
+    if (!appointmentTime) {
+      handleError('Please select Appointment Time', 'appointmentTime');
+      isValid = false;
+    }
+
+
+
+
+    return isValid;
+
   };
 
-  useEffect(() => {
-    getUserInfo();
-  }, []);
 
-  const getUserInfo = async () => {
-    setlaoder(true)
-    const { id } = route.params;
-    console.log(route.params)
-    const temp = await getData(`${Get_Appointment_Data_by_id}+${id}`)
-    const { data } = temp;
-    console.log(temp)
-    if (data.length > 0) {
-
-      const { user_name, depat, purpose, noofpeople, phone, img, } = data[0];
-      setInputs({
-        user_name,
-        depat,
-        purpose,
-        noofpeople,
-        phone,
-        img,
-      });
-    }
-    setlaoder(false)
-  }
   // ----------------------------------------Validation section end ------------------------------------------
 
+  const navigation = useNavigation()
 
   async function requestCameraPermission() {
     try {
@@ -136,100 +225,62 @@ const EditBookAppointment = ({ navigation, route }) => {
     requestCameraPermission()
   };
 
-  // const uploadImage = async () => {
-  //   if (!buttonDisabled && valdiate()) {
-  //     setButtonDisabled(true); 
-  //     const formData = new FormData();
-  //     const cityName = await AsyncStorage.getItem("city")
-  //     formData.append('id', route.params.id);
-  //     // if(formData
-  //     //   .image)
-  //     formData.append('img', image == null ? "" : {
-  //       uri: image.uri,
-  //       name: image.fileName,
-  //       type: image.type,
-  //     });
-  //     formData.append('user_name', inputs.user_name);
-  //     formData.append('depat', inputs.depat);
-  //     formData.append('phone', inputs.phone);
-  //     formData.append('purpose', inputs.purpose);
-  //     formData.append('noofpeople', inputs.noofpeople);
-  //     formData.append('city', cityName);
-  //     await axios.post(Update_Appointment_Data, formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     }).then((response) => {
-  //       if (response) {
-  //         // console.log(response.data)
-  //         toast.show("Appointment updated", { type: "success", position: 'top' });
-  //         navigation.navigate('HomeScreenPa');
-  //       }
-  //     }).catch((error) => {
-  //       console.log(error);
-  //     });
-  //   } else {
-  //     toast.show("Fill all inputs first", { type: "danger" });
-  //   }
-
-  // };
-
-
   const uploadImage = async () => {
+    // handleeNotofication();
     if (!buttonDisabled && valdiate()) {
       setButtonDisabled(true);
       const formData = new FormData();
-      const cityName = await AsyncStorage.getItem("city");
-      formData.append("id", route.params.id);
-      formData.append("img", image == null ? "" : {
+      const cityName = await AsyncStorage.getItem("city")
+      formData.append('img', image == null ? "" : {
         uri: image.uri,
         name: image.fileName,
         type: image.type,
       });
-      formData.append("user_name", inputs.user_name);
-      formData.append("depat", inputs.depat);
-      formData.append("phone", inputs.phone);
-      formData.append("purpose", inputs.purpose);
-      formData.append("noofpeople", inputs.noofpeople);
-      formData.append("city", cityName);
-  
-      let apiEndpoint;
-      if (userType === "pa") {
-        apiEndpoint = Update_Appointment_Data;
-      } else if (userType === "stn") {
-        apiEndpoint = Update_Appointment_Data_By_Steno;
-      }
-  
-      await axios
-        .post(apiEndpoint, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          if (response) {
-            toast.show("Appointment updated", { type: "success", position: "top" });
-            if (userType === "pa") {
-              navigation.navigate("HomeScreenPa");
-            } else if (userType === "stn") {
-              navigation.navigate("HomeScreenSteno");
-            }
-          }
-        })
+      formData.append('user_name', inputs.user_name);
+      formData.append('depat', inputs.depat);
+      formData.append('phone', inputs.phone);
+      formData.append('purpose', inputs.purpose);
+      formData.append('noofpeople', inputs.noofpeople);
+      formData.append('city', cityName);
+      formData.append('appointmentDate', (inputs.appointmentDate));
+      formData.append('appointmentTime', (inputs.appointmentTime));
 
-
-        .catch((error) => {
-          console.log(error);
-        });
+      axios.post(Post_Appointment_Data_Steno, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then(async (response) => {
+        if (response) {
+          console.log(response)
+          toast.show("Appointment Booked", { type: "success", position: 'top' });
+          await setcount(count + 1)
+          await navigation.navigate('HomeScreenSteno');
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
     } else {
       toast.show("Fill all inputs first", { type: "danger" });
     }
   };
 
 
-
-
-
+  const formatDateForAPI = (dateString) => {
+    // Assuming the current format is "dd/mm/yyyy"
+    const parts = dateString.split('/');
+    const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+    return formattedDate;
+  };
+  
+  const formatTimeForAPI = (timeString) => {
+    // Assuming the current format is "hh:mm AM/PM"
+    const parts = timeString.split(' ');
+    const time = parts[0];
+    const amPm = parts[1];
+    const [hours, minutes] = time.split(':');
+    const formattedTime = `${hours}:${minutes} ${amPm}`;
+    return formattedTime;
+  };
 
 
 
@@ -242,16 +293,12 @@ const EditBookAppointment = ({ navigation, route }) => {
     setErrors(prevState => ({ ...prevState, [input]: error }));
   };
 
+
+
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}>
-        {
-          console.log(JSON.stringify(inputs))
-        }
-
-
-        <Loader visible={laoder} />
 
         <Text style={{ color: COLORS.black, fontSize: responsiveFontSize(3.2), fontWeight: 'bold' }}>
           अपॉइंटमेंट
@@ -267,9 +314,9 @@ const EditBookAppointment = ({ navigation, route }) => {
           <Input
             onChangeText={text => handleOnchange(text, 'user_name')}
             onFocus={() => handleError(null, 'user_name')}
-            value={inputs.user_name}
+
             label="पूरा नाम"
-            placeholder="कृपया पूरा नाम दर्ज करे "
+            placeholder="कृपया पूरा नाम दर्ज करे dsdsadasd "
             placeholderTextColor="gray"
             error={errors.user_name}
           />
@@ -278,12 +325,16 @@ const EditBookAppointment = ({ navigation, route }) => {
             onChangeText={text => handleOnchange(text, 'depat')}
             onFocus={() => handleError(null, 'depat')}
             // iconName="depat-outline"
-            value={inputs.depat}
             label="विभाग/पता"
             placeholder="विभाग/पता दर्ज करे"
             placeholderTextColor="gray"
             error={errors.depat}
           />
+
+
+
+
+
 
           <Input
             keyboardType="numeric"
@@ -294,7 +345,6 @@ const EditBookAppointment = ({ navigation, route }) => {
             placeholder="मोबाइल नंबर दर्ज करे"
             placeholderTextColor="gray"
             error={errors.phone}
-            value={inputs.phone}
           />
 
           <Input
@@ -304,7 +354,6 @@ const EditBookAppointment = ({ navigation, route }) => {
             placeholder="उद्देश्य(काम) दर्ज करे"
             placeholderTextColor="gray"
             error={errors.purpose}
-            value={inputs.purpose}
           />
 
           <Input
@@ -316,9 +365,58 @@ const EditBookAppointment = ({ navigation, route }) => {
             placeholder="व्यक्तियों की संख्या "
             placeholderTextColor="gray"
             error={errors.noofpeople}
-            value={inputs.noofpeople}
-
           />
+
+
+
+          {showPicker && (
+            <DateTimePicker
+              mode='date'
+              display='spinner'
+              value={date}
+              onChange={onchange2}
+            />
+          )}
+
+
+          {!showPicker && (<Pressable
+            onPress={toggleDatepicker}
+          >
+            <Input
+              label="अपॉइंटमेंट दिनांक"
+              placeholder="दिनांक सेलेक्ट करे "
+              value={appointmentDate}
+              onChangeText={setAppointmentDate}
+              placeholderTextColor="gray"
+              editable={false}
+           
+
+            />
+          </Pressable>)}
+
+
+
+          {showTimePicker && (
+            <DateTimePicker
+              mode='time' // Set mode to 'time' for time picker
+              display='spinner'
+              value={time}
+              onChange={onTimeChange}
+            />
+          )}
+
+          {!showTimePicker && (
+            <Pressable onPress={toggleTimepicker}>
+              <Input
+                label="अपॉइंटमेंट समय"
+                placeholder="समय सेलेक्ट करे"
+                value={appointmentTime}
+                onChangeText={setAppointmentTime}
+                placeholderTextColor="gray"
+                editable={false}
+              />
+            </Pressable>
+          )}
 
 
           {/* ----------------------------------------------------------------- */}
@@ -331,7 +429,8 @@ const EditBookAppointment = ({ navigation, route }) => {
 
           {/* ------------------------------------------------------ */}
 
-          <Button onPress={uploadImage} title="Update" disabled={buttonDisabled} />
+
+          <Button onPress={uploadImage} title="Submit" disabled={buttonDisabled} />
         </View>
 
         {/* ---------------------------------------Input Field End-------------------------- */}
@@ -341,7 +440,7 @@ const EditBookAppointment = ({ navigation, route }) => {
   );
 };
 
-export default EditBookAppointment;
+export default BookAppointment;
 
 
 const styles = StyleSheet.create({
@@ -406,7 +505,7 @@ const styles = StyleSheet.create({
     height: responsiveHeight(8)
   },
   buttonText: {
-    fontSize: responsiveFontSize(1.7),
+    fontSize: 14,
     color: '#BABBC3',
     display: 'flex',
     justifyContent: 'center',
