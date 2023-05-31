@@ -441,22 +441,46 @@ import {
   
   
   
-    const onPressChangeStatus = async (id, item) => {
-      let payload = {
-        id: id,
-        status: item,
-      };
-      const data = await postData(Update_StatusSteno, payload);
-      console.log("data result",data.result)
-      if (data.result) {
-        SetshowWarning(false);
-        await toast.show('Updated', { type: 'success', position: 'top' });
-        await StenoAppointmentData();
-        await getDataFunc();
-        await setcount(count + 1);
-      }
-    };
+    // const onPressChangeStatus = async (id, item) => {
+    //   let payload = {
+    //     id: id,
+    //     status: item,
+    //   };
+    //   const data = await postData(Update_StatusSteno, payload);
+    //   console.log("data result",data.result)
+    //   if (data.result) {
+    //     SetshowWarning(false);
+    //     await toast.show('Updated', { type: 'success', position: 'top' });
+    //     await StenoAppointmentData();
+    //     await getDataFunc();
+    //     await setcount(count + 1);
+    //   }
+    // };
   
+
+const onPressChangeStatus = async (id, item) => {
+  let payload = {
+    id: id,
+    steno_status: item
+  };
+  try {
+    const { data } = await axios.post('https://srninfotech.com/projects/dmdesk_steno/updateStenoStatus', payload);
+    if (data.result) {
+      SetshowWarning(false);
+      await toast.show('Updated', { type: 'success', position: 'top' });
+      await StenoAppointmentData();
+      await getDataFunc();
+      await setcount(count + 1);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+
+
+    
     const navigateToEdit = id => {
       // console.log(id)
       setloader1(true);

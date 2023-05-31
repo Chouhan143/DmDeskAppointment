@@ -21,6 +21,6 @@ export const Confirm_Status = UrlConstants.Base_Url+`/paConfirm`;
 export const Post_Appointment_Data_Steno = UrlConstants.Base_Url +  `/stenoAppointment`;
 export const Get_Appointment_DataBy_Steno = UrlConstants.Base_Url + `/getAppointmentBySteno`;
 
-export const Update_Appointment_Data_By_Steno = UrlConstants.Base_Url + `/editAppointmentBySteno`;
+export const Update_Appointment_Data_By_Steno = UrlConstants.Base_Url + `/updateAppointmentBySteno`;
 export const Update_StatusSteno = UrlConstants.Base_Url + `/updateStenoStatus`;
-export const getSingleStenoAppointment = UrlConstants.Base_Url + `/getSingleStenoAppointment?id=`;
+export const getSingleStenoAppointment = UrlConstants.Base_Url + `/getBookedAppointmentDataBySteno?id=`;

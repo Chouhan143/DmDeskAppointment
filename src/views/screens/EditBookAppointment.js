@@ -94,6 +94,7 @@ const EditBookAppointment = ({ navigation, route }) => {
         img,
       });
     }
+    console.log("data.l",data.length)
     setlaoder(false)
   }
   // ----------------------------------------Validation section end ------------------------------------------

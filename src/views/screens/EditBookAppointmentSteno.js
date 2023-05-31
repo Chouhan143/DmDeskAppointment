@@ -1,11 +1,12 @@
 import { launchCamera } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, DatePickerAndroid, Platform, Pressable, Keyboard, ScrollView, Alert, StyleSheet, StatusBar, TextInput, Image, Dimensions, TouchableOpacity, PermissionsAndroid } from 'react-native';
 import COLORS from '../../conts/colors';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import { getData } from '../../Hooks/ApiHelper';
+import Loader from '../components/Loader';
+// import { getData } from '../../Hooks/ApiHelper';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -14,17 +15,18 @@ import {
 import axios from 'axios';
 import { useToast } from 'react-native-fast-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Update_Appointment_Data_By_Steno,Post_Appointment_Data_Steno,getSingleStenoAppointment } from '../../Constants/UrlConstants';
+import { Update_Appointment_Data_By_Steno, Post_Appointment_Data_Steno, getSingleStenoAppointment } from '../../Constants/UrlConstants';
 import DataContext from '../../LoginCredencial/context/DataContextApi';
 import PushNotification from "react-native-push-notification";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DateTime from '../components/DateTime';
-
+import { getData } from '../../Hooks/ApiHelper';
 
 const EditBookAppointmentSteno = ({ navigation, route }) => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
+  const [loader, setloader] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [appointmentDate, setAppointmentDate] = useState("");
   const [appointmentTime, setAppointmentTime] = useState("");
@@ -106,7 +108,7 @@ const EditBookAppointmentSteno = ({ navigation, route }) => {
     noofpeople: '',
     phone: '',
     img: '',
-    city:'',
+    city: '',
     appointmentDate: '',
     appointmentTime: '',
   });
@@ -190,24 +192,124 @@ const EditBookAppointmentSteno = ({ navigation, route }) => {
     getUserInfo();
   }, []);
 
+  //   const getUserInfo = async () => {
+  //     setlaoder(true)
+  //     const { id } = route.params;
+  //     console.log(route.params)
+  //  axios.get(`https://srninfotech.com/projects/dmdesk_steno/getBookedAppointmentDataBySteno?id=${id}`)
+  //  .then (response =>{
+  //     const temp = response.data;
+  //     const  {data}  = temp;
+  //     console.log("chala",data)
+
+  //  })
+
+  //     if (data.length > 0) {
+
+  //       const { user_name, depat, purpose, noofpeople, phone, img,city,appointmentDate,appointmentTime } = data[0];
+  //       setInputs({
+  //         user_name,
+  //         depat,
+  //         purpose,
+  //         noofpeople,
+  //         phone,
+  //         img,
+  //         city,
+  //         appointmentDate,
+  //         appointmentTime,
+  //       });
+  //     }
+  //     setlaoder(false)
+  //   }
+
+
+
+  // const getUserInfo = async () => {
+  //   setlaoder(true)
+  //   const { id } = route.params;
+  //   console.log(route.params);
+
+  //   try {
+  //     const response = await axios.get(`https://srninfotech.com/projects/dmdesk_steno/getBookedAppointmentDataBySteno?id=${id}`);
+  //     const temp = response.data;
+  //     const { data } = temp;
+  //     console.log("2 time s ",temp)
+
+  //     if (data.length > 0) {
+  //       const { user_name, depat, purpose, noofpeople, phone, img, city, appointmentDate, appointmentTime } = data[0];
+  //       setInputs({
+  //         user_name,
+  //         depat,
+  //         purpose,
+  //         noofpeople,
+  //         phone,
+  //         img,
+  //         city,
+  //         appointmentDate,
+  //         appointmentTime,
+  //       });
+  //     }
+  //     console.log("let see",data.length)
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  //   setlaoder(false)
+  // };
+
+
+  // const getUserInfo = () => {
+  //   setloader(true);
+  //   const { id } = route.params;
+  //   console.log(route.params);
+
+  //   axios
+  //     .get(`https://srninfotech.com/projects/dmdesk_steno/getBookedAppointmentDataBySteno?id=${id}`)
+  //     .then((response) => {
+  //       const temp = response.data;
+  //       // console.log("2 times ", temp);
+  //       const { data } = temp;
+  // // console.log("data aaya",data)
+  //       if (data.length > 0) {
+
+  //         const { user_name, depat, purpose, noofpeople, phone, img, city, appointmentDate, appointmentTime } = data[0];
+  //         // var user_name = data[0]['user_name']; 
+  //         // console.log("array data",data[0]['user_name'])
+  //         setInputs({
+  //           user_name ,
+  //           depat,
+  //           purpose,
+  //           noofpeople,
+  //           phone,
+  //           img,
+  //           city,
+  //           appointmentDate,
+  //           appointmentTime,
+  //         });
+  //         console.log("maharaj chalja",setInputs)
+  //       }
+  //       console.log("let's see", data.length);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     })
+  //     .finally(() => {
+  //       setloader(false);
+  //     });
+  // };
+
   const getUserInfo = async () => {
     setlaoder(true)
     const { id } = route.params;
     console.log(route.params)
- axios.get(`https://srninfotech.com/projects/dmdesk_steno/getSingleStenoAppointment/${id}`)
- ,then (response =>{
-    const data = response.data.result;
-    console.log("check url data",data)
- })
-
-
-
-    // const temp = await getData(`${getSingleStenoAppointment}+${id}`)
-    // const { data } = temp;
-    // console.log(temp)
+    const temp = await getData(`${getSingleStenoAppointment}+${id}`)
+    const { data } = temp;
+    console.log(temp)
     if (data.length > 0) {
 
-      const { user_name, depat, purpose, noofpeople, phone, img,city,appointmentDate,appointmentTime } = data[0];
+      const { user_name, depat, purpose, noofpeople, phone, img, city,
+        appointmentDate,
+        appointmentTime, } = data[0];
       setInputs({
         user_name,
         depat,
@@ -220,22 +322,15 @@ const EditBookAppointmentSteno = ({ navigation, route }) => {
         appointmentTime,
       });
     }
+    console.log("data.l", data.length)
     setlaoder(false)
   }
 
 
 
-
-
-
-
-
-
-
-
   // ----------------------------------------Validation section end ------------------------------------------
 
-//   const navigation = useNavigation()
+  //   const navigation = useNavigation()
 
   async function requestCameraPermission() {
     try {
@@ -295,48 +390,48 @@ const EditBookAppointmentSteno = ({ navigation, route }) => {
       formData.append('appointmentDate', (inputs.appointmentDate));
       formData.append('appointmentTime', (inputs.appointmentTime));
 
-    //   axios.post(Post_Appointment_Data_Steno, formData, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   }).then(async (response) => {
-    //     if (response) {
-    //       console.log(response)
-    //       toast.show("Appointment updated", { type: "success", position: 'top' });
-    //       await setcount(count + 1)
-    //       await navigation.navigate('HomeScreenSteno');
-    //     }
-    //   })
-    let apiEndpoint;
-    if (userType === "pa") {
-      apiEndpoint = Update_Appointment_Data;
-    } else if (userType === "stn") {
-      apiEndpoint = Update_Appointment_Data_By_Steno;
-    }
+      //   axios.post(Post_Appointment_Data_Steno, formData, {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //   }).then(async (response) => {
+      //     if (response) {
+      //       console.log(response)
+      //       toast.show("Appointment updated", { type: "success", position: 'top' });
+      //       await setcount(count + 1)
+      //       await navigation.navigate('HomeScreenSteno');
+      //     }
+      //   })
+      let apiEndpoint;
+      if (userType === "pa") {
+        apiEndpoint = Update_Appointment_Data;
+      } else if (userType === "stn") {
+        apiEndpoint = Update_Appointment_Data_By_Steno;
+      }
 
-    await axios
-      .post(apiEndpoint, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        if (response) {
-          toast.show("Appointment updated", { type: "success", position: "top" });
-          if (userType === "pa") {
-            navigation.navigate("HomeScreenPa");
-          } else if (userType === "stn") {
-            navigation.navigate("HomeScreenSteno");
+      await axios
+        .post(apiEndpoint, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response) {
+            toast.show("Appointment updated", { type: "success", position: "top" });
+            if (userType === "pa") {
+              navigation.navigate("HomeScreenPa");
+            } else if (userType === "stn") {
+              navigation.navigate("HomeScreenSteno");
+            }
           }
-        }
-      })
+        })
 
 
 
-      
-      .catch((error) => {
-        console.log(error);
-      });
+
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       toast.show("Fill all inputs first", { type: "danger" });
     }
@@ -349,7 +444,7 @@ const EditBookAppointmentSteno = ({ navigation, route }) => {
     const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
     return formattedDate;
   };
-  
+
   const formatTimeForAPI = (timeString) => {
     // Assuming the current format is "hh:mm AM/PM"
     const parts = timeString.split(' ');
@@ -378,7 +473,7 @@ const EditBookAppointmentSteno = ({ navigation, route }) => {
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}>
 
-<Loader visible={laoder} />
+        <Loader visible={laoder} />
         <Text style={{ color: COLORS.black, fontSize: responsiveFontSize(3.2), fontWeight: 'bold' }}>
           अपॉइंटमेंट
         </Text>
@@ -463,7 +558,7 @@ const EditBookAppointmentSteno = ({ navigation, route }) => {
               onChangeText={setAppointmentDate}
               placeholderTextColor="gray"
               editable={false}
-           
+
 
             />
           </Pressable>)}
